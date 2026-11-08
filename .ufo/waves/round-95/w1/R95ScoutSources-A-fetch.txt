@@ -1,0 +1,28 @@
+R95ScoutSources receipt A — read-only re-open of the S222 JMLA URL
+date_utc=2026-11-08T23:22:51Z  seat=R95ScoutSources  scratch=/fast/scratch/hyaku/chousa-r95/R95ScoutSources
+
+COMMAND: curl -fsSL --max-time 30 -o $S/jmla962_1274.pdf -w 'HTTP=%{http_code} SIZE=%{size_download} URL=%{url_effective}\n' https://jmla.pitt.edu/ojs/jmla/article/download/962/1274
+OUTPUT: HTTP=200 SIZE=532659 URL=https://jmla.pitt.edu/ojs/jmla/article/download/962/1274
+curl_exit=0
+
+COMMAND: sha256sum $S/jmla962_1274.pdf
+07036f03c4c08ce9eec02d17d904509a2b26431abe0bba0e3bc823d2c58d9ec2  /fast/scratch/hyaku/chousa-r95/R95ScoutSources/jmla962_1274.pdf
+COMMAND: stat -c %s /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/1a8c36c4c24444967bd9c3ce.raw
+532659
+
+COMMAND: grep -n '^S222' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round57/refetch.tsv
+190:S222	https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7839230/fullTextXML	c2e77a7a794d375ae917bbb9	1	2026-11-08T22:51:19Z	22	500	-	-
+191:S222	https://jmla.pitt.edu/ojs/jmla/article/download/962/1274	1a8c36c4c24444967bd9c3ce	1	2026-11-08T22:51:39Z	0	200	07036f03c4c08ce9eec02d17d904509a2b26431abe0bba0e3bc823d2c58d9ec2	86f1aacd558377129dc79b8c1bc27a686ebfc668eb78a58204dea41043db3871
+
+COMPARISON vs S222 row (refetch.tsv line 191):
+  raw_sha256 expected 07036f03c4c08ce9eec02d17d904509a2b26431abe0bba0e3bc823d2c58d9ec2
+  raw_sha256 observed 07036f03c4c08ce9eec02d17d904509a2b26431abe0bba0e3bc823d2c58d9ec2  -> MATCH (byte-identical PDF)
+  byte size expected 532659 (committed .raw) / observed 532659 -> MATCH
+
+COMMAND: pdftotext -layout $S/jmla962_1274.pdf $S/layout.txt ; sha256sum $S/layout.txt
+86f1aacd558377129dc79b8c1bc27a686ebfc668eb78a58204dea41043db3871  /fast/scratch/hyaku/chousa-r95/R95ScoutSources/layout.txt
+COMMAND: sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/1a8c36c4c24444967bd9c3ce.txt
+86f1aacd558377129dc79b8c1bc27a686ebfc668eb78a58204dea41043db3871  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/1a8c36c4c24444967bd9c3ce.txt
+  -> txt_sha256 expected 86f1aacd558377129dc79b8c1bc27a686ebfc668eb78a58204dea41043db3871 (refetch.tsv col 9) / observed identical
+COMMAND: diff -q $S/layout.txt <committed .txt>  -> IDENTICAL_LAYOUT (exit 0)
+  => the committed capture is byte-reproducible from the re-opened PDF with poppler pdftotext -layout

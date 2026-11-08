@@ -1,0 +1,10 @@
+# command: compare GNU grep 3.12 -P vs Python re on base captures (Q6/Q8) plus PCRE-only syntax divergence
+# base captures materialised from git archive 7b237358 corpus/captures into scratch
+=== GNU grep -P Q6/Q8 (counts 1/1, single files) ===
+Q6: corpus/captures/c52a1f15884a78028febcf43.txt
+Q8: corpus/captures/a640b15abf781e5c583d7088.txt
+=== Python re agrees (both single files, same sets) ===
+=== PCRE-only: \QPRISMA-S\E under GNU grep -P rc=0 (matches); under Python re.compile -> re.error: bad escape \Q (rc=1)
+=== \p{Letter}: Python re.error bad escape \p; GNU grep -P accepts
+=== (?>PRISMA)-S: Python compiles (3.11+ atomic) and matches; not divergent on this fixture
+=== Live probe: record with Q1 expression \\QPRISMA-S\\E -> SEARCH_RERUN Q1 rev=DRIFT COUNT_DRIFT,SET_DRIFT at_rev=0 rc=1 (spurious DRIFT under Python engine)

@@ -1,0 +1,85 @@
+# receipt: R95ConnectorSiblings-p1-rerun-tools.txt
+# host: Linux 7.2.11-arch1-1; cwd=/home/vgpnk/Projects/shokunin; shell=bash -lc
+
+$ /usr/bin/grep -rlE "rerun|re-run|recorded (count|hits)" --include='*.py' --include='*.sh' . | grep -v '/\.git/' | wc -l
+--- stdout (EXIT=0) ---
+4277
+
+$ /usr/bin/grep -rlE "rerun|re-run|recorded (count|hits)" --include='*.py' --include='*.sh' *-shokunin/ | grep -v '^chousa-shokunin/' | grep -v '/\.ufo/' | wc -l
+--- stdout (EXIT=0) ---
+1196
+
+$ /usr/bin/grep -rlE "rerun|re-run|recorded (count|hits)" --include='*.py' --include='*.sh' *-shokunin/ | grep -v '^chousa-shokunin/' | grep -v '/\.ufo/' | sed 's|/[^/]*$||' | sort | uniq -c | sort -rn | head -12
+--- stdout (EXIT=0) ---
+     64 kengaku-shokunin/plans
+     29 souji-shokunin/tools
+     28 souji-shokunin/census/round-69/battery
+     26 souji-shokunin/census/round-26/waves/assimilation/validate/tools
+     23 kama-shokunin/tools
+     17 mado-shokunin/quality/counters
+     16 souji-shokunin/census/round-73/records/wave-w1/seats/S73MutWriter/mutants
+     15 souji-shokunin/census/round-67/wave/w1/S67MutKill/mutants
+     14 souji-shokunin/census/round-42/waves/w1/R42reviewer04
+     13 tsukuroi-shokunin/tools
+     13 souji-shokunin/census/round-80/records/wave-w1/seats/S80MutTool/mutants
+     13 kagi-shokunin/plans
+
+$ git -C tameshi-shokunin log -1 --format='%H %ad %s' --date=short -- tools/count-recheck.py
+--- stdout (EXIT=0) ---
+3af968fa136e0fe212644cd3652731532cf1d5b0 2026-11-02 round 70 C1 declared work: tools/count-recheck.py + tools/count-recheck.json (new, schema tameshi-count-recheck-v1) - a record's printed counting figure must still be the count its named command produces at the revision the record names: a manifest row pins the record bytes at a revision, the exact span carrying the figure, the printed integer and the counting command of record git grep -c (S301); the span binding requires the span to be a byte substring of the record and the printed integer a delimited token in it; zero matches print nothing and exit 1, read as the count 0 (measured, disclosed); unresolvable records setup exit 2 before any row effect, zero-row manifest refused exit 2; an expect=drift row MEASURES the drift on every sweep; selftest 6/6 hermetic (match-met, drift-met, mismatch-caught, span-absent, unresolvable, vacuous-usage); standing manifest 7 rows - the two routed red arms (scorecard-r68corr-unanchored-r67tip and lesson-r69-unanchored-r67tip: printed 4, recount 0 at 859a736d, expect drift) and five green anchored arms beside them; records pinned at the base 0c2573d7 whose bytes were verified; capability row enters the table at the receipts commit
+
+$ git -C kagi-shokunin log -1 --format='%H %ad %s' --date=short -- corpus/recheck-replay.py
+--- stdout (EXIT=0) ---
+9cbe9d5f803de2518d4c11c6bc6b9a585e5120ad 2026-11-07 round-56: predeclaration epoch F — F15 vacuous-control fix (S114 -> round-55 S113 capture, R56ReviewCounter I1), manifest fetched calendar-validated in gate+counter (R56MutCounter-2 m31), F28 control, GATE_SHA256_PIN bump b6959d6c; controls 23 MATCH
+
+$ /usr/bin/grep -n "Counting command of record\|git grep -c\|record_rev\|span binding\|resolved for ALL rows" tameshi-shokunin/tools/count-recheck.py
+--- stdout (EXIT=0) ---
+21:Counting command of record: `git grep -c [-E] <pattern> <rev> -- <path>`
+30:  rows[]: id, record (repo path), record_rev (40-hex; pin the revision whose
+36:  1. span binding — the span must be a byte substring of the record at
+37:     record_rev, and the printed integer must occur in the span as a
+52:resolved for ALL rows up front, before any row effect.
+79:REQUIRED = ("id", "record", "record_rev", "span", "printed", "command",
+114:        # zero matches: git grep -c prints nothing and exits 1 (measured,
+142:            repo, "show", "%s:%s" % (row["record_rev"], row["record"])
+230:            return {"id": rid, "record": "record.md", "record_rev":
+
+$ /usr/bin/grep -n "replays each stated clock offline\|result must equal the stated N\|grep runs as the host" kagi-shokunin/corpus/recheck-replay.py
+--- stdout (EXIT=0) ---
+7:from the standing false fire. This gate replays each stated clock offline: the fetch stage is
+9:and the result must equal the stated N.
+19:grep runs as the host `grep -c -e '<BRE>'` (the statement's own semantics); pdftotext and the
+
+$ /usr/bin/grep -n "COUNT (<path>:#<pin>->#<actual>" kagi-shokunin/corpus/drift-pins.sh
+--- stdout (EXIT=0) ---
+15:#                    | COUNT (<path>:#<pin>->#<actual>; `#N` line pins a count,
+
+$ /usr/bin/grep -c "cases.append" kagi-shokunin/corpus/recheck-replay.py
+--- stdout (EXIT=0) ---
+19
+
+# --- appended: standing registration of the sibling instruments ---
+
+$ /usr/bin/grep -n "Replay a knowledge entry's stated .recheck:. clock offline" kagi-shokunin/SKILL.md | cut -c1-190
+--- stdout (EXIT=0) ---
+49:| Replay a knowledge entry's stated `recheck:` clock offline | `python3 -I -B corpus/recheck-replay.py` (replays every `recheck:` clock of `corpus/knowledge/*.md` against the committed ca
+
+$ /usr/bin/grep -n "lane-wide stated-clock offline" kagi-shokunin/SCORECARD.md | cut -c1-190
+--- stdout (EXIT=0) ---
+1861:| freshness | 9 → 9 | [C1] `bash plans/round-56-c1.sh <candidate>` 0 → 10 (target 10): capability acquisition — lane-wide stated-clock offline replay. `corpus/recheck-replay.py` r
+
+$ /usr/bin/grep -n "printed-count recheck" tameshi-shokunin/SCORECARD.md | cut -c1-190
+--- stdout (EXIT=0) ---
+259:| printed-count recheck | verify that a record's printed counting figure is still the count its named command produces at the revision the record names: a manifest row pins the record by
+4090:| R70-C1 | `tools/count-recheck.py` + `tools/count-recheck.json` (new; schema `tameshi-count-recheck-v1`): a record's printed counting figure must still be the count its named command p
+
+$ /usr/bin/grep -n "COUNT_RECHECK_SELFTEST: 6/6 pass" tameshi-shokunin/SCORECARD.md | cut -c1-190
+--- stdout (EXIT=0) ---
+259:| printed-count recheck | verify that a record's printed counting figure is still the count its named command produces at the revision the record names: a manifest row pins the record by
+4090:| R70-C1 | `tools/count-recheck.py` + `tools/count-recheck.json` (new; schema `tameshi-count-recheck-v1`): a record's printed counting figure must still be the count its named command p
+4115:| R70-C1 | verifies (measured) | selftest `COUNT_RECHECK_SELFTEST: 6/6 pass` exit 0 (`count-selftest-r70.txt`; rehearsed pre-data, `reh-count-selftest.txt`); the standing sweep `COUNT_R
+
+$ /usr/bin/grep -n "R70-C1" tameshi-shokunin/SCORECARD.md | cut -c1-120
+--- stdout (EXIT=0) ---
+4090:| R70-C1 | `tools/count-recheck.py` + `tools/count-recheck.json` (new; schema `tameshi-count-recheck-v1`): a record
+4115:| R70-C1 | verifies (measured) | selftest `COUNT_RECHECK_SELFTEST: 6/6 pass` exit 0 (`count-selftest-r70.txt`; rehe

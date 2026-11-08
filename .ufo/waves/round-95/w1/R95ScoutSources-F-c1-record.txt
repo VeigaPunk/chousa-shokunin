@@ -1,0 +1,36 @@
+R95ScoutSources receipt F — C1 record cross-check: the 8 recorded searches re-run at base with GNU grep 3.12
+date_utc=2026-11-08T23:39:41Z  seat=R95ScoutSources
+BASE = 7b2373586fb70f0ead6446c671fcc8b546d3e687   (corpus/captures/*.txt count at base = 90)
+
+### COMMAND (per the record's own 'As run' block):
+###   git archive 7b237358... corpus/captures | tar -x -C $S   ;   cd $S
+###   /usr/bin/grep -l -F|-P -e '<expression>' corpus/captures/*.txt | LC_ALL=C sort
+
+recorded  id    engine hits  observed  match  recorded_hit_set
+Q1 fixed PRISMA-S                    7        7    yes   sha256:69cfc05988a6ea78b149d8027c0c0405171429c1aff812090b6aed4da1a00dc1  (recomputed digest identical)
+Q2 fixed exactly as run              2        2    yes   corpus/captures/c52a1f15884a78028febcf43.txt, corpus/captures/c9d1e74c3ac8d9eb332c9770.txt  (identical)
+Q3 fixed deduplicat                  3        3    yes   corpus/captures/0ae65ac01b93119d3c2f3fed.txt, corpus/captures/c52a1f15884a78028febcf43.txt, corpus/captures/f2489455cc311a4de981e926.txt  (identical)
+Q4 fixed 検索者                        1        1    yes   corpus/captures/62be15a474e866e4bef6c9d5.txt  (identical)
+Q5 fixed 检索                          14       14    yes   sha256:df36eb9846e2017f68ca2d0ce5c5fff09ee332edca5394c89218fb40794878bd  (recomputed digest identical)
+Q6 regex [Ss]earch(es)? (was|were) (run|conducted)  1  1  yes   corpus/captures/c52a1f15884a78028febcf43.txt  (identical)
+Q7 fixed Client Challenge            0        0    yes   -  (no hits, exit 1)
+Q8 regex last search(ed)?            1        1    yes   corpus/captures/a640b15abf781e5c583d7088.txt  (identical)
+
+### Python-re engine (the re-running engine of tools/search-rerun.py) over the same base tree:
+###   same 8 counts, same digests for the two digest-form rows -> the two engines agree on these 8 expressions.
+###   (record's named limit (a) holds on these 8 expressions; agreement is NOT claimed in general.)
+
+### The C1 record's rev column names base for all 8; the tree has moved on (the S222 capture was added at
+### the carrier), so 5/8 rows report TREE_CHANGED at the current tree — which is the designed behaviour and
+### is NOT a drift in the recorded values.
+
+### COMMAND: python3 -B tools/search-rerun.py verify corpus/fixtures/search-rerun-r95.md --root .   (at carrier C)
+###   (output reproduced in the lane's own receipt corpus/evidence/round95/after/c1-verify.txt)
+### COMMAND: python3 -B corpus/evidence/round95/rerun-controls-r95.py --root . --work <scratch>   (at carrier C)
+###   POSITIVE=1/1 STRICT_TREE=1/1 FORGERY_REFUSED=8/8 PRIOR_ACCEPTED=8/8 SETUP_REFUSED=12/12
+###   CLONE_TREE=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=3/3 / RERUN_CONTROLS=PASS  (exit 0)
+
+### TOOLING NOTE: no install was needed for this seat. Tools used, all preinstalled:
+###   /usr/bin/grep  = GNU grep 3.12 (modified)   [the record names GNU grep 3.12]
+###   pdftotext     = poppler 26.10.0
+###   curl          = 8.23.0 ; python3 = 3.14.8 ; git = 2.56.0

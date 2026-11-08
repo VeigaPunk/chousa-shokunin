@@ -1,0 +1,216 @@
+== P01 expr='token' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt', 'data/b_crlf.txt', 'data/c_nul.txt', 'data/d_badutf8.txt', 'data/e_notrail.txt', 'data/f_lastline.txt', 'data/h_jp.txt', 'data/i_space.txt', 'data/j_vtab.txt', 'data/k_digits.txt', 'data/k_nbsp.txt', 'data/o_embed.txt'] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=12 at_rev=13 at_tree=13 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=12 at_rev=13 at_tree=13 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P02 expr='HELLO TOKEN' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/g_case.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P03 expr='検索者' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/h_jp.txt', 'data/r_cjkonly.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P04 expr='\\w' glob=data/r_cjkonly.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/r_cjkonly.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P04c expr='\\w' glob=data/r_cjkonly.txt LC_ALL(grep)=C
+grep_rc=1 grep_set=[] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P05 expr='\\b検索者\\b' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/r_cjkonly.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P06 expr='world$' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P07 expr='world\\r$' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/b_crlf.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P08 expr='^second' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt', 'data/b_crlf.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P09 expr='\\t' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/i_space.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P10 expr='\\s' glob=data/j_vtab.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/j_vtab.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P11 expr='\\s' glob=data/k_nbsp.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/k_nbsp.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P11c expr='\\s' glob=data/k_nbsp.txt LC_ALL(grep)=C
+grep_rc=1 grep_set=[] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P12 expr='foo\\nbar' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=1 grep_set=[] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P13 expr='(?<=foo)bar' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/m_wall.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P14 expr='\\Ktoken' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt', 'data/b_crlf.txt', 'data/c_nul.txt', 'data/d_badutf8.txt', 'data/e_notrail.txt', 'data/f_lastline.txt', 'data/h_jp.txt', 'data/i_space.txt', 'data/j_vtab.txt', 'data/k_digits.txt', 'data/k_nbsp.txt', 'data/o_embed.txt'] grep_err=''
+tool_rc=2 tool_line='SEARCH_RERUN_ERROR EXPRESSION Q1: bad escape \\K at position 0' agree=REFUSED
+tool_stdout:
+tool_stderr: SEARCH_RERUN_ERROR EXPRESSION Q1: bad escape \K at position 0
+
+== P15 expr='[[:alpha:]]+' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt', 'data/b_crlf.txt', 'data/c_nul.txt', 'data/d_badutf8.txt', 'data/e_notrail.txt', 'data/f_lastline.txt', 'data/g_case.txt', 'data/h_jp.txt', 'data/i_space.txt', 'data/j_vtab.txt', 'data/k_digits.txt', 'data/k_nbsp.txt', 'data/m_wall.txt', 'data/n_span.txt', 'data/o_embed.txt', 'data/p_dot.txt', 'data/r_cjkonly.txt'] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=17 at_rev=0 at_tree=0 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=17 at_rev=0 at_tree=0 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+tool_stderr: /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/search-rerun.py:135: FutureWarning: Possible nested set at position 1
+  r["pattern"] = re.compile(r["expr"])
+
+== P16 expr='.' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt', 'data/b_crlf.txt', 'data/c_nul.txt', 'data/d_badutf8.txt', 'data/e_notrail.txt', 'data/f_lastline.txt', 'data/g_case.txt', 'data/h_jp.txt', 'data/i_space.txt', 'data/j_vtab.txt', 'data/k_digits.txt', 'data/k_nbsp.txt', 'data/m_wall.txt', 'data/n_span.txt', 'data/o_embed.txt', 'data/p_dot.txt', 'data/r_cjkonly.txt'] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=17 at_rev=18 at_tree=18 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=17 at_rev=18 at_tree=18 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P17 expr='\\btoken\\b' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt', 'data/b_crlf.txt', 'data/c_nul.txt', 'data/d_badutf8.txt', 'data/e_notrail.txt', 'data/f_lastline.txt', 'data/h_jp.txt', 'data/i_space.txt', 'data/j_vtab.txt', 'data/k_digits.txt', 'data/k_nbsp.txt'] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=11 at_rev=12 at_tree=12 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=11 at_rev=12 at_tree=12 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P18 expr='token' glob=data/sub/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/sub/k_sub.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P19 expr='token' glob=data/**/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/sub/k_sub.txt'] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=1 at_rev=14 at_tree=14 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=1 at_rev=14 at_tree=14 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P20 expr='token\\Z' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt', 'data/c_nul.txt', 'data/e_notrail.txt', 'data/f_lastline.txt', 'data/j_vtab.txt', 'data/k_digits.txt', 'data/k_nbsp.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=7 at_rev=7 at_tree=7' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=7 at_rev=7 at_tree=7
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+== P21 expr='^$' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=1 grep_set=[] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=17 at_tree=17 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=17 at_tree=17 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P22 expr='x*' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/a_plain.txt', 'data/b_crlf.txt', 'data/c_nul.txt', 'data/d_badutf8.txt', 'data/e_notrail.txt', 'data/f_lastline.txt', 'data/g_case.txt', 'data/h_jp.txt', 'data/i_space.txt', 'data/j_vtab.txt', 'data/k_digits.txt', 'data/k_nbsp.txt', 'data/m_wall.txt', 'data/n_span.txt', 'data/o_embed.txt', 'data/p_dot.txt', 'data/r_cjkonly.txt'] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=17 at_rev=19 at_tree=19 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=17 at_rev=19 at_tree=19 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P23 expr='hel\\x00lo' glob=data/*.txt LC_ALL(grep)=host
+grep_rc=1 grep_set=[] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P24 expr='^$' glob=data/j_empty.txt LC_ALL(grep)=host
+grep_rc=1 grep_set=[] grep_err=''
+tool_rc=1 tool_line='SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT' agree=DISAGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+
+== P25 expr='token' glob=data/.x.txt LC_ALL(grep)=host
+grep_rc=0 grep_set=['data/.x.txt'] grep_err=''
+tool_rc=0 tool_line='SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1' agree=AGREE
+tool_stdout:
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+

@@ -1,0 +1,28 @@
+probe	engine	expr	where	LC_ALL(grep)	grep_rc	grep_set	tool_rc	tool_set_or_note	agree
+P01	fixed	token	data/*.txt	host(UTF-8)	0	data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/o_embed.txt	1	data/.x.txt, data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/o_embed.txt	DISAGREE
+P02	fixed	HELLO TOKEN	data/*.txt	host(UTF-8)	0	data/g_case.txt	0	(agrees: same as grep)	AGREE
+P03	fixed	検索者	data/*.txt	host(UTF-8)	0	data/h_jp.txt, data/r_cjkonly.txt	0	(agrees: same as grep)	AGREE
+P04	regex	\w	data/r_cjkonly.txt	host(UTF-8)	0	data/r_cjkonly.txt	0	(agrees: same as grep)	AGREE
+P04c	regex	\w	data/r_cjkonly.txt	C	1	-	1	data/r_cjkonly.txt	DISAGREE
+P05	regex	\b検索者\b	data/*.txt	host(UTF-8)	0	data/r_cjkonly.txt	0	(agrees: same as grep)	AGREE
+P06	regex	world$	data/*.txt	host(UTF-8)	0	data/a_plain.txt	0	(agrees: same as grep)	AGREE
+P07	regex	world\r$	data/*.txt	host(UTF-8)	0	data/b_crlf.txt	0	(agrees: same as grep)	AGREE
+P08	regex	^second	data/*.txt	host(UTF-8)	0	data/a_plain.txt, data/b_crlf.txt	0	(agrees: same as grep)	AGREE
+P09	regex	\t	data/*.txt	host(UTF-8)	0	data/i_space.txt	0	(agrees: same as grep)	AGREE
+P10	regex	\s	data/j_vtab.txt	host(UTF-8)	0	data/j_vtab.txt	0	(agrees: same as grep)	AGREE
+P11	regex	\s	data/k_nbsp.txt	host(UTF-8)	0	data/k_nbsp.txt	0	(agrees: same as grep)	AGREE
+P11c	regex	\s	data/k_nbsp.txt	C	1	-	1	data/k_nbsp.txt	DISAGREE
+P12	regex	foo\nbar	data/*.txt	host(UTF-8)	1	-	0	(agrees: same as grep)	AGREE
+P13	regex	(?<=foo)bar	data/*.txt	host(UTF-8)	0	data/m_wall.txt	0	(agrees: same as grep)	AGREE
+P14	regex	\Ktoken	data/*.txt	host(UTF-8)	0	data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/o_embed.txt	2	SEARCH_RERUN_ERROR EXPRESSION Q1: bad escape \K at position 0	REFUSED
+P15	regex	[[:alpha:]]+	data/*.txt	host(UTF-8)	0	data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/g_case.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/m_wall.txt, data/n_span.txt, data/o_embed.txt, data/p_dot.txt, data/r_cjkonly.txt	1	-	DISAGREE
+P16	regex	.	data/*.txt	host(UTF-8)	0	data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/g_case.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/m_wall.txt, data/n_span.txt, data/o_embed.txt, data/p_dot.txt, data/r_cjkonly.txt	1	data/.x.txt, data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/g_case.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/m_wall.txt, data/n_span.txt, data/o_embed.txt, data/p_dot.txt, data/r_cjkonly.txt	DISAGREE
+P17	regex	\btoken\b	data/*.txt	host(UTF-8)	0	data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt	1	data/.x.txt, data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt	DISAGREE
+P18	fixed	token	data/sub/*.txt	host(UTF-8)	0	data/sub/k_sub.txt	0	(agrees: same as grep)	AGREE
+P19	fixed	token	data/**/*.txt	host(UTF-8)	0	data/sub/k_sub.txt	1	data/.x.txt, data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/o_embed.txt, data/sub/k_sub.txt	DISAGREE
+P20	regex	token\Z	data/*.txt	host(UTF-8)	0	data/a_plain.txt, data/c_nul.txt, data/e_notrail.txt, data/f_lastline.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt	0	(agrees: same as grep)	AGREE
+P21	regex	^$	data/*.txt	host(UTF-8)	1	-	1	data/.x.txt, data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/g_case.txt, data/h_jp.txt, data/i_space.txt, data/j_empty.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/m_wall.txt, data/n_span.txt, data/o_embed.txt, data/p_dot.txt, data/r_cjkonly.txt	DISAGREE
+P22	regex	x*	data/*.txt	host(UTF-8)	0	data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/g_case.txt, data/h_jp.txt, data/i_space.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/m_wall.txt, data/n_span.txt, data/o_embed.txt, data/p_dot.txt, data/r_cjkonly.txt	1	data/.x.txt, data/a_plain.txt, data/b_crlf.txt, data/c_nul.txt, data/d_badutf8.txt, data/e_notrail.txt, data/f_lastline.txt, data/g_case.txt, data/h_jp.txt, data/i_space.txt, data/j_empty.txt, data/j_vtab.txt, data/k_digits.txt, data/k_nbsp.txt, data/m_wall.txt, data/n_span.txt, data/o_embed.txt, data/p_dot.txt, data/r_cjkonly.txt	DISAGREE
+P23	regex	hel\x00lo	data/*.txt	host(UTF-8)	1	-	1	data/c_nul.txt	DISAGREE
+P24	regex	^$	data/j_empty.txt	host(UTF-8)	1	-	1	data/j_empty.txt	DISAGREE
+P25	fixed	token	data/.x.txt	host(UTF-8)	0	data/.x.txt	0	(agrees: same as grep)	AGREE

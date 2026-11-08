@@ -1,0 +1,23 @@
+# battery containment: work-dir scope, cleanup-on-failure, lane-clean
+## 1. battery writes: sample of absolute O_WRONLY|O_CREAT opens (all under <work>/rerun-controls-r95/, none under the lane)
+openat(AT_FDCWD, "/dev/null", O_WRONLY|O_CREAT|O_TRUNC, 0666
+openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r95/R95SentinelScope/w2/rerun-controls-r95/oracle-constant-clean/clone/corpus/captures/62be15a474e866e4bef6c9d5.txt", O_WRONLY|O_CREAT|O_APPEND|O_CLOEXEC, 0666
+openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r95/R95SentinelScope/w2/rerun-controls-r95/oracle-constant-clean/clone/.git/description", O_WRONLY|O_CREAT|O_EXCL, 0666
+openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r95/R95SentinelScope/w2/rerun-controls-r95/oracle-constant-clean/clone/.git/HEAD", O_WRONLY|O_CREAT|O_TRUNC, 0666
+openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r95/R95SentinelScope/w2/rerun-controls-r95/oracle-constant-clean/clone/.git/hooks/applypatch-msg.sample", O_WRONLY|O_CREAT|O_EXCL, 0777
+## 1b. count of absolute O_WRONLY opens NOT under the lane and NOT /dev/null:
+
+## 2. cleanup on SUCCESS: residue under --work after a PASS run (exit was 0)
+residue:
+/fast/scratch/hyaku/chousa-r95/R95SentinelScope/wA
+
+## 3. cleanup on SETUP FAILURE: --tool pointing at a missing file (exit was 1 = FAIL)
+residue:
+/fast/scratch/hyaku/chousa-r95/R95SentinelScope/wB
+
+## 4. cleanup on a bad --root (record unreadable, exit was 1)
+residue:
+/fast/scratch/hyaku/chousa-r95/R95SentinelScope/wC
+
+## 5. lane mutation by the battery: git status --porcelain of the attacked clone (empty = unmodified)
+(end)

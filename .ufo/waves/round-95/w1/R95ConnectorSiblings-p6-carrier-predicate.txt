@@ -1,0 +1,33 @@
+# receipt: R95ConnectorSiblings-p6-carrier-predicate.txt
+# host: Linux 7.2.11-arch1-1; cwd=/home/vgpnk/Projects/shokunin; shell=bash -lc; TMPDIR=/fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/tmp; tree=/fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/repo (carrier C)
+
+$ git -C /fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/repo rev-parse HEAD
+--- stdout (EXIT=0) ---
+d27e9891ba6d2bae8b1f6060f7c01bf13a1a6ea1
+
+$ cd /fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/repo && python3 -B tools/search-rerun.py verify corpus/fixtures/search-rerun-r95.md --root . ; echo EXIT=$?
+--- stdout (EXIT=0) ---
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=7 at_rev=7 at_tree=8 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=CHANGED recorded=2 at_rev=2 at_tree=3 TREE_CHANGED
+SEARCH_RERUN Q3 rev=MATCH tree=CHANGED recorded=3 at_rev=3 at_tree=4 TREE_CHANGED
+SEARCH_RERUN Q4 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=14 at_rev=14 at_tree=14
+SEARCH_RERUN Q6 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=2 TREE_CHANGED
+SEARCH_RERUN Q7 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN Q8 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=2 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=8 rev_match=8/8 tree_same=3/8 findings=0
+SEARCH_RERUN: CLEAN
+EXIT=0
+
+$ /usr/bin/grep -n "sha256\|--tool\|TOOL =" /fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/repo/corpus/evidence/round95/rerun-controls-r95.py | head -8
+--- stdout (EXIT=0) ---
+24:Usage: python3 -B corpus/evidence/round95/rerun-controls-r95.py --root LANE --work DIR [--tool PATH]
+37:TOOL = "tools/search-rerun.py"
+106:         "sha256:69cfc05988a6ea78b149d8027c0c0405171429c1aff812090b6aed4da1a00dc0", {"SET_DRIFT"}),
+189:    ap.add_argument("--tool")
+
+$ /usr/bin/grep -n "rows = parse_record\|for r in rows" /fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/repo/tools/search-rerun.py
+--- stdout (EXIT=0) ---
+282:    rows = parse_record(record)
+284:    listing = tree_files(root, sorted({g for r in rows for g in r["globs"]}))
+287:    for r in rows:

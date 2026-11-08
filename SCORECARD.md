@@ -4226,3 +4226,46 @@ the single appended `S221` row; the round's instruments are new files under `cor
    declared line number) so `HEADING_ALIAS_ACCEPTED` becomes a refusal, not a named limit.
 4. carried debt: the round-74 "source-blind order oracle", the r82 clip range, QUALITY 173's successful-refused
    record form, the r80 backlog Gate ids.
+
+## Capabilities (round-95 addition)
+
+| Capability | What the lane can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| search-record re-run | re-run each recorded local search expression (filed as run, with where, revision, date, count and hit set — PRISMA-S items 8, 9, 13, 15) at the recorded revision and over the current tree, refusing a record whose count or set differs (`COUNT_DRIFT`/`SET_DRIFT`) and reporting a moved corpus separately (`TREE_CHANGED`), matching as GNU grep does on text over a bash glob | `python3 -B tools/search-rerun.py verify corpus/fixtures/search-rerun-r95.md --root .` → `rev_match=8/8 … SEARCH_RERUN: CLEAN`; `python3 -B corpus/evidence/round95/rerun-controls-r95.py --root . --work DIR` → `RERUN_CONTROLS=PASS`; receipts `corpus/evidence/round95/after-f2/c1-*.txt` | 95 |
+
+## Round 95 verdict — a recorded search becomes re-runnable, and PRISMA-S is held in its own words (2026-11-08)
+
+Base `7b237358`; freeze F `d6429e02`, carrier C `d27e9891`; wave-forced re-freeze F2 `86909f02` (Amendments 1–7,
+`plans/round-95.md`); every number below is from `corpus/evidence/round95/after-f2/*.txt` (`# computed_against
+F=86909f02…`). Two claims, two axes, no exploratory claim; both sourced on `S222`. One v1 wave, 12 seats, 0 dead.
+The round-94 planned row (three more layers on the lane's control instruments) was not worked; it is carried below,
+and the round chose a named domain gap of the province instead (`plans/round-95.md` § Why these claims).
+
+| claim | axis | before | after | delta | verdict |
+|---|---|---|---|---|---|
+| C1 `C1-RERUN-R95` | operability (lowest, historical 3/10) — capability acquisition | tool absent: the counting command exits 2 at base (`before/c1-base.txt`); the lane's nearest prior instrument (`research-gate verify-sweeps`) returns CLEAN on every forged record because it reads no `## Searches` section | `searches=8 rev_match=8/8 SEARCH_RERUN: CLEAN`; `RERUN_CONTROLS=PASS` with `FORGERY_REFUSED=10/10 PRIOR_ACCEPTED=10/10 SETUP_REFUSED=12/12 CLONE_TREE=2/2 GREP_AGREE=4/4 CONTAINMENT=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=4/4`; `MUTANTS_KILLED=10/10` | numeric score unchanged (the row's historical 3/10 is frozen by its own rule); capability row added | **verified at F2 (author-measured; non-author closure pending)** |
+| C2 `C2-ENTRY-R95` | depth | entry absent: `gate-records.py` exits 2 at base (`before/c2-base.txt`); no base capture holds PRISMA-S's item-15 sentence | `GATE_RECORDS files=1 records=13 ok=13 fail=0`, `METADATA_COMPLETE=1/1`, `ENTRY_CONTROLS=PASS` with `FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1 LQ_BOUND=13/13 WARRANTS_OK=7/7 WARRANT_TERMS=7/7 LANE_FILLED=7/7` | one knowledge entry, 7 decision rows, 13 located quotes | **verified at F2 (author-measured; faithfulness of each row is R95ReviewerC2's judgment, repaired at Amendment 1)** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | a runnable capability the lane lacked: re-executing a recorded search and comparing count and set, with a 10-group battery, a mutant rebuild and four stand-ins rejected |
+| depth | **improved** | PRISMA-S's own checklist and explanation text (items 8, 9, 12, 13, 15) held as 13 located quotes behind 7 decision rows, with the lane's reading confined to a marked column |
+| coverage | unchanged | registry 220 → 221 rows (`S222`); `PROVINCE.md` untouched; the README frontier gap 398-399 is closed for local searches only |
+| freshness | unchanged | no re-verification claim; `TREE_CHANGED` is a drift detector for search records, measured but not claimed on this axis |
+| calibration | unchanged | both claim sentences were narrowed before landing to what the instruments enforce (Amendments 6, 7), and the round-94 routed defects D1–D8 are recorded as corrections in `LOG.md`; no calibration claim |
+| adjacency | unchanged | sibling count re-checks (tameshi, kagi) routed by the connector seat, not absorbed |
+
+No axis harmed: `tools/research-gate.sh` and `tools/gate-records.py` are byte-identical at base and landing; the
+r94 counters still pass on the landing tree (`SKILL_TALLY_R94=PASS`, `CURATION_R94=PASS`); the registry diff is the
+single appended `S222` row plus one `## Search log` entry; `SKILL.md` gains one checklist item and one Gates row.
+
+## Planned — round 96 (intent, not a predicate)
+
+1. **operability (lowest)** — run the search-rerun capability on a real search the lane itself performs (the next
+   source-opening round's local sweeps filed as a `## Searches` record) instead of a fixture, and file the record
+   with the lesson.
+2. **depth / coverage** — PRISMA-S items 14 (search peer review, PRESS) and 16 (deduplication) are read in the
+   S222 capture but not held; the Systematic Reviews co-publication was not opened.
+3. carried debt: the round-94 planned items (declare-then-read driver leg, punctuation fixture, exact heading
+   equality), the round-74 source-blind order oracle, the r82 clip range, QUALITY 173's successful-refused record
+   form, the r80 backlog Gate ids.

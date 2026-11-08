@@ -1,0 +1,38 @@
+R95ExecEngine mechanism receipts (scratch fixture, run in /fast/scratch/hyaku/chousa-r95/R95ExecEngine)
+
+[M1] search-rerun.py per-line matcher on the empty string / trailing newline
+  command: python3 -B <inline driver calling tools/search-rerun.py run_at_rev on a 3-file fixture: a.txt="hello\n", e.txt="" (empty), .x.txt="dot\n">
+  observed:
+    dot-token  tool at_rev set = ['data/.x.txt']                       (fixed "dot", glob data/*.txt)
+    empty-^$   tool at_rev set = ['data/.x.txt', 'data/a.txt', 'data/e.txt']   (regex ^$, glob data/*.txt)
+    x*         tool at_rev set = ['data/.x.txt', 'data/a.txt', 'data/e.txt']   (regex x*, glob data/*.txt)
+    ls-tree paths: ['data/.x.txt', 'data/a.txt', 'data/e.txt']
+    python bytes split: b"".split(b"\n") = [b'']; b"hello\n".split(b"\n") = [b'hello', b'']
+  reading: the trailing '' after the final newline is matched as a line (phantom line); dotfiles are listed by os.walk / ls-tree.
+  exit: python run exit 0 (inline driver)
+
+[M2] GNU grep binary-mode NUL handling (grep 3.12-modified, en_US.UTF-8)
+  command: printf 'hel\0lo token\n' > nulchk.txt; grep -c -P 'hel\x00lo' nulchk.txt
+  observed: 0, rc=1
+  command: grep -a -c -P 'hel\x00lo' nulchk.txt   -> 1, rc=0
+  command: grep -c -P 'lo token' nulchk.txt        -> 1, rc=0   (grep splits the binary line at NUL)
+
+[M3] Committed record at carrier d27e9891ba6d2bae8b1f6060f7c01bf13a1a6ea1 (clone, checkout of carrier)
+  command: python3 -B tools/search-rerun.py verify corpus/fixtures/search-rerun-r95.md --root .
+  observed (verbatim):
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=7 at_rev=7 at_tree=8 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=CHANGED recorded=2 at_rev=2 at_tree=3 TREE_CHANGED
+SEARCH_RERUN Q3 rev=MATCH tree=CHANGED recorded=3 at_rev=3 at_tree=4 TREE_CHANGED
+SEARCH_RERUN Q4 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=14 at_rev=14 at_tree=14
+SEARCH_RERUN Q6 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=2 TREE_CHANGED
+SEARCH_RERUN Q7 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN Q8 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=2 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=8 rev_match=8/8 tree_same=3/8 findings=0
+SEARCH_RERUN: CLEAN
+  exit: 0
+  note: the carrier adds capture(s) under corpus/captures (TREE_CHANGED, exit 0 by design).
+
+[M4] committed capture store has no dotfiles
+  command: git -C <clone> ls-files corpus/captures | /usr/bin/grep -c '/\.'
+  observed: 0, rc=1

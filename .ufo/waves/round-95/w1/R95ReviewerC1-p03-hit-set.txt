@@ -1,0 +1,26 @@
+===== spaces after comma rc=0
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=2 at_rev=2 at_tree=3 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=0/1 findings=0
+SEARCH_RERUN: CLEAN
+===== duplicates in list rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=CHANGED recorded=2 at_rev=2 at_tree=3 SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=0/1 findings=1
+SEARCH_RERUN: DRIFT
+===== unsorted list rc=0
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=2 at_rev=2 at_tree=3 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=0/1 findings=0
+SEARCH_RERUN: CLEAN
+===== path outside glob rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=CHANGED recorded=2 at_rev=2 at_tree=3 SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=0/1 findings=1
+SEARCH_RERUN: DRIFT
+===== raw outside glob rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=CHANGED recorded=2 at_rev=2 at_tree=3 SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=0/1 findings=1
+SEARCH_RERUN: DRIFT
+===== trailing comma rc=2
+STDERR: SEARCH_RERUN_ERROR HIT_SET Q1: empty path in hit_set
+===== count mismatch rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=CHANGED recorded=3 at_rev=2 at_tree=3 COUNT_DRIFT,TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=0/1 findings=1
+SEARCH_RERUN: DRIFT

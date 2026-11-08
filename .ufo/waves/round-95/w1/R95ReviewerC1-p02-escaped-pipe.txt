@@ -1,0 +1,8 @@
+===== unescaped pipe rc=2
+STDERR: SEARCH_RERUN_ERROR ROW row width != 8: '| Q1 | fixed | corpus/captures/*.txt | `a|b` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 0 | - |'
+cells escaped: ['Q1', 'fixed', 'where', '`a|b`', 'rev', 'd', '0', '-']
+cells double-backslash: ['Q1', 'fixed', 'where', '`a\\|b`', 'rev', 'd', '0', '-']
+cells backslash-pipe at end: ['Q1', 'fixed', 'where', '`a\\`', 'rev', 'd', '0', '-']
+'| a | `x\\|y` | z |' -> ['a', '`x|y`', 'z']
+'| a | `x\\\\|y` | z |' -> ['a', '`x\\|y`', 'z']
+'| a | `x\\\\\\|y` | z |' -> ['a', '`x\\\\|y`', 'z']

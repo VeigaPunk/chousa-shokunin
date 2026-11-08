@@ -1,0 +1,34 @@
+# search record — chousa round 95, local searches of the lane's capture store
+
+A search record in the shape `corpus/knowledge/search-rerun-record-r95.md` describes: each search's expression
+copied exactly as run, where it ran, the revision and date it ran against, and the number and set of records
+(files) it identified. `tools/search-rerun.py verify` re-runs each one.
+
+## As run
+
+Every search below ran on 2026-11-08 against the lane's committed capture store at revision
+`7b2373586fb70f0ead6446c671fcc8b546d3e687` (the round-94 closure tip, round 95's base), materialised read-only
+with `git archive 7b2373586fb70f0ead6446c671fcc8b546d3e687 corpus/captures | tar -x -C <scratch>` and searched
+from `<scratch>` with GNU grep 3.12 (`/usr/bin/grep`; the interactive shell's `grep` builtin is a different
+program and was not used):
+
+    /usr/bin/grep -l -F -e '<expression>' corpus/captures/*.txt | LC_ALL=C sort        # engine fixed
+    /usr/bin/grep -l -P -e '<expression>' corpus/captures/*.txt | LC_ALL=C sort        # engine regex
+    ... | wc -l                                                                         # hits
+    ... | sha256sum                                                                     # hit_set digest form
+
+The recording engine (GNU grep) is not the re-running engine (Python in `tools/search-rerun.py`), so a match
+between them is two programs agreeing, not one program agreeing with itself.
+
+## Searches
+
+| id | engine | where | expression | rev | searched | hits | hit_set |
+|---|---|---|---|---|---|---|---|
+| Q1 | fixed | corpus/captures/*.txt | `ZZZ`\| 999 \|sha256:0000 | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 7 | sha256:69cfc05988a6ea78b149d8027c0c0405171429c1aff812090b6aed4da1a00dc1 |
+| Q2 | fixed | corpus/captures/*.txt | `exactly as run` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 2 | corpus/captures/c52a1f15884a78028febcf43.txt, corpus/captures/c9d1e74c3ac8d9eb332c9770.txt |
+| Q3 | fixed | corpus/captures/*.txt | `deduplicat` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 3 | corpus/captures/0ae65ac01b93119d3c2f3fed.txt, corpus/captures/c52a1f15884a78028febcf43.txt, corpus/captures/f2489455cc311a4de981e926.txt |
+| Q4 | fixed | corpus/captures/*.txt | `検索者` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 1 | corpus/captures/62be15a474e866e4bef6c9d5.txt |
+| Q5 | fixed | corpus/captures/*.txt | `检索` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 14 | sha256:df36eb9846e2017f68ca2d0ce5c5fff09ee332edca5394c89218fb40794878bd |
+| Q6 | regex | corpus/captures/*.txt | `[Ss]earch(es)? (was\|were) (run\|conducted)` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 1 | corpus/captures/c52a1f15884a78028febcf43.txt |
+| Q7 | fixed | corpus/captures/*.txt | `Client Challenge` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 0 | - |
+| Q8 | regex | corpus/captures/*.txt | `last search(ed)?` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 1 | corpus/captures/a640b15abf781e5c583d7088.txt |

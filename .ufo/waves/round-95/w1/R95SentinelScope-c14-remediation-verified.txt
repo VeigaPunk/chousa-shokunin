@@ -1,0 +1,19 @@
+# post-remediation verification (working-tree tools/search-rerun.py, concurrent edit citing R95SentinelScope findings 1,2,4)
+
+## A. GIT_DIR attack against the REMEDIATED tool — must not be CLEAN
+SEARCH_RERUN Q5 rev=DRIFT tree=SAME recorded=15 at_rev=14 at_tree=14 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=8 rev_match=7/8 tree_same=3/8 findings=2
+SEARCH_RERUN: DRIFT
+stderr: 
+
+## B. symlinked record against the REMEDIATED tool — must be refused
+SEARCH_RERUN_ERROR RECORD_TYPE /fast/scratch/hyaku/chousa-r95/R95SentinelScope/rec-etc2.md: the record must be a regular file, not a symlink
+
+## C. promisor partial clone against the REMEDIATED tool — socket count
+connect(): 0
+0
+upload-pack execs: 0
+0
+tool output:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=7 at_rev=7 at_tree=0 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=CHANGED recorded=2 at_rev=2 at_tree=0 TREE_CHANGED

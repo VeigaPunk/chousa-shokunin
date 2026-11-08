@@ -1,0 +1,39 @@
+# tool=/fast/scratch/hyaku/chousa-r95/R95MutantsC1/mut/m14-revok-mask.py base=7b2373586fb70f0ead6446c671fcc8b546d3e687 f7_rev=b022b135f11b630e897202efa8f3e0708944f2cf
+CASE positive rc=0 expect=0 ok
+CASE strict-tree rc=1 expect=1 codes=['TREE_CHANGED'] ok
+CASE f1-count rc=1 expect=1 codes=['COUNT_DRIFT'] want=['COUNT_DRIFT'] ok
+CASE prior-f1-count research-gate-verify-sweeps rc=0 expect=0 ok
+CASE f2-set-swap rc=1 expect=1 codes=['SET_DRIFT'] want=['SET_DRIFT'] ok
+CASE prior-f2-set-swap research-gate-verify-sweeps rc=0 expect=0 ok
+CASE f3-expression rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=any-rev-code ok
+CASE prior-f3-expression research-gate-verify-sweeps rc=0 expect=0 ok
+CASE f4-digest rc=1 expect=1 codes=['SET_DRIFT'] want=['SET_DRIFT'] ok
+CASE prior-f4-digest research-gate-verify-sweeps rc=0 expect=0 ok
+CASE f5-zero rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=['COUNT_DRIFT', 'SET_DRIFT'] ok
+CASE prior-f5-zero research-gate-verify-sweeps rc=0 expect=0 ok
+CASE f6-engine rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=['COUNT_DRIFT', 'SET_DRIFT'] ok
+CASE prior-f6-engine research-gate-verify-sweeps rc=0 expect=0 ok
+CASE f7-rev rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=any-rev-code ok
+CASE prior-f7-rev research-gate-verify-sweeps rc=0 expect=0 ok
+CASE f8-where rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=any-rev-code ok
+CASE prior-f8-where research-gate-verify-sweeps rc=0 expect=0 ok
+CASE s1-missing rc=2 expect=2 code=RECORD_UNREADABLE ok
+CASE s2-no-section rc=2 expect=2 code=SECTION ok
+CASE s3-header rc=2 expect=2 code=HEADER ok
+CASE s4-engine rc=2 expect=2 code=ENGINE ok
+CASE s5-dotdot rc=2 expect=2 code=WHERE ok
+CASE s6-absolute rc=2 expect=2 code=WHERE ok
+CASE s7-rev rc=2 expect=2 code=REV ok
+CASE s8-regex rc=2 expect=2 code=EXPRESSION ok
+CASE s9-empty rc=2 expect=2 code=EXPRESSION ok
+CASE s10-zero-set rc=2 expect=2 code=HIT_SET ok
+CASE s11-dup-id rc=2 expect=2 code=ROW ok
+CASE s12-root rc=2 expect=2 code=ROOT ok
+CASE clone-edit rc=0/1 expect=0/1 ok
+CASE clone-symlink rc=2 expect=2 ok
+CASE do-nothing-base rc=2 expect=nonzero tool_present=False ok
+CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/8', 'SETUP': '0/12', 'CLONE_TREE': '0/2'} ok
+CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '4/8'} ok
+CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/8', 'SETUP': '11/12', 'CLONE_TREE': '1/2'} ok
+POSITIVE=1/1 STRICT_TREE=1/1 FORGERY_REFUSED=8/8 PRIOR_ACCEPTED=8/8 SETUP_REFUSED=12/12 CLONE_TREE=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=3/3
+RERUN_CONTROLS=PASS

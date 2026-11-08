@@ -1,0 +1,19 @@
+# R95ScribeCorrections receipt R5 — D6 ledger C3 ExecC3Repro row 'both named limits measured'
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+
+$ grep -n '' .ufo/waves/round-94/claim-falsification.tsv | sed -n '15p'
+15:C3	w1/R94ExecC3Repro.md	neutral	-	counter and controls reproduced; both named limits measured
+exit=0
+
+--- the seat's own statement ---
+$ grep -n '' .ufo/waves/round-94/w1/R94ExecC3Repro.md | sed -n '176,178p'
+176:Named limits 2 (any column-0 `#`…`######` heading, no setext/indented parse) and 3 (a tally inside a fenced code
+177:block is attributed to the preceding heading) were **not** independently measured by this seat; the frozen
+178:predicate does not require them and no claim sentence depends on them beyond the declaration.
+exit=0
+
+--- which limits it did measure (O2 = limit 1, third-tail = limit 4) ---
+$ /usr/bin/grep -n -e 'named limit 1 confirmed' -e 'named limit 4' .ufo/waves/round-94/w1/R94ExecC3Repro.md
+103:`alias-heading` (r94, rc 0) — **named limit 1 confirmed by measurement**: the moved tally's nearest heading is a
+112:`third-tail` confirms named limit 4 in the refusal direction: an undeclared third tail tally prints
+exit=0

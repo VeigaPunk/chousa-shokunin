@@ -1,0 +1,26 @@
+### GNU grep 3.12 PCRE semantics
+$ /usr/bin/grep -P -e "(was\\|were)" pipe2.txt  [single backslash = literal pipe in PCRE]
+Xwas|wereY
+exit:0
+$ /usr/bin/grep -P -e "(was|were)" pipe2.txt  [bare = alternation]
+XwasY
+Xwas|wereY
+exit:0
+
+### Q6 pattern over base-rev capture c52a1f15884a78028febcf43.txt (at 7b237358)
+$ /usr/bin/grep -c -P -e "[Ss]earch(es)? (was\\|were) (run\\|conducted)" c52a-base.txt
+0
+$ /usr/bin/grep -c -P -e "[Ss]earch(es)? (was|were) (run|conducted)" c52a-base.txt
+1
+$ /usr/bin/grep -F -c "was|were" c52a-base.txt
+0
+exit:1 (no literal was|were)
+
+### Whole-base-captures scan (base materialised from git archive)
+$ /usr/bin/grep -l -P -e "[Ss]earch(es)? (was|were) (run|conducted)" $S/basecaps/corpus/captures/*.txt
+/fast/scratch/hyaku/chousa-r95/R95ReviewerC1/basecaps/corpus/captures/c52a1f15884a78028febcf43.txt
+$ /usr/bin/grep -l -P -e "[Ss]earch(es)? (was\\|were) (run\\|conducted)" $S/basecaps/corpus/captures/*.txt
+exit:1 (empty)
+
+### Recorded row Q6 (raw bytes):
+| Q6 | regex | corpus/captures/*.txt | `[Ss]earch(es)? (was\|were) (run\|conducted)` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 1 | corpus/captures/c52a1f15884a78028febcf43.txt |

@@ -1,0 +1,51 @@
+# receipt: R95ConnectorSiblings-p4-novelty-scope.txt
+# host: Linux 7.2.11-arch1-1; cwd=/home/vgpnk/Projects/shokunin; shell=bash -lc
+
+$ /usr/bin/grep -n "nearest prior" chousa-shokunin/.ufo/waves/round-95/claims.md
+--- stdout (EXIT=0) ---
+12:unless `--strict`). On the committed 8-search record every search matches at its revision; the nearest prior
+
+$ /usr/bin/grep -n "re-executes\|verify-sweeps" /fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/repo/tools/search-rerun.py
+--- stdout (EXIT=0) ---
+6:The lane's `research-gate verify-sweeps` re-checks only that a NEGATIVE sweep's named glob set is empty; nothing
+7:re-executes a recorded expression or compares the count it recorded. This tool does, for local searches over
+
+$ sed -n '6,7p' /fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/repo/tools/search-rerun.py
+--- stdout (EXIT=0) ---
+The lane's `research-gate verify-sweeps` re-checks only that a NEGATIVE sweep's named glob set is empty; nothing
+re-executes a recorded expression or compares the count it recorded. This tool does, for local searches over
+
+$ /usr/bin/grep -rn "tameshi-shokunin\|kagi-shokunin\|count-recheck\|recheck-replay" --include='*.md' --include='*.py' --include='*.sh' chousa-shokunin/ 2>/dev/null | grep -v '/\.git/' | grep -v '/\.ufo/' | cut -c1-200
+--- stdout (EXIT=0) ---
+chousa-shokunin/corpus/lessons/round-1.md:63:evidence it (`tameshi-shokunin/PROVINCE.md:14-17`). This lesson is the second
+chousa-shokunin/corpus/lessons/round-62.md:49:- **Province**: `RevProvince.md` — the instance is chousa's; the generic battery shape (do-nothing set, null counters, mutants, sandbox rule) is contest
+
+$ /usr/bin/grep -n "sibling\|Connector\|overlap" chousa-shokunin/corpus/lessons/round-95.md | wc -l
+--- stdout (EXIT=0) ---
+0
+
+$ /usr/bin/grep -rn "GATE_SHA256_PIN" kagi-shokunin/corpus/ 2>/dev/null | cut -c1-200
+--- stdout (EXIT=0) ---
+kagi-shokunin/corpus/lessons/round-56.md:44:9. R56MutCounter epoch-E governance reminder: GATE_SHA256_PIN couples the counter to the gate but the kill-rule pathspec names only `plans/*` — adding `co
+kagi-shokunin/corpus/lessons/round-56-verifier-spotcheck.md:39:- `sha256sum corpus/recheck-replay.py` ⇒ `b6959d6c7afb9380c043cbd40530e6a70ee8da2bf79f1ea9d0669706f50bb5a3` = `GATE_SHA256_PIN` at `pla
+kagi-shokunin/corpus/lessons/round-57-verifier-spotcheck.md:65:| 1 | `SCORECARD.md` round-56 row: "`--selftest` 18 cases" → 20 | `corpus/recheck-replay.py --selftest` ⇒ `PASS (20 cases)` in `.ufo/
+
+$ python3 -c "
+import json
+d=json.load(open('tameshi-shokunin/tools/count-recheck.json'))
+rows=d['rows']
+print('schema=%s rows=%d expect_drift=%d' % (d.get('schema'), len(rows), sum(1 for r in rows if r['expect']=='drift')))
+print('row0 command=%s' % json.dumps(rows[0]['command']))
+" 
+--- stdout (EXIT=0) ---
+schema=tameshi-count-recheck-v1 rows=7 expect_drift=2
+row0 command={"rev": "859a736deb1e26fd16a0cbd10f6bab0636c7a3a2", "path": "SCORECARD.md", "pattern": "figure-attribution check", "regex": false}
+
+$ /usr/bin/grep -n "def selftest" tameshi-shokunin/tools/count-recheck.py kagi-shokunin/corpus/recheck-replay.py
+--- stdout (EXIT=0) ---
+tameshi-shokunin/tools/count-recheck.py:215:def selftest(out=sys.stdout):
+kagi-shokunin/corpus/recheck-replay.py:331:def selftest():
+
+$ /usr/bin/grep -n "SELFTEST_ARM" tameshi-shokunin/tools/count-recheck.py | /usr/bin/grep -c "PASS" 
+--- stdout (EXIT=0) ---
+6

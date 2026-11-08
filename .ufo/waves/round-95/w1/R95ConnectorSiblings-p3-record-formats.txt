@@ -1,0 +1,78 @@
+# receipt: R95ConnectorSiblings-p3-record-formats.txt
+# host: Linux 7.2.11-arch1-1; cwd=/home/vgpnk/Projects/shokunin; shell=bash -lc
+
+$ /usr/bin/grep -rn "hit_set" --include='*.md' --include='*.py' --include='*.sh' --include='*.json' --include='*.txt' --include='*.tsv' *-shokunin/ 2>/dev/null | grep -v '^chousa-shokunin/' | wc -l
+--- stdout (EXIT=0) ---
+1
+
+$ /usr/bin/grep -rn "hit_set" --include='*.md' --include='*.py' --include='*.sh' --include='*.json' --include='*.txt' --include='*.tsv' *-shokunin/ 2>/dev/null | grep -v '^chousa-shokunin/' | cut -c1-160
+--- stdout (EXIT=0) ---
+mori-shokunin/.ufo/waves/round-48/w1-results.json:46:   "output": "{\n  \"seat\": \"ExecPortability\",\n  \"claim\": \"considerthese/2026-10-25.md suggestion 2 
+
+$ /usr/bin/grep -rn "^## Searches" --include='*.md' *-shokunin/ 2>/dev/null | grep -v '^chousa-shokunin/'
+--- stdout (EXIT=0) ---
+kaidoku-shokunin/.ufo/waves/round-99/w1/ScoutSources/draft-s327-candidate-rejection.md:7:## Searches run (receipts in this directory)
+kengaku-shokunin/.ufo/waves/round-36/build/R36ScoutPriorArt.md:62:## Searches that found nothing specific (so novelty is bounded, not proven)
+kotodama-shokunin/.ufo/waves/round-79/w1/ScoutR78Truth.md:25:## Searches performed
+
+$ /usr/bin/grep -rlnE "^\| *(expression|strategy|query|search) *\|.*(hits|count|records)" --include='*.md' *-shokunin/ 2>/dev/null | grep -v '^chousa-shokunin/' | wc -l
+--- stdout (EXIT=0) ---
+3
+
+$ head -2 kagi-shokunin/corpus/recheck-captures.tsv | cut -c1-200
+--- stdout (EXIT=0) ---
+# recheck-captures.tsv — committed body capture per recheck URL (round 56, corpus/recheck-replay.py)
+# One row per URL a knowledge entry's `recheck:` clock fetches. Body bytes only (curl -o; no
+
+$ /usr/bin/grep -n "stated=%d replayed=%d\|verdict = .MATCH." kagi-shokunin/corpus/recheck-replay.py
+--- stdout (EXIT=0) ---
+317:        verdict = "MATCH" if got == stated else "MISMATCH"
+319:        print("%s %s id=%s form=%s stated=%d replayed=%d" % (verdict, where, row["id"], flt[0], stated, got))
+
+$ python3 -c "
+import json
+d=json.load(open('mori-shokunin/.ufo/waves/round-48/w1-results.json'))
+for s in d.get('results',[]):
+    o=s.get('output')
+    if isinstance(o,str) and 'hit_sets_identical' in o:
+        o=json.loads(o)
+        print('seat=%s entering_tip=%s previous=%s count_now=%s count_prev=%s hit_sets_identical=%s' % (o['seat'],o['entering_tip'][:12],o['previous_round_entering_tip'][:12],o['count_at_entering_tip'],o['count_at_previous_round_entering_tip'],o['hit_sets_identical']))
+        print('commands=%s' % o['commands'])
+" 
+--- stdout (EXIT=0) ---
+seat=ExecPortability entering_tip=e5dbac054598 previous=2d85e33d1419 count_now=395 count_prev=395 hit_sets_identical=True
+commands=["git ls-tree -r --name-only <rev> -- tools/ .ufo/waves/round-*/ | grep -E '\\.(py|sh)$'", "cat <files> | xargs git grep -l -F '/home/vgpnk' <rev> -- | sed 's/^[^:]*://'"]
+
+$ git -C mori-shokunin log -1 --format='%H %ad %s' --date=short -- .ufo/waves/round-48/w1-results.json
+--- stdout (EXIT=0) ---
+e4dfff32d4f97c7ef250e9a7538fa75d4f284492 2026-10-25 round-48: data — pin-check v3 + pin repair, unlanded check, FR2 quota entry (S479-S484), QUALITY 125-128, lesson, README/SKILL/SCORECARD/LOG, w1 evidence
+
+# --- appended: the three narrative search|count tables ---
+
+$ sed -n '90,95p' mado-shokunin/.ufo/waves/round-17/w2/reports/ReopenS070.md | cut -c1-170
+--- stdout (EXIT=0) ---
+Over the 339-line extract, the row's own expressions:
+
+| expression | hits |
+|---|---|
+| `[0-9]+\.[0-9]+\.[0-9]+` | **1** — `:296` "Explore weird IPv4 notation: 8.8.2056, legacy parsing, browser behavior, URLs…" (the "unrelated promo line" the wave-1 no
+| `hypr(idle|lock) v?[0-9]` | **0** |
+
+$ sed -n '102,108p' tsukuroi-shokunin/.ufo/waves/round-96/w1/ScoutSources/report.md | cut -c1-170
+--- stdout (EXIT=0) ---
+**What it does NOT state** (checked by byte search on the 280632-byte pin):
+
+| search | count | consequence |
+|---|---|---|
+| `b"4300"` | **0** | the page never states the default's *numeric* value — that is S389's stdtypes page |
+| `b"640"` | **0** | the page never states the check threshold |
+| `b"Limine"` | **0** | the page states **no Limine behaviour whatsoever** |
+
+$ sed -n '69,74p' kaidoku-shokunin/.ufo/waves/round-67/w1/ConnectorCross/overlap.md | cut -c1-170
+--- stdout (EXIT=0) ---
+### Hit counts
+
+| search | hits outside kaidoku |
+|---|---|
+| `squashfs` in sibling `tools/` (C2, C3) | **0** |
+| `squashfs` in sibling root `*.md` and `plans/` (C2) | **0** |

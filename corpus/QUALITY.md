@@ -1380,3 +1380,14 @@ the admitted entry that motivates it. Tier definitions live in
     silent, so the new check was decorative for that class. Check: for each way the population can change (moved,
     duplicated, deleted) the detector names a code, and the battery binds each code to its case. —
     `lessons/round-94.md` Mistakes 3.
+220. **Located fragments are joined only by reading order, and every load-bearing word of a decision cell is in a
+    located quote.** Round 95's entry called three column-line fragments of a two-column PDF "one sentence"; the
+    reading-order text form showed two, and the row's key word ("nearly") sat on an unlocated line between them.
+    Check: before a lesson or entry says fragments form one statement, the reading-order form (`pdftotext` without
+    `-layout`) is read and cited; `entry-controls-r95.py`'s `WARRANT_TERMS` leg (a shared content word between a
+    row's Do and its named quotes) runs on the entry, and its `b1-nonsense-do` case drops it. —
+    `lessons/round-95.md` Mistakes 4.
+221. **A report states a ledger or battery tally by pasting the command that computes it.** Round 94's report
+    said "9 / 1 / 9" for a ledger whose `awk` tally is 8 / 1 / 10 (round-94 spot-check D1). Check: every count of
+    ledger rows, seats or cases in a round report is followed by the command and its output, and the closure can
+    re-run it. — `lessons/round-95.md` Mistakes 1.

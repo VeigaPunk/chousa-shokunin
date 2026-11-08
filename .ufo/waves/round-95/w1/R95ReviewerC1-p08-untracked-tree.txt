@@ -1,0 +1,39 @@
+strict False rc 0
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+ERR 
+strict True rc 0
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+ERR 
+--- after adding untracked b.txt
+strict False rc 0
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=2 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=0/1 findings=0
+SEARCH_RERUN: CLEAN
+
+ERR 
+strict True rc 1
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=2 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=0/1 findings=1
+SEARCH_RERUN: DRIFT
+
+ERR 
+--- after ignored c.txt (git-ignored but on disk)
+strict False rc 0
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=3 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=0/1 findings=0
+SEARCH_RERUN: CLEAN
+
+ERR 
+--- after deleting tracked a.txt from disk
+strict False rc 0
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=2 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=0/1 findings=0
+SEARCH_RERUN: CLEAN
+
+ERR 

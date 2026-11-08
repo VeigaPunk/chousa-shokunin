@@ -1,0 +1,20 @@
+--- clean rc=0
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+ERR: 
+--- symlinked file rc=2
+
+ERR: SEARCH_RERUN_ERROR WHERE_TYPE Q1: corpus/captures/link.txt in the tree is a symlink or not a regular file
+
+--- symlinked dir outside root rc=0
+SEARCH_RERUN Q1 rev=MATCH tree=SAME recorded=1 at_rev=1 at_tree=1
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=1/1 findings=0
+SEARCH_RERUN: CLEAN
+
+ERR: 
+--- glob into symlinked dir rc=2
+
+ERR: SEARCH_RERUN_ERROR WHERE_TYPE corpus/captures/sub on a glob's path is a symlink
+

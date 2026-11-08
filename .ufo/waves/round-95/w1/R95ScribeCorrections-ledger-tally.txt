@@ -1,0 +1,16 @@
+# R95ScribeCorrections receipt R1 — round-94 ledger header check and class tally
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+$ head -1 .ufo/waves/round-94/claim-falsification.tsv | cat -A
+C1^Iw1/R94ExecC1Repro.md^Ifalsifies-number^Iplans/round-94.md^Ibattery exited 1 at carrier C on the unsatisfiable s1-schema case; Amendment 4 dropped it and F3/C3 prints FORGERIES=PASS$
+exit=0
+$ wc -l .ufo/waves/round-94/claim-falsification.tsv
+19 .ufo/waves/round-94/claim-falsification.tsv
+$ awk -F'\t' 'NR>1{c[$3]++} END{for(k in c) print k, c[k]}' .ufo/waves/round-94/claim-falsification.tsv
+neutral 10
+falsifies-wording 8
+exit=0
+$ awk -F'\t' '{c[$3]++} END{for(k in c) print k, c[k]}' .ufo/waves/round-94/claim-falsification.tsv   # headerless file: NR>1 drops row 1
+neutral 10
+falsifies-number 1
+falsifies-wording 8
+exit=0

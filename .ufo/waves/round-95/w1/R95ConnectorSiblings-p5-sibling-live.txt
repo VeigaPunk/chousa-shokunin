@@ -1,0 +1,42 @@
+# receipt: R95ConnectorSiblings-p5-sibling-live.txt
+# host: Linux 7.2.11-arch1-1; cwd=/home/vgpnk/Projects/shokunin; shell=bash -lc; TMPDIR=/fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/tmp
+
+$ TMPDIR=/fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/tmp python3 -B tameshi-shokunin/tools/count-recheck.py --selftest 2>&1 | tail -12
+--- stdout (EXIT=0) ---
+SELFTEST_ARM1 match-met: PASS
+SELFTEST_ARM2 drift-met: PASS
+SELFTEST_ARM3 mismatch-caught: PASS
+SELFTEST_ARM4 span-absent: PASS
+SELFTEST_ARM5 unresolvable: PASS
+SELFTEST_ARM6 vacuous-usage: PASS
+COUNT_RECHECK_SELFTEST: 6/6 pass
+
+$ TMPDIR=/fast/scratch/hyaku/chousa-r95/R95ConnectorSiblings/tmp python3 -B kagi-shokunin/corpus/recheck-replay.py --selftest 2>&1 | tail -6
+--- stdout (EXIT=0) ---
+PASS header-case-status rc=1 want=1 token=BAD-CAPTURE
+PASS unsupported-form rc=1 want=1 token=UNSUPPORTED
+PASS extra-curl-flag rc=1 want=1 token=UNSUPPORTED
+PASS second-clock-mismatch rc=1 want=1 token=MISMATCH
+PASS symlink-component rc=1 want=1 token=symlink:
+RECHECK_REPLAY_SELFTEST: PASS (20 cases)
+
+$ python3 -B tameshi-shokunin/tools/count-recheck.py --help 2>&1 | head -12
+--- stdout (EXIT=0) ---
+usage: count-recheck.py [-h] [--repo REPO] [--manifest MANIFEST] [--selftest]
+
+options:
+  -h, --help           show this help message and exit
+  --repo REPO
+  --manifest MANIFEST
+  --selftest
+
+$ cd tameshi-shokunin && python3 -B tools/count-recheck.py --repo . --manifest tools/count-recheck.json 2>&1 | head -12
+--- stdout (EXIT=0) ---
+COUNT_ROW scorecard-r68corr-unanchored-r67tip expect=drift printed=4 measured=0 ok
+COUNT_ROW scorecard-r68corr-anchored-r67tip expect=match printed=0 measured=0 ok
+COUNT_ROW scorecard-r68corr-anchored-r68tip expect=match printed=1 measured=1 ok
+COUNT_ROW lesson-r69-unanchored-r67tip expect=drift printed=4 measured=0 ok
+COUNT_ROW lesson-r69-unanchored-r68tip expect=match printed=4 measured=4 ok
+COUNT_ROW lesson-r69-anchored-r67tip expect=match printed=0 measured=0 ok
+COUNT_ROW lesson-r69-anchored-r68tip expect=match printed=1 measured=1 ok
+COUNT_RECHECK: rows=7 met=7 unexpected=0

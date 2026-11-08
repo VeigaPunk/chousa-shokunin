@@ -1,0 +1,42 @@
+===== ** glob rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=CHANGED recorded=7 at_rev=71 at_tree=76 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=0/1 findings=2
+SEARCH_RERUN: DRIFT
+===== dot segment rc=2
+STDERR: SEARCH_RERUN_ERROR WHERE Q1: unsafe or empty glob './corpus/captures/*.txt'
+===== empty segment // rc=2
+STDERR: SEARCH_RERUN_ERROR WHERE Q1: unsafe or empty glob 'corpus//captures/*.txt'
+===== windows sep rc=2
+STDERR: SEARCH_RERUN_ERROR WHERE Q1: unsafe or empty glob 'corpus\\captures\\*.txt'
+===== trailing slash rc=2
+STDERR: SEARCH_RERUN_ERROR WHERE Q1: unsafe or empty glob 'corpus/captures/*.txt/'
+===== dotdot substring rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=7 at_rev=0 at_tree=0 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+===== bracket class rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=7 at_rev=2 at_tree=2 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+===== empty where rc=2
+STDERR: SEARCH_RERUN_ERROR WHERE Q1: unsafe or empty glob ''
+===== space after comma in where rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=CHANGED recorded=7 at_rev=10 at_tree=11 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=0/1 findings=2
+SEARCH_RERUN: DRIFT
+===== trailing dot rc=2
+STDERR: SEARCH_RERUN_ERROR WHERE Q1: unsafe or empty glob 'corpus/captures/.'
+===== bare *.txt rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=7 at_rev=0 at_tree=0 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+===== **/*.txt rc=2
+STDERR: SEARCH_RERUN_ERROR WHERE_TYPE Q1: .ufo/waves/round-84/w1/R84ExecForge/forge/linkcap.txt at 7b2373586fb7 is mode 120000 (blob)
+===== */x rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=7 at_rev=0 at_tree=0 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+===== question mark rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=7 at_rev=0 at_tree=0 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT

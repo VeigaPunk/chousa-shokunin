@@ -1,0 +1,43 @@
+R95ScoutSources receipt E — (c) co-publication statement, and (d) newer version / erratum
+date_utc=2026-11-08T23:39:29Z  seat=R95ScoutSources
+
+=== (c) DOES THE JMLA PDF ITSELF STATE THE CO-PUBLICATION? ===
+### COMMAND: pdftotext -f 1 -l 1 $S/jmla962_1274.pdf - | grep -n -A3 'will also be published'
+56:In order to encourage broad adoption of PRISMA-S, this article will also be published in Systematic Reviews (https://doi.org/10.1186/s13643-02001542-z).
+57-
+58-jmla.mlanet.org
+59-
+### (layout form, capture lines 61-62):
+  *   In order to encourage broad adoption of PRISMA-S, this article will also be published in Systematic Reviews (https://doi.org/10.1186/s13643-020-
+       01542-z).
+
+### VERDICT (c): YES — the JMLA PDF states the co-publication itself, on page 1 as a footnote to the
+###   title, in the words 'will also be published in Systematic Reviews' with the DOI
+###   https://doi.org/10.1186/s13643-020-01542-z.
+
+### HOWEVER the string '10:39' is NOWHERE in the JMLA PDF:
+### COMMAND: grep -n '10:39' $S/read_order.txt $S/layout.txt
+grep_exit=1 (1 = not found)
+### The '10:39' locator in corpus/SOURCES.md:234 comes from the Systematic Reviews record, which the lane
+### never captured: corpus/evidence/round57/refetch.tsv:190 shows the S222 europepmc fullTextXML attempt
+### failed (curl_rc=22, http=500).
+
+=== (d) NEWER PRISMA-S VERSION OR ERRATUM CHANGING ITEMS 8, 9, 12, 13, 15? ===
+web_search 'PRISMA-S erratum correction Systematic Reviews 10:39 Rethlefsen checklist update'  -> no erratum,
+  no correction, no retraction; the 2021 16-item checklist is still the current version.
+web_search 'PRISMA-S 2025 revised checklist version update reporting literature searches' -> no revised
+  checklist; the '2025' seen is EQUATOR's record-last-updated date (2025-02-06), catalogue metadata only.
+web_search 'site:link.springer.com PRISMA-S Rethlefsen 2021 correction OR erratum' -> no correction notice.
+web_search 'jmla.pitt.edu PRISMA-S Rethlefsen article 962 corrections erratum publisher record' -> article 962
+  is an 'Original Investigation' with no correction/erratum/publisher note linked.
+web_search '"PRISMA-S" "Erratum in" Systematic Reviews 2021 10 39 correction Rethlefsen' -> no erratum
+  attached to PMID 33499930; the 'Erratum in' wording traces to OTHER references (e.g. PRISMA 2020's own
+  Rev Esp Cardiol 2022;75(2):192, and in the lane's own S120 capture only O'Mara-Eves 2015;4:5).
+
+### COMMAND: grep -c 'Erratum' corpus/captures/c9d1e74c3ac8d9eb332c9770.txt   (S120, Cochrane ch.4)
+1
+### COMMAND: grep -n 'Erratum' corpus/captures/c9d1e74c3ac8d9eb332c9770.txt
+1197: O'Mara-Eves A, Thomas J, McNaught J, Miwa M, Ananiadou S. Using text mining for study identification in systematic reviews: a systematic review of current approaches. Systematic Reviews 2015; 4: 5. (Erratum in: Systematic Reviews 2015; 2014: 2059). 
+
+### CONCLUSION (d): NO newer PRISMA-S version and NO erratum exists that changes items 8, 9, 12, 13 or 15.
+###   The 2021 JMLA/Syst Rev text is the current and only PRISMA-S checklist.

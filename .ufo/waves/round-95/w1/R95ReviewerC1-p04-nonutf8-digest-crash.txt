@@ -1,0 +1,18 @@
+rev c4e96104e4ee8b3f7fa7ad1e3a45b945f97bd978
+expected byte-sort digest cb4549944f4c60ec71b3b558d83afcdf935cf9638c865e6c1b2718378355fbcc
+rc 1
+
+STDERR: Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r95/R95ReviewerC1/repo/tools/search-rerun.py", line 333, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ~~~~^^^^^^^^^^^^^^
+  File "/fast/scratch/hyaku/chousa-r95/R95ReviewerC1/repo/tools/search-rerun.py", line 326, in main
+    return verify(a.record, os.path.abspath(a.root), a.strict)
+  File "/fast/scratch/hyaku/chousa-r95/R95ReviewerC1/repo/tools/search-rerun.py", line 294, in verify
+    if digest(at_rev) != r["digest"]:
+       ~~~~~~^^^^^^^^
+  File "/fast/scratch/hyaku/chousa-r95/R95ReviewerC1/repo/tools/search-rerun.py", line 275, in digest
+    return hashlib.sha256("".join(p + "\n" for p in sorted(paths)).encode("utf-8")).hexdigest()
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+UnicodeEncodeError: 'utf-8' codec can't encode characters in position 38-39: surrogates not allowed
+

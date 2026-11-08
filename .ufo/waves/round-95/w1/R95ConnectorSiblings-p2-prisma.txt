@@ -1,0 +1,47 @@
+# receipt: R95ConnectorSiblings-p2-prisma.txt
+# host: Linux 7.2.11-arch1-1; cwd=/home/vgpnk/Projects/shokunin; shell=bash -lc
+
+$ /usr/bin/grep -rln --include='*.md' --include='*.py' --include='*.sh' --include='*.json' --include='*.txt' --include='*.tsv' "PRISMA-S\|jmla.2021.962" *-shokunin/ 2>/dev/null | wc -l
+--- stdout (EXIT=0) ---
+309
+
+$ /usr/bin/grep -rln --include='*.md' --include='*.py' --include='*.sh' --include='*.json' --include='*.txt' --include='*.tsv' "PRISMA-S\|jmla.2021.962" *-shokunin/ 2>/dev/null | cut -d/ -f1 | sort | uniq -c | sort -rn
+--- stdout (EXIT=0) ---
+    306 chousa-shokunin
+      1 tsukuroi-shokunin
+      1 kasegi-shokunin
+      1 kake-shokunin
+
+$ /usr/bin/grep -rln --include='*.md' --include='*.py' --include='*.sh' --include='*.json' --include='*.txt' --include='*.tsv' "PRISMA-S\|jmla.2021.962" *-shokunin/ 2>/dev/null | grep -v '^chousa-shokunin/' | wc -l
+--- stdout (EXIT=0) ---
+3
+
+$ /usr/bin/grep -rln --include='*.md' --include='*.py' --include='*.sh' --include='*.json' --include='*.txt' --include='*.tsv' "PRISMA-S\|jmla.2021.962" *-shokunin/corpus/ 2>/dev/null | grep -v '^chousa-shokunin/' | wc -l
+--- stdout (EXIT=0) ---
+0
+
+$ /usr/bin/grep -rln --include='*.md' --include='*.py' --include='*.sh' --include='*.json' --include='*.txt' --include='*.tsv' "PRISMA-S\|jmla.2021.962" *-shokunin/ 2>/dev/null | grep -v '^chousa-shokunin/'
+--- stdout (EXIT=0) ---
+kake-shokunin/.ufo/waves/round-92/w1/ConnectorScope/receipts/query-stale.txt
+kasegi-shokunin/.ufo/waves/round-33/wave1/ConnSibling.md
+tsukuroi-shokunin/.ufo/waves/round-88/w1/ConnectorOverlap/pat-unified_kernel_uki_b___efi_b_EFI__.txt
+
+$ /usr/bin/grep -n "PRISMA-S" kasegi-shokunin/.ufo/waves/round-33/wave1/ConnSibling.md | cut -c1-200
+--- stdout (EXIT=0) ---
+57:  PRISMA-S), `chousa-shokunin/corpus/knowledge/cnki-citation-check-r40.md:6`,
+
+$ /usr/bin/grep -n "jmla.2021.962" tsukuroi-shokunin/.ufo/waves/round-88/w1/ConnectorOverlap/pat-unified_kernel_uki_b___efi_b_EFI__.txt | cut -c1-200
+--- stdout (EXIT=0) ---
+(no stdout)
+
+$ /usr/bin/grep -c "PRISMA-S" tsukuroi-shokunin/.ufo/waves/round-88/w1/ConnectorOverlap/pat-unified_kernel_uki_b___efi_b_EFI__.txt
+--- stdout (EXIT=0) ---
+1
+
+$ /usr/bin/grep -n "PRISMA-S\|jmla.2021.962" kake-shokunin/.ufo/waves/round-92/w1/ConnectorScope/receipts/query-stale.txt | cut -c1-200
+--- stdout (EXIT=0) ---
+24:/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/chinese-prisma-s-reception-r52.md:6:recheck: 180d — from the lane root, `python3 corpus/evidence/round52/build-spans.py --check` pri
+
+$ for d in *-shokunin/; do [ "$d" = "chousa-shokunin/" ] && continue; /usr/bin/grep -Hn "PRISMA" "$d"corpus/SOURCES.md 2>/dev/null; done | wc -l
+--- stdout (EXIT=0) ---
+0

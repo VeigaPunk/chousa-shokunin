@@ -1,0 +1,18 @@
+C order: [b'corpus/captures/\x80.txt', b'corpus/captures/\xc3\xa9.txt']
+C-order digest 00ec335b1fc2e4b6e2742a6e433ea2a7e8cfbd81f683a1d4f100a6d463744f50
+py order: ["'corpus/captures/é.txt'", "'corpus/captures/\\udc80.txt'"]
+rc 1
+
+STDERR: , line 333, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ~~~~^^^^^^^^^^^^^^
+  File "/fast/scratch/hyaku/chousa-r95/R95ReviewerC1/repo/tools/search-rerun.py", line 326, in main
+    return verify(a.record, os.path.abspath(a.root), a.strict)
+  File "/fast/scratch/hyaku/chousa-r95/R95ReviewerC1/repo/tools/search-rerun.py", line 294, in verify
+    if digest(at_rev) != r["digest"]:
+       ~~~~~~^^^^^^^^
+  File "/fast/scratch/hyaku/chousa-r95/R95ReviewerC1/repo/tools/search-rerun.py", line 275, in digest
+    return hashlib.sha256("".join(p + "\n" for p in sorted(paths)).encode("utf-8")).hexdigest()
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+UnicodeEncodeError: 'utf-8' codec can't encode character '\udc80' in position 38: surrogates not allowed
+

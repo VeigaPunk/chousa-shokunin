@@ -2735,3 +2735,53 @@ report §Work performed. Frozen sentences: `.ufo/waves/round-94/claims.md`; plan
 - Measured revisions: the driver walks the pins table at `C` and pins non-receipt rows at `F`; every scored
   receipt in `corpus/evidence/round94/after/` prints `computed_against`. Tools untouched:
   `git diff --quiet 0f3f84da <landing> -- tools/ SKILL.md PROVINCE.md` is empty.
+
+## Round 95 — 2026-11-08
+
+Lane `chousa`, round 95 (attempt 2, `ChousaR95a2`). Base `7b237358`; freeze `d6429e02` (F); carrier `d27e9891`
+(C); wave-forced re-freeze `86909f02` (F2). Two claims: C1 operability (lowest scored axis; capability
+acquisition, `tools/search-rerun.py`) and C2 depth (`corpus/knowledge/search-rerun-record-r95.md`), both resting on
+`S222` (PRISMA-S, opened this round). One v1 wave, 12 seats, no dead seat. Frozen sentences and the F2 amendments:
+`.ufo/waves/round-95/claims.md`; plan and amendments 1–7: `plans/round-95.md`; lesson `corpus/lessons/round-95.md`.
+
+- Motivating evidence: `corpus/README.md:398-399` — "the sweep re-run is a glob/existence check over the named
+  locations, never the recorded command"; PRISMA-S item 15's explanation says a re-run with a drastically different
+  count indicates errors in the published search or major changes to a database. The lane held neither the standard
+  nor an instrument that re-runs a recorded expression.
+- Before (`corpus/evidence/round95/before/`): the counting commands exit 2 at base (tool and entry absent); no base
+  capture contains PRISMA-S's item-15 sentence; `research-gate verify-sweeps` returns CLEAN on every forged record
+  (it reads no `## Searches` section).
+- After at F2 (`corpus/evidence/round95/after-f2/`): `SEARCH_RERUN_SUMMARY searches=8 rev_match=8/8`,
+  `RERUN_CONTROLS=PASS` (`FORGERY_REFUSED=10/10 PRIOR_ACCEPTED=10/10 SETUP_REFUSED=12/12 CLONE_TREE=2/2
+  GREP_AGREE=4/4 CONTAINMENT=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=4/4`), `MUTANTS_KILLED=10/10`;
+  `GATE_RECORDS files=1 records=13 ok=13 fail=0`, `METADATA_COMPLETE=1/1`, `ENTRY_CONTROLS=PASS`
+  (`BINDING_REFUSED=3/3 ORACLE_REJECTED=1/1 LQ_BOUND=13/13 WARRANTS_OK=7/7 WARRANT_TERMS=7/7 LANE_FILLED=7/7`).
+  The F receipts (`after/`, 9 records, 8 forgeries) are kept as the F record.
+- Wave-forced amendments (all named in the plan with their seat): grep-aligned matching (phantom final line,
+  dotfiles, `**`, POSIX classes), caller-`GIT_*` scrub with replace refs and lazy fetch off, symlinked-record
+  refusal, byte-sorted digest, stray-table refusal; the entry's two-sentence reading of ITEM 15 and four repaired
+  rows (13 located quotes); both claim sentences narrowed to what their instruments enforce.
+- Frontier: `corpus/SOURCES.md` 220 → 221 rows (`S222`, tier A); a round-95 `## Search log` entry; census exit 0
+  before and after. Sibling mechanisms routed, not absorbed: tameshi `tools/count-recheck.py`, kagi
+  `corpus/recheck-replay.py` (`R95ConnectorSiblings`).
+- Correction (r94 spot-check D2, append-only): `LOG.md` round-94 "After" bullet quotes `PINNED_FILES=34/34 …
+  rev=41038ed7 receipts_rev=352924bb` and `DETECTOR_WITNESS=17/17`; the round-94 landing measurement is at F3
+  `ebbcbe39` / C3 `d13c2ff2` — `after/c1-verify.txt` prints `PINNED_FILES=35/35`, `after/c2-counter.txt` prints
+  `DETECTOR_WITNESS=18/18` (`.ufo/waves/round-95/w1/R95ScribeCorrections-D2-log.md-stale.txt`). The earlier pair is
+  genuine for its C-era revision. The original text stays.
+- Correction (r94 spot-check D4): the round-94 ledger row `C2 w1/R94CriticClaims.md` credits a two-line-predicate
+  finding that seat did not file; it is `R94ReviewerC2` F3 (`R95ScribeCorrections-D4-ledger-attribution.txt`).
+- Correction (r94 spot-check D5): the round-94 ledger row `C1 w1/R94SentinelScope.md` names `--expected`/`--receipts`
+  guards the seat never measured; the seat filed F2 (`--work`), F5 (symlinked rows), F6 (`--pins`), F7
+  (`--receipts-rev`); the `--expected`/`--receipts` guard is the lane's Amendment 8
+  (`R95ScribeCorrections-D5-sentinel-scope.txt`).
+- Correction (r94 spot-check D6): the round-94 ledger row `C3 w1/R94ExecC3Repro.md` says "both named limits
+  measured"; the seat measured named limits 1 and 4 and declared 2 and 3 unmeasured (`R94ExecC3Repro.md:176-178`).
+- Correction (r94 spot-check D7): `plans/round-94.md:122` calls `after/c1-forgeries.txt` "at F2/C2 the green run";
+  no `after/` exists at F2 `4cbaed6c` or C2 `f276d7fb`; the green run is at F3 `ebbcbe39` / C3 `d13c2ff2`
+  (`R95ScribeCorrections-D7-amendment4-revpair.txt`).
+- Correction (r94 spot-check D8): `plans/round-94.md:86` says every amendment was applied before `C2`; Amendments
+  8–9 are absent at F2 and land at F3 (`R95ScribeCorrections-D8-preamble-stale.txt`).
+- Correction (r94 spot-check D1): the round-94 report's ledger tally "9 / 1 / 9" is `falsifies-wording 8`,
+  `falsifies-number 1`, `neutral 10` (`awk -F'\t' '{c[$3]++}'`, headerless ledger;
+  `R95ScribeCorrections-ledger-tally.txt`); the report is a filed record and is not edited.

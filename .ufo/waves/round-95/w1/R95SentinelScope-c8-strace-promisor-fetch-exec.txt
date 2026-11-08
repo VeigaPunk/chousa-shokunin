@@ -1,0 +1,9 @@
+# strace extract: partial clone -- the tool spawns git fetch / git-upload-pack
+## execve of git fetch / git-upload-pack:
+3144309 execve("/usr/lib/git-core/git", ["/usr/lib/git-core/git", "-c", "fetch.negotiationAlgorithm=noop", "fetch", "origin", "--no-tags", "--no-write-fetch-head", "--recurse-submodules=no", "--filter=blob:none", "--stdin"], 0x5654ee2ba670 /* 275 vars */) = 0
+3144315 execve("/bin/sh", ["/bin/sh", "-c", "git-upload-pack '/fast/scratch/h"..., "git-upload-pack '/fast/scratch/h"...], 0x5567af452770 /* 275 vars */) = 0
+3144315 execve("/usr/lib/git-core/git-upload-pack", ["git-upload-pack", "/fast/scratch/hyaku/chousa-r95/R"...], 0x56548b82a780 /* 275 vars */) = 0
+3144364 execve("/usr/lib/git-core/git", ["/usr/lib/git-core/git", "-c", "fetch.negotiationAlgorithm=noop", "fetch", "origin", "--no-tags", "--no-write-fetch-head", "--recurse-submodules=no", "--filter=blob:none", "--stdin"], 0x5595e90a19c0 /* 275 vars */) = 0
+3144369 execve("/bin/sh", ["/bin/sh", "-c", "git-upload-pack '/fast/scratch/h"..., "git-upload-pack '/fast/scratch/h"...], 0x55f7691f88b0 /* 275 vars */ <unfinished ...>
+3144369 execve("/usr/lib/git-core/git-upload-pack", ["git-upload-pack", "/fast/scratch/hyaku/chousa-r95/R"...], 0x5653a0d0c780 /* 275 vars */) = 0
+## objects written into the ROOT's .git/objects by the fetch: 4 -> 354 (see report)

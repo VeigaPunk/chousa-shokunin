@@ -1,0 +1,58 @@
+R95ScoutSources receipt B — reading-order ITEM 15 sentence vs the entry's Q7/Q8/Q9
+date_utc=2026-11-08T23:23:09Z  seat=R95ScoutSources
+PDF: https://jmla.pitt.edu/ojs/jmla/article/download/962/1274 (sha256 07036f03...c58d9ec2, 532659 B)
+READER: pdftotext (poppler 26.10.0) WITHOUT -layout, i.e. PDF content-stream reading order
+
+### COMMAND: pdftotext $S/jmla962_1274.pdf $S/read_order.txt
+### SOURCE LINES (read_order.txt 1420-1437) — ITEM 15 'Explanation.' block, page 13 left column
+majority of the records reviewed, for example. Knowing
+the number of records from each source also helps with
+reproducibility. If a reader tries to duplicate a search from
+a systematic review, one would expect to retrieve nearly
+the same results when limiting to the timeframe in the
+original review. If instead, the searcher locates a
+drastically different number of results than reported in the
+original review, this can be indicative of errors in the
+published search [22] or major changes to a database, both
+of which might be reasons to update a systematic review
+or view the systematic review’s results with skepticism.
+Suggested location for reporting
+Report the total number of references retrieved from all
+sources, including updates, in the results section. Report
+the total number of references from each database and
+information source in the supplementary materials. If
+space permits, report the total number of references from
+each database in the PRISMA flow diagram [34].
+
+### VERBATIM ITEM 15 SENTENCES CONTAINING THE ENTRY'S Q7/Q8/Q9 (joined from the reading-order lines above):
+S1: "If a reader tries to duplicate a search from a systematic review, one would expect to retrieve nearly the same results when limiting to the timeframe in the original review."
+S2: "If instead, the searcher locates a drastically different number of results than reported in the original review, this can be indicative of errors in the published search [22] or major changes to a database, both of which might be reasons to update a systematic review or view the systematic review's results with skepticism."
+
+### OBSERVED: Q7 = "If a reader tries to duplicate a search from"  -> belongs to S1
+### OBSERVED: Q8 = "drastically different number of results than reported in the" -> belongs to S2
+### OBSERVED: Q9 = "published search [22] or major changes to a database, both" -> belongs to S2
+### => Q7,Q8,Q9 are in that ORDER, but they are NOT one sentence: Q7 ends S1 and Q8/Q9 are in S2.
+
+### COMMAND: grep -n 'drastically different\|If a reader tries\|published search \[22\]' <committed capture>
+931:      reproducibility. If a reader tries to duplicate a search from                                       extensions including PRISMA-P for protocols [35],
+935:      drastically different number of results than reported in the                                        It may also be used with other reporting guidelines that
+937:      published search [22] or major changes to a database, both                                          as RepOrting standards for Systematic Evidence Syntheses
+
+### COMMAND: sed -n '929,940p' <capture> | cut -c1-68   (left column of the two-column layout)
+      majority of the records reviewed, for example. Knowing        
+      the number of records from each source also helps with        
+      reproducibility. If a reader tries to duplicate a search from 
+      a systematic review, one would expect to retrieve nearly      
+      the same results when limiting to the timeframe in the        
+      original review. If instead, the searcher locates a           
+      drastically different number of results than reported in the  
+      original review, this can be indicative of errors in the      
+      published search [22] or major changes to a database, both    
+      of which might be reasons to update a systematic review       
+      or view the systematic review’s results with skepticism.    
+                                                                    
+
+### COMMAND: sed -n '934p' <capture> | cut -c1-68   (the line carrying the sentence boundary)
+      original review. If instead, the searcher locates a           
+  -> the period after 'original review.' sits on the SAME layout line, so the S1/S2 boundary is visible
+     in the -layout capture itself; the two-column join does NOT need to cross it.

@@ -1,0 +1,12 @@
+===== glob corpus/* (matches dir corpus/captures itself?) rc=1
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=2 at_tree=2 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+*.txt -> '' matches corpus/captures/x.txt? False
+**/*.txt -> '' matches corpus/captures/x.txt? True
+corpus/captures/*.txt -> 'corpus/captures' matches corpus/captures/x.txt? True
+corpus/*/x.txt -> 'corpus' matches corpus/captures/x.txt? True
+corpus/captures/*.txt -> 'corpus/captures' matches corpus/captures/x.txt? True
+a/b.txt -> 'a' matches corpus/captures/x.txt? False
+ab?/x.txt -> '' matches corpus/captures/x.txt? False
+corpus/captures/sub*.txt -> 'corpus/captures' matches corpus/captures/x.txt? False

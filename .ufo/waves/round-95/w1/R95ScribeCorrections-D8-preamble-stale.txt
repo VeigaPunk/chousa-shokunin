@@ -1,0 +1,39 @@
+# R95ScribeCorrections receipt R7 — D8 plans/round-94.md preamble 'applied before C2'
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+
+$ grep -n '' plans/round-94.md | sed -n '84,89p'
+84:## Amendments
+85:
+86:Each is a narrowing or a wired guard forced by the wave, applied before `C2`; the artifact that forced it
+87:is named with its seat. The frozen sentence before → after is recorded in `claims.md` and the
+88:claim-falsification ledger.
+89:
+exit=0
+
+--- are Amendments 8-9 present at F2 4cbaed6c ? ---
+$ git show 4cbaed6c:plans/round-94.md | grep -n 'Amendment 8\|Amendment 9'
+exit=0 (1 = absent at F2)
+
+--- are Amendments 8-9 present at F3 ebbcbe39 ? ---
+$ git show ebbcbe39:plans/round-94.md | grep -n 'Amendment 8\|Amendment 9'
+139:**Amendment 8 (R94SentinelScope F2/F5/F6/F7) — containment and validation.** `--work` equal to a system root
+144:**Amendment 9 (R94SentinelScope F3/F4/F8/F9/F10) — host paths and leftovers.** `expected.tsv` no longer sets
+exit=0
+
+--- commit timestamps: F3 lands after C2 ---
+1794153045 2026-11-08 12:50:45 -0300 4cbaed6c round-94: freeze F2 — wave-forced amendments (Unicode punctuation class + CJK control, TAIL_OWNER_UNMAPPED, dead code removed, s1 dropped, prior acceptance measured), measurement wrapper
+1794153108 2026-11-08 12:51:48 -0300 f276d7fb round-94: carrier C2 — six receipts emitted at F2 and the 35-row role-bearing pins table
+1794153945 2026-11-08 13:05:45 -0300 ebbcbe39 round-94: freeze F3 — reviewer/critic/sentinel findings applied (containment guards, receipts-rev validation, reproducible receipts, independent prior measurement, wording narrowed)
+1794154009 2026-11-08 13:06:49 -0300 d13c2ff2 round-94: carrier C3 — six receipts emitted at F3 and the matching pins table
+
+--- the guards Amendment 8/9 install exist only at F3 ---
+$ git show 4cbaed6c:corpus/evidence/round94/control-driver-r94.py | grep -n 'contained = \|--expected", a.expected
+exit=0 (1 = absent at F2)
+$ git show ebbcbe39:corpus/evidence/round94/control-driver-r94.py | grep -n 'contained = \|--expected", a.expected
+487:    contained = [("--expected", a.expected), ("--pins", a.pins)]
+exit=0
+
+--- and the guard is live in the landing tree (HEAD) ---
+$ grep -n 'contained = ' corpus/evidence/round94/control-driver-r94.py
+487:    contained = [("--expected", a.expected), ("--pins", a.pins)]
+exit=0

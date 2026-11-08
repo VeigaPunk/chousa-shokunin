@@ -1,0 +1,38 @@
+# R95ScribeCorrections receipt R3 — D4 ledger C2 row attribution
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+
+$ grep -n '' .ufo/waves/round-94/claim-falsification.tsv | sed -n '10p'   # the C2/R94CriticClaims row
+10:C2	w1/R94CriticClaims.md	falsifies-wording	plans/round-94.md	predicate tokens span the summary line and the VERDICT line, not one line; Amendment 2(c)
+exit=0
+
+--- what R94CriticClaims actually files for C2 ---
+$ grep -n '^\*\*F[0-9]' .ufo/waves/round-94/w1/R94CriticClaims.md
+149:**F7 (C1, predicate-level — highest severity).** "The battery prints `FORGERIES=PASS FORGERY_REFUSED=4/4
+165:**F1 (C1, narrative).** "the landed 23-row table scores `CONTROL_DRIVER_R93=PASS` — but 18 of its rows
+175:**F2 (C1).** "a dangling or missing member of a covered role is `PIN_ROLE_DANGLING` /
+189:**F3 (C1, named limit 2).** "so a deleted driver row is `PIN_MISSING`-class only"
+203:**F4 (C2, After) — amended at F2.** "the class is counted on the located-quote population before the
+217:**F5 (C2, predicate, cosmetic; persists at F2).** F: "The controls print `CONTROLS=PASS
+228:**F6 (C2, Before, cosmetic; persists at F2).** "refuses the tree only downstream (`LEG_FAIL FLOOR`,
+exit=0
+
+$ grep -n 'Predicate: counter line' .ufo/waves/round-94/w1/R94CriticClaims.md
+122:| Predicate: counter line + `VERDICT fields_hold=1 legs_ok=16/16 DETECTOR_WITNESS=17/17` | reproduced verbatim | bound |
+exit=0
+
+--- the seat that did file the predicate-text finding ---
+$ grep -n '### F3 — LOW: frozen predicate text' .ufo/waves/round-94/w1/R94ReviewerC2.md
+95:### F3 — LOW: frozen predicate text is not a verbatim line (values hold)
+exit=0
+$ grep -n 'grep -cF' .ufo/waves/round-94/w1/R94ReviewerC2.md
+101:`grep -cF -- 'PUNCT_SHAPE_GREEN_R93=1/1 PRIOR_REGRESSION=7/7' c2-controls-clean.txt` → `0`, **exit 1**;
+102:the second check `grep -cF -- 'LEGS_MEASURED=16/16 Q_SHAPE_FAIL=0 Q_WSQUOT=0 Q_PUNCTQUOT=0 Q_ROWS=20'`
+exit=0
+
+--- Amendment 2 heading names ReviewerC2 ---
+$ grep -n 'Amendment 2 (' plans/round-94.md
+98:**Amendment 2 (R94ReviewerC2 F1/F2/F3/F4) — C2 wording and class domain.** (a) `Q_PUNCTQUOT` is the
+exit=0
+$ grep -n 'The predicate values are printed across two lines' plans/round-94.md
+104:downstream as short), and `DETECTOR_WITNESS` is 18/18. (c) The predicate values are printed across two lines
+exit=0

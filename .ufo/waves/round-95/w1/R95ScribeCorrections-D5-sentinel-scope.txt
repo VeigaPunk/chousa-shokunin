@@ -1,0 +1,45 @@
+# R95ScribeCorrections receipt R4 — D5 ledger C1 SentinelScope row scope
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+
+$ grep -n '' .ufo/waves/round-94/claim-falsification.tsv | sed -n '4p'
+4:C1	w1/R94SentinelScope.md	falsifies-wording	plans/round-94.md	no containment guard for --work, --pins/--expected/--receipts, symlinked pin rows or --receipts-rev; Amendment 8
+exit=0
+
+--- findings the seat filed ---
+$ grep -n '^## F[0-9]' .ufo/waves/round-94/w1/R94SentinelScope.md
+16:## F1 — C1 predicate not met at the carrier: the forgeries battery exits 1 (`FORGERIES=FAIL`)
+69:## F2 — all three batteries `rmtree` the caller's `--work` with no containment guard
+103:## F3 — a pinned expectation hardcodes an absolute host `HOME`, defeating the driver's own scrub
+137:## F4 — a pinned receipt embeds the emitter's absolute scratch path
+154:## F5 — a pins row naming an in-tree symlink reads bytes outside the tree
+173:## F6 — `--pins` outside the tree is read (and its content echoed) before containment is checked; exit is 1, not 2
+193:## F7 — `--receipts-rev` is not validated the way `--rev` is
+212:## F8 — `bash` clones with `--shared` (correct) but leaves the clone behind on every exit path
+231:## F9 — files the executed instruments read are pinned nowhere; a byte drift there is invisible
+262:## F10 — a setup-class failure surfaces as a raw traceback and exit 1
+exit=0
+
+--- did the seat mention --expected ? ---
+$ /usr/bin/grep -n -e '--expected' .ufo/waves/round-94/w1/R94SentinelScope.md
+exit=0 (1 = no match)
+
+--- did the seat mention bare --receipts ? ---
+$ /usr/bin/grep -n -e '--receipts ' .ufo/waves/round-94/w1/R94SentinelScope.md
+exit=0 (1 = no match)
+
+--- the guard exists at F3 (Amendment 8) ---
+$ grep -n '' corpus/evidence/round94/control-driver-r94.py | sed -n '486,494p'
+486:    # R94SentinelScope F6: every named input is resolved inside --root before it is opened.
+487:    contained = [("--expected", a.expected), ("--pins", a.pins)]
+488:    if a.mode == "verify":
+489:        contained.append(("--receipts", a.receipts))
+490:    for label, path in contained:
+491:        rel = os.path.relpath(os.path.abspath(path), root)
+492:        if rel == ".." or rel.startswith(".." + os.sep):
+493:            print(f"CONTROL_DRIVER_R94=SETUP {label} outside --root: {path}")
+494:            return 2
+exit=0
+
+$ /usr/bin/grep -n 'Amendment 8 (' plans/round-94.md
+139:**Amendment 8 (R94SentinelScope F2/F5/F6/F7) — containment and validation.** `--work` equal to a system root
+exit=0

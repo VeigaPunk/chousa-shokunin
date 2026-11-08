@@ -1,0 +1,33 @@
+R95ScoutSources receipt G — item attributions (7/7) and the no-cross-column-join check (K3)
+date_utc=2026-11-08T23:40:33Z  seat=R95ScoutSources
+
+=== 1. Every decision row's item number checked against the PDF's own checklist table ===
+COMMAND: sed -n '261,320p' <committed capture> | cut -c1-118   (the checklist table, PDF pages 4-5)
+3:      Full search strategies                8      Include the search strategies for each database and information
+7:      Limits and restrictions               9      Specify that no limits were used, or describe any limits or restric
+32:            Updates                                      12      Report the methods used to update the search(es) (e.g
+36:            Dates of searches                            13      For each search strategy, provide the date when the l
+49:            Total records                                15      Document the total number of records identified from 
+53:            Deduplication                                16      Describe the processes and any software used to dedup
+
+row 1  warrant 'Q1 (S222, item 8)'  -> table row 'Full search strategies  8  Include the search strategies for each database and information source, copied and pasted exactly as run.'   OK
+row 2  warrant 'Q5 (S222, item 9)'  -> table row 'Limits and restrictions  9  Specify that no limits were used, or describe any limits or restrictions applied to a search ...'   OK
+row 3  warrant 'Q2 (S222, item 13)' -> table row 'Dates of searches  13  For each search strategy, provide the date when the last search occurred.'   OK
+row 4  warrant 'Q3 (S222, item 15)' -> table row 'Total records  15  Document the total number of records identified from each database and other information sources.'   OK
+row 5  warrant 'Q7, Q8 (S222, ITEM 15)' -> both in ITEM 15 'Explanation' (PDF p.13 left column)   OK
+row 6  warrant 'Q9, Q8 (S222, ITEM 15)' -> both in ITEM 15 'Explanation' (PDF p.13 left column)   OK
+row 7  warrant 'Q4 (S222, item 12)' -> table row 'Updates  12  Report the methods used to update the search(es) (e.g., rerunning searches, email alerts).'   OK
+=> 7/7 item attributions CORRECT.
+
+=== 2. K3: does any quote need a join ACROSS the two columns of the two-column text form? ===
+COMMAND: pdftotext -bbox $S/jmla962_1274.pdf $S/all_bbox.html ; reconstruct each PDF page's left
+  column (xMax<=302) and right column (xMin>=302) as separate single streams; test each quote.
+RESULT (each quote is present in ONE column stream of ONE page -> no cross-column join is needed):
+  Q1  PDF p.9  left column   |  Q2  PDF p.12 left column   |  Q3  PDF p.13 left column
+  Q4  PDF p.11 right column  |  Q5  PDF p.10 left column   |  Q6  PDF p.12 right column
+  Q7  PDF p.13 left column   |  Q8  PDF p.13 left column   |  Q9  PDF p.13 left column
+=> K3 holds: every quote is located without crossing a column boundary.
+
+=== 3. The Located-quotes table equals the 9 GATE-RECORD quotes one-to-one ===
+COMMAND: python3 (compare |qid| row text against the 9 GATE-RECORD quote= values, in order)
+RESULT: 9/9 rows equal to the 9 GATE-RECORD quote= values, in the same order. OK
