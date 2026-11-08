@@ -3927,7 +3927,7 @@ No axis harmed at the tip: `tools/research-gate.sh --selftest` `PASS (283 cases,
 ## Round 87 verdict — the 203 class is every committed row with an accounted verdict; the curation counter gains floors, warrant linkage and a teaches leg (2026-11-08)
 
 Base `6495ef88`; egress table `b7db07140791ab071de49743687e6d330edabc2e` (committed before the first fetch); freeze
-`c033577b4fb840553f3e10e40aa77c724abe0bca`; wave `.ufo/waves/round-87/w1/` (13 seats). Instruments pinned in
+`c033577b4fb840553f3e10e40aa77c724abe0bca`; wave `.ufo/waves/round-87/w1/` (12 seats). Instruments pinned in
 `corpus/evidence/round87/instrument-pins.txt`.
 
 | claim / axis | before → after | counting command / evidence | verdict |
@@ -3938,7 +3938,7 @@ Base `6495ef88`; egress table `b7db07140791ab071de49743687e6d330edabc2e` (commit
 | axis | verdict | evidence |
 |---|---|---|
 | operability | **improved** | three routed battery defects close on committed bytes: the class is every qualifying 203 row with an independent width count, the reject form refuses any 2xx, and the verdict is leg-accounted so the `M2`/`M5` shapes change it. 362 forgeries refused with expected codes; no genuine record moves over 27 committed lines. |
-| calibration | **improved** | per-entry quote floors (13/7) refuse the delete-row and truncate-table gaming the round-86 counter passed; 17/17 decision rows carry a resolvable, term-linked warrant; the `TEACHES` leg fires once on `S024` and requires its supersession disposition. Five criteria mined (QUALITY 182–186), three from this round's own pre-freeze findings. |
+| calibration | **improved** | per-entry quote floors (13/7) refuse the delete-row and truncate-table gaming the round-86 counter passed; 17/17 decision rows carry a resolvable, term-linked warrant; the `TEACHES` leg fires once on `S024` and requires its supersession disposition. Eight criteria mined (QUALITY 182–189), three from this round's own pre-freeze findings. |
 | depth | **unchanged** | no new knowledge entry (97 → 97); the one new registry row is `own-work` (S218), the contract the `TEACHES` leg enforces, not a domain fact. |
 | coverage | **unchanged** | `PROVINCE.md` untouched; registry 217 → 218 rows (one `own-work`), census exit 0 before and after with the same five pre-existing `W04` warnings. |
 | freshness | **unchanged** | one URL re-opened (`S216`, HTTP 200 at `2026-11-08T06:50:40Z`); the recipe text form is byte-identical to round 86, so its located line and word count hold. No drift detector added. |
@@ -3946,7 +3946,7 @@ Base `6495ef88`; egress table `b7db07140791ab071de49743687e6d330edabc2e` (commit
 
 Trends: expansion **unchanged** (97 knowledge files before and after; one `own-work` registry row) — the round's
 capability gain is in the instruments, and the lesson says so instead of counting a row as ground; quality **improved**
-(six routed repairs across two instruments, four forgeries now refused with named legs, five criteria mined); discernment
+(six routed repairs across two instruments, four forgeries now refused with named legs, eight criteria mined); discernment
 **improved** (two defects in the round's own first instruments were found by pre-freeze probes and published as
 `## Mistakes` rather than quietly fixed; the misreporting-leg limit is in the claim, not the appendix).
 

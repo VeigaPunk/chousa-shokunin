@@ -169,5 +169,9 @@ conformance notes. Disposition, one row each:
 | trend | verdict | evidence |
 |---|---|---|
 | expansion | unchanged | `corpus/knowledge/*.md` 97 → 97 (`ls corpus/knowledge/*.md \| wc -l`); the registry gained one `own-work` row (S218) and no knowledge entry. The round's gain is in the instruments, and this lesson says so rather than counting a row as ground. |
-| quality | improved | two instruments carry three routed repairs each; the four round-86 forgeries are refused with named legs; five criteria mined (QUALITY 182–186), three from this round's own findings (Mistakes 1–3) and two from the routed defects. |
+| quality | improved | two instruments carry three routed repairs each; the four round-86 forgeries are refused with named legs; eight criteria mined (QUALITY 182–189): 182–184 from this round's pre-freeze probes (Mistakes 1–3), 185–186 from the round-86 routed defects, 187–189 from this round's wave findings (Mistakes 5–7). |
 | discernment | improved | the round refused to score its own two candidates as first written: the self-referential width derivation and the over-firing `TEACHES` vocabulary were both found by pre-freeze probes and are published as Mistakes 1–2 rather than silently fixed; the named limit on misreporting legs is in the claim, not the appendix. |
+
+## Corrections
+
+1. **The criteria count in `## Trends` above was updated in the integration commit and the two sentences naming it here and in `SCORECARD.md` were corrected with it.** The original sentence said "five criteria mined (QUALITY 182–186)". Eight criteria (182–189) landed; the attribution is three / two / three, not the report's "four and four". The lesson is append-only, so this row is the correction, not a rewrite. — round-88 integration, for round-87 spot-check routed defect 2.

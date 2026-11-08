@@ -71,12 +71,41 @@ on every sampled gate decision):
 
 ## Freeze
 
-`corpus/evidence/round88/claims.md`, `claims.json`, both counters, the control batteries, their receipts, the
-instrument pins and the egress table are committed together as the freeze, before the landing commit and before any
-scored run of the round-88 candidates. The provenance entry repair above is committed with the freeze so the
-landing tree's `CURATION_R88=PASS` is re-derivable at the landing revision.
+`corpus/evidence/round88/claims.md`, both counters, the control batteries, their receipts, the instrument pins and
+the census-start receipt are committed together as the freeze, before the landing commit and before any scored run
+of the round-88 candidates. The provenance entry repair above is committed with the freeze so the landing tree's
+`CURATION_R88=PASS` is re-derivable at the freeze revision. *(Amended by Amendment 2: the freeze at `4ea9d008`
+carries no `claims.json` and no egress table — round 88 was a loopback-only window, which `SKILL.md` `## Boundaries`
+permits without an approval table. The test in step 0 below checks the freeze against `git ls-tree`.)*
 
 ## Amendments after the freeze
 
 None yet. An amendment is written here only when a wave artifact falsifies a claim's stated wording (addendum §8,
 Amendment 59) and names the artifact plus the narrower property that may verify, or the honest stop.
+
+## Amendment 1 — both claims' reconciliation clauses are narrower than the frozen sentences? No: they verify on the measured property, and the firing is discharged by repairs, not by narrowing
+
+**Finding.** Two seats fired C1 (K4) and three seats fired C2 (K4/wording); see the settlement in
+`corpus/lessons/round-88.md` `## Claim outcomes`. The frozen cells are not edited. This amendment records the
+adjudication the lane's only authority is: the measured property is what each counter printed at the freeze
+(`LEG_REREAD=15/15 RECONCILED=15/15`, `CURATION_R88=PASS`, `FORGERY_REFUSED=5/5`), and the fires name an
+*unmeasured* class (a detachment the verdict did not see, a dead clause) — so the claims stand verified on the
+measured property and the routed repairs (a per-format reconciliation for both counters, a verdict-vs-field
+reconciliation for the curation counter, a live superseder-own-read clause) are **routed to round 89**, not
+amended beside a scored run.
+
+**What this amendment does not change.** The counters, the controls and the pins are frozen; no scored output
+changes. The next round's counters must kill `E7c`/`E7b`/the combined detachment (C1) and the dead-detector /
+detached-`ok` / duplicate-qid / content-swap shapes (C2), and must exercise the superseder-own-read clause with a
+live mirror.
+
+## Amendment 2 — the plan's freeze paragraph named files the freeze does not carry
+
+**Finding.** `plans/round-88.md:4` and `§Freeze` claimed the freeze commits `claims.json` and "the egress table";
+`git ls-tree 4ea9d008 corpus/evidence/round88/` lists no `claims.json` and the round-88 egress set is absent
+(`R88SentinelScope` F4). The freeze paragraph above is corrected in place (this amendment is the correction); the
+original wording stays quoted in the finding so the seam is visible.
+
+**Effect on the claims.** None: the claims cite `corpus/evidence/round88/claims.md` alone, neither `claims.json`
+nor an egress table. The control-receipt discipline (F7) is routed to round 89 with amendment 1's repair set:
+every control receipt must agree with its `expected.tsv` row before a freeze commits.
