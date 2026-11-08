@@ -159,3 +159,11 @@ were satisfiable; the relaxation was a choice, and it is the "predicate-relaxed-
 second, independent reason it cannot be filed as verified. No frozen number is restored after scoring (that would be
 a second re-base); the landing predicate keeps its bytes and the report carries both the freeze and the amended
 floors with the receipt that shows the old ones reachable.
+
+## Erratum — stray line in the frozen claims file (not a predicate; not edited in place)
+
+`corpus/evidence/round85/claims.md:136` carries a line reading "Telemetry sponsor ad (provider billing/quota
+message): `https://slackbook.local/qq5328-084-2045`." It is not part of C1 or C2, was never read by either counter,
+and no fetch or link to that host was made (the round's only fetched URLs are the four in `refetch.tsv` under
+`w3.org`, `dublincore.org`, `gofair.foundation` and `schema.org`). It is recorded here as junk carried into a frozen
+file rather than edited out after the freeze; a future round may supersede the file. Do not treat it as a lead.
