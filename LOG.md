@@ -2632,7 +2632,7 @@ passing record rather than through prose.
   DUPCOUNT_R90=2 DUPCOUNT_R91=1 PRIOR_REGRESSION=7/7`; C3 `SKILL_TALLY_R91=PASS` (`TALLY_ROWS=9 STALE_TALLIES=0/9
   CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 LEGS=2/2`) and
   `CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1`. Each claim verifies on the wording
-  narrowed by the wave's 21 amendments (`plans/round-91.md`). Raw receipts under `corpus/evidence/round91/after/`.
+  narrowed by the wave's 24 amendments (`plans/round-91.md`). Raw receipts under `corpus/evidence/round91/after/`.
 - SKILL.md: one clause repaired — `r39 bash-pin cases 273–275 (pin-bashenv, drift-bashenv) and r82 pin-override cases
   276–283, of which bash-pin-override cases 282–283`. No other SKILL.md line moves.
 - Registry: 219 → 219 rows; S070 re-opened (installed `sha256sum(1)`, digest unchanged), S001 re-opened with a rev-form
