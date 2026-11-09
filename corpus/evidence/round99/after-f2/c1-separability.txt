@@ -1,0 +1,27 @@
+# round 99 C1 separability probe (L1, after R99CriticClaims): F tree with C2's entry and S233/S236 captures deleted; battery copy with POS p1/p2 swapped to BASE captures S225 (347c55ba…) and S231 (4ec85a1e…); every other byte as at F2
+$ diff <F2 battery> <probe battery>
+52,54c52,53
+<     "S233": ("https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0184727", "4b70901ad80c513f0c2f750c"),
+<     "S236": ("https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:26528420%20AND%20SRC:MED"
+<              "&resultType=core&format=json", "405a0054e1f6dbd1854a3618"),
+---
+>     "S233": ("x", "347c55ba9be9d63afe17986e"),
+>     "S236": ("x", "4ec85a1e83553aa272caeb69"),
+145,146c144,145
+<     pos = [("p1", "https://fixture.invalid/p1", cap["S233"], "Previous reviews estimated that approximately 20 to 25%"),
+<            ("p2", "https://fixture.invalid/p2", cap["S236"], "Indirect references accounted for less than one sixth"),
+---
+>     pos = [("p1", "https://fixture.invalid/p1", cap["S233"], "Are the search concepts clear?"),
+>            ("p2", "https://fixture.invalid/p2", cap["S236"], "The seventh (skilled translation of the search strategy"),
+$ python3 -B <probe battery> --root . --work <scratch>
+CASE POS p1 rc=0 verdict=OK PASS
+CASE POS p2 rc=0 verdict=OK PASS
+CASE POS p3 rc=0 verdict=OK PASS
+CASE POS p4 rc=0 verdict=OK PASS
+CASE PROD S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD S234 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S229 rc=1 verdict=CHALLENGE PASS
+NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=24/24 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=5/5
+CHALLENGE_CONTROLS_R99=PASS
+exit=0

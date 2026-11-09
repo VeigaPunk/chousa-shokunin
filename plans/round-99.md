@@ -47,3 +47,26 @@ share (reviewer, critic, mutation-tester) 5/12. The L1 holds the canonical plann
 F = the commit that first carries `claims.md`: `d41f4cd8b857c6de683e7be5c5e8125b32763a8e` (helper `landed` line),
 recorded here by the carrier commit after it. After receipts at F: `corpus/evidence/round99/after/c1-all.txt`,
 `after/c2-all.txt` (clean shared clone checked out at F).
+
+## Amendments (F2)
+
+Wave-forced narrowings, each recorded with its seat artifact in `.ufo/waves/round-99/claims.md` `## Amendments`
+(A1-A7 for C1, B1-B2 for C2). None changes a predicate, a counter's code, a kill rule or a target; the C1 battery's
+docstring changed (A1, A2), its code did not (AST of everything below the docstring equal F..F2).
+
+- C1: A1 "28-word" (`R99ReviewerC1` F1, `R99CriticClaims`); A2 battery docstring o3-o5 (`R99ReviewerC1` F2,
+  `R99SentinelC1` F-2); A3 separability — the battery reads two C2 captures and the C2 entry; probe receipt
+  `corpus/evidence/round99/after-f2/c1-separability.txt` (`R99CriticClaims`); A4 limit (d) — the rev guard is keyed to
+  the exact path spelling, `./corpus/captures/<key>.txt` and `.raw` admit a challenge blob (`R99SentinelC1` F-1,
+  `R99ConnectorSiblings`, `R99ReviewerC1` F4); A5 limit (g) — markers, bound, `norm` and the rev guard are not shown
+  live by the battery, six battery loosenings pass (`R99MutantsC1`); A6 limit (h) — a committed marker-less Chinese
+  verification page is admitted (`R99RevenPrior`); A7 limit (g) — the rev legs cannot tell a whole-blob check from a
+  quoted-line check (`R99SentinelC1` F-4).
+- C2: B1 limit (c) — Never cells and a number's sense are unchecked by the controls (`R99MutantsC2`); B2 sentence —
+  the coverage is new to this lane's corpus; tameshi holds Europe PMC records of both papers (S327 A mined, S328 A
+  rejected) (`R99ConnectorSiblings` F4).
+
+Routed to round 100 (not this round's claims): normalize the rev path before the capture guard (or check every rev
+blob under `corpus/captures/`), marker fixtures one per marker plus 199/200/201 boundary fixtures and a whole-blob rev
+fixture whose quoted line carries no marker (kills `R99MutantsC1` survivors and `R99SentinelC1` F-4), a Never-cell
+leg and a number-sense leg for entry controls, the fleet tier rule for index-record abstracts (tameshi A vs chousa B).

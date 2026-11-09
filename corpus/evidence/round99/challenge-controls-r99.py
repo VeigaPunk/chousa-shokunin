@@ -14,7 +14,8 @@ under --work; never fetches. Legs:
             `FAIL CHALLENGE` (CHALLENGE the only code) and exit 1.
   POS       four records that must print `OK` and exit 0: p1 a quote from S233's committed capture (8,455 words),
             p2 a quote from S236's committed capture (JSON), p3 a 300-plus-word article written here that mentions
-            "reCAPTCHA" and "Just a moment" in prose, p4 a 30-word page with no marker.
+            "reCAPTCHA" and "Just a moment" in prose, p4 a 28-word page with no marker (F2: "30-word" was wrong,
+            `R99ReviewerC1` F1).
   PROD      the production path, verified with `--root LANE` itself (the lane's own registry, refetch rows and git
             objects): two url/admit records quoting S230's and S234's committed captures, and two rev records
             quoting S230's and S229's capture blobs at BASE (the first line of three or more words); each must
@@ -22,9 +23,12 @@ under --work; never fetches. Legs:
   HARM      every `corpus/knowledge/*.md` and `corpus/lessons/*.md` file that carries a line starting
             `GATE-RECORD`: the candidate's stdout and exit code equal the BASE tool's, file by file.
   ORACLES   five stand-ins, each the candidate with one change, must each make the battery FAIL: o1 refuse every
-            capture of at most 200 words (no marker), o2 refuse on a marker at any length, o3 refuse only the
-            sha256 of the four committed challenge captures, o4 act only when ROOT has no `.git` (passes the
-            scratch legs, fails PROD), o5 act only when ROOT has a `.git` (passes PROD, fails the scratch legs).
+            capture of at most 200 words (no marker), o2 refuse on a marker at any length, o3 (url/admit call) refuse
+            only the sha256 of the three committed challenge capture texts S230, S229/S021/S022/S032 (one text) and
+            S234, o4 (url/admit call) act only when ROOT has no `.git` (passes the scratch legs, fails PROD), o5
+            (url/admit call) act only when ROOT has a `.git` (passes PROD, fails the scratch legs). o3-o5 patch the
+            url/admit call site only; the rev-branch CHALLENGE call stays unconditional in all three (F2 wording,
+            `R99ReviewerC1` F2), so they refuse a rev record on a challenge blob regardless of their stated gate.
   BASE      informational: how many NEG records the BASE tool admits (`BASE_NEG_ADMITTED=k/7`).
 
 Usage: python3 -B corpus/evidence/round99/challenge-controls-r99.py --root LANE --work DIR [--tool PATH] [--no-oracles]
