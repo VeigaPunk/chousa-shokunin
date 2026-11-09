@@ -42,13 +42,20 @@ Python's Unicode digit class had admitted `line=2٢٢` as line 222, `R83ExecForg
   QUOTE_ABSENT  url/admit: the quote, normalized, does not occur in the normalized capture text
   REV           rev form: rev is not a commit in GITDIR or path is not a blob at rev
   LINE          rev form: line is outside the blob, or the normalized quote does not occur in that one line
-  CHALLENGE     url/admit, and rev when path is corpus/captures/<24 hex>.txt: the capture is an interstitial challenge
+  CHALLENGE     url/admit, and rev when the blob is a capture: the capture is an interstitial challenge
                 page, not the document (round-99 repair: S230 answered http 200 with a reCAPTCHA page and S234 with a
                 "Client Challenge" page, and a record quoting either passed every check above,
                 `corpus/evidence/round98/gate-records-challenge-200.txt`). The rule is lexical: the capture's
                 normalized, lower-cased text has at most CHALLENGE_MAX_WORDS (200) words AND contains one of
                 CHALLENGE_MARKERS. A challenge page in other words, or longer than 200 words, passes; a document of
                 more than 200 words that mentions a marker (an article about CAPTCHAs) is admitted.
+                A rev blob is a capture (round-100 repair: round 99 keyed the guard to the path's exact spelling,
+                and `git cat-file` resolves `./corpus/captures/<key>.txt` and `<key>.raw` to a challenge blob that
+                then passed, `.ufo/waves/round-99/w1/R99SentinelC1.md` F-1) when its object id, as git resolves
+                rev:path, equals the object id of a corpus/captures/<24 hex>.txt or .raw entry at that rev — whatever
+                the path's spelling, and for a byte-identical copy at any other path. The text judged is the whole
+                blob; for a .raw entry it is the sibling <key>.txt blob at that rev when one exists (the raw HTML of a
+                short challenge page often exceeds 200 tokens), else the raw blob itself.
 
 Normalization (quote and text alike): U+2018/U+2019 -> ', U+201C/U+201D -> ", then whitespace runs (Python
 str.split) collapse to one space. Matching is otherwise exact (case, punctuation and markup are kept).
@@ -76,6 +83,7 @@ SID_RE = re.compile(r"S[0-9]{3,}")
 TS_RE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z")
 HEX40_RE = re.compile(r"[0-9a-f]{40}")
 CAP_RE = re.compile(r"corpus/captures/([0-9a-f]{24})\.txt")
+CAPANY_RE = re.compile(r"corpus/captures/([0-9a-f]{24})\.(?:txt|raw)")
 SHA_RE = re.compile(r"([0-9a-f]{16,64})(?:…|\.\.\.)?")
 REC_RE = re.compile(r"^GATE-RECORD(?:\s|$)")
 
@@ -230,6 +238,43 @@ def git_blob(repo, rev, path):
         return None
 
 
+_CAP_OIDS = {}
+
+
+def capture_oids(repo, rev):
+    """Map object id -> path for every corpus/captures/<24 hex>.txt|.raw entry at REV (.txt wins). Read-only."""
+    k = (repo, rev)
+    if k not in _CAP_OIDS:
+        m = {}
+        p = subprocess.run(["git", "-C", repo, "ls-tree", "-z", rev, "--", "corpus/captures/"], capture_output=True)
+        if p.returncode == 0:
+            for ent in p.stdout.decode("utf-8", errors="replace").split("\0"):
+                meta, _, path = ent.partition("\t")
+                parts = meta.split()
+                if len(parts) == 3 and parts[1] == "blob" and CAPANY_RE.fullmatch(path):
+                    if parts[2] not in m or path.endswith(".txt"):
+                        m[parts[2]] = path
+        _CAP_OIDS[k] = m
+    return _CAP_OIDS[k]
+
+
+def rev_capture_text(repo, rev, path, blob):
+    """Text CHALLENGE judges when rev:path is a capture (round 100), else None.
+
+    A capture is a blob whose object id equals that of a corpus/captures/<24 hex>.txt|.raw entry at REV, however
+    PATH is spelled. A .raw entry is judged by its sibling .txt at REV when one exists."""
+    p = subprocess.run(["git", "-C", repo, "rev-parse", "--verify", "--quiet", rev + ":" + path],
+                       capture_output=True, text=True)
+    name = capture_oids(repo, rev).get(p.stdout.strip()) if p.returncode == 0 else None
+    if name is None:
+        return None
+    if name.endswith(".raw"):
+        sib = git_blob(repo, rev, name[:-4] + ".txt")
+        if sib is not None:
+            blob = sib
+    return blob.decode("utf-8", errors="replace")
+
+
 def _valid_ts(s):
     try:
         datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
@@ -304,7 +349,8 @@ def check(rec, root, repo, reg, refetch):
             i = int(kv["line"])
             if i > len(lines) or not quote.strip() or norm(quote) not in norm(lines[i - 1]):
                 codes.append("LINE")
-            if CAP_RE.fullmatch(kv["path"]) and is_challenge("\n".join(lines)):
+            ctext = rev_capture_text(repo, kv["rev"], kv["path"], blob)
+            if ctext is not None and is_challenge(ctext):
                 codes.append("CHALLENGE")
     return sorted(set(codes))
 

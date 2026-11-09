@@ -114,6 +114,16 @@ and searched from `<scratch>` with GNU grep 3.12 (`/usr/bin/grep`):
 - The controls read numerals only: a spelled-out quantity ("one sixth", "about half") in a Do cell is not checked
   against its warrants (amendment B6, `R99ScoutSources` F-4).
 
+## Update
+
+Round 100 (2026-11-09): this entry's `recheck: on-release` fired. The authors' 2025 update (Baethge & Jergas,
+Research Integrity and Peer Review, pmid 40696441) was opened through its Europe PMC record as S238 and is held in
+`corpus/knowledge/quotation-error-update-r100.md`: 46 studies, 16.9% of quotations incorrect, major errors 8.0%, and no
+significant improvement over time by meta-regression. Read the first decision row above as the 2015 synthesis's
+reading, not the current pooled rate; the two rates pool different study sets and their gap is not a trend. Nothing
+above is changed by the update; the 2025 abstract does not define major and minor, so the rows that use them still
+stand on S233 (G4, G5, G11).
+
 ## Gate records
 
 GATE-RECORD S236 url=https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:26528420%20AND%20SRC:MED&resultType=core&format=json fetched=2026-11-09T04:01:07Z tier=B decision=admit capture=corpus/captures/405a0054e1f6dbd1854a3618.txt capture_sha256=6b0bcbda40de0c02268931d749701142a1e222edf679d4055577130af886ac31 words=10 quote="Quotation accuracy in medical journal articles-a systematic review and meta-analysis."
