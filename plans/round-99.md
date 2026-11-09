@@ -44,4 +44,6 @@ share (reviewer, critic, mutation-tester) 5/12. The L1 holds the canonical plann
 
 ## Freeze
 
-F = the commit that first carries `claims.md`; its hash is written here by the carrier commit after it.
+F = the commit that first carries `claims.md`: `d41f4cd8b857c6de683e7be5c5e8125b32763a8e` (helper `landed` line),
+recorded here by the carrier commit after it. After receipts at F: `corpus/evidence/round99/after/c1-all.txt`,
+`after/c2-all.txt` (clean shared clone checked out at F).
