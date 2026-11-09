@@ -1,0 +1,11 @@
+# computed_against BASE=c8087ac529003e667505bcc624f9a7bde0cffbce
+$ git cat-file -e BASE:corpus/knowledge/press-checklist-questions-r97.md
+fatal: path 'corpus/knowledge/press-checklist-questions-r97.md' exists on disk, but not in 'c8087ac529003e667505bcc624f9a7bde0cffbce'
+exit=128
+$ python3 -B tools/gate-records.py verify --root . <absent path>
+GATE_RECORDS_ERROR missing /fast/scratch/hyaku/chousa-r97/L1/absent/press-checklist-questions-r97.md
+exit=2
+$ grep -c 'Are there any spelling errors' at BASE over corpus/captures (git grep)
+exit=1 (1 = no line)
+$ git grep -c -F 'orphan lines' BASE -- corpus/captures/*.txt
+exit=1

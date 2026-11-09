@@ -1,0 +1,67 @@
+{
+ "round": 97,
+ "lane": "chousa",
+ "l1": "ChousaR97",
+ "base": "c8087ac529003e667505bcc624f9a7bde0cffbce",
+ "shape": "two claims, two axes (operability, depth), no exploratory claim; C2 sourced on S225 and S226, both opened this round",
+ "claims": {
+  "C1": {
+   "id": "C1-SELFTEST-GRIP-R97",
+   "axis": "operability",
+   "type": "gate self-test hardening against the round-96 non-author mutants (tools/search-rerun.py --selftest)",
+   "counting_command": [
+    "python3 -B tools/search-rerun.py --selftest",
+    "python3 -B corpus/evidence/round97/selftest-controls-r97.py --root . --work <scratch>"
+   ],
+   "predicate": {
+    "selftest_last_line": "SEARCH_RERUN_SELFTEST: PASS cases=47/47",
+    "selftest_exit": 0,
+    "controls_stdout": [
+     "POSITIVE=1/1 EXTERNAL_KILLED=30/30 DO_NOTHING_REFUSED=1/1 R96_MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=1/1 REGRESSION_R95=2/2 BASE_KILLED=10/30 CASES=47",
+     "SELFTEST_CONTROLS_R97=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round97/before/c1-base.txt (base tool: EXTERNAL_KILLED=10/30, SELFTEST_CONTROLS_R97=FAIL)",
+   "sources": []
+  },
+  "C2": {
+   "id": "C2-ENTRY-R97",
+   "axis": "depth",
+   "type": "knowledge entry (corpus/knowledge/press-checklist-questions-r97.md)",
+   "counting_command": [
+    "python3 -B tools/gate-records.py verify --root . corpus/knowledge/press-checklist-questions-r97.md",
+    "bash tools/research-gate.sh verify-metadata corpus/knowledge/press-checklist-questions-r97.md --root .",
+    "python3 -B tools/search-rerun.py verify corpus/knowledge/press-checklist-questions-r97.md --root .",
+    "python3 -B corpus/evidence/round97/entry-controls-r97.py --root . --work <scratch>"
+   ],
+   "predicate": {
+    "gate_stdout": [
+     "GATE_RECORDS files=1 records=30 ok=30 fail=0"
+    ],
+    "gate_exit": 0,
+    "metadata_stdout": [
+     "METADATA_COMPLETE=1/1",
+     "RESEARCH_GATE: CLEAN"
+    ],
+    "metadata_exit": 0,
+    "rerun_stdout": [
+     "SEARCH_RERUN_SUMMARY searches=7 rev_match=7/7",
+     "SEARCH_RERUN: CLEAN"
+    ],
+    "rerun_exit": 0,
+    "controls_stdout": [
+     "POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 SOLE_SUPPORT=2/2 CORROBORATION=2/2 SEARCHES=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1",
+     "LQ_BOUND=29/29 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8 SOLE_SUPPORT=8/8 ONE_LINE=29/29 VERBATIM=10/26 LETTERS=14/26",
+     "ENTRY_CONTROLS=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round97/before/c2-base.txt (entry absent, gate exit 2)",
+   "sources": [
+    "S225",
+    "S226"
+   ]
+  }
+ }
+}
