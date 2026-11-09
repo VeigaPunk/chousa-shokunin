@@ -146,3 +146,40 @@ Census: `scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin
 
 SHONEN: all four boxes are `[~]` with resolvable pointers; box 4 (PROVINCE untouched — `git diff --quiet` exit 0)
 and box 2 (8 real searches re-run, reproduced above) look checkable by a non-author. Promotion is operator-owned.
+
+## 7. Closure re-verification pass (second non-author judge, 2026-11-09)
+
+author: hyaku closure (non-author integrator, @m_zfl) — a fresh closure seat dispatched after the first pass
+landed this file (`cec54a08`) without appending the MANIFEST entry. Sections 1–6 above are left as filed; this
+section records an independent re-run and the one finding it changes.
+
+- Conformance re-run: `git log --format='%an %H' -- .ufo/reports/round-95/chousa.md` → `chousa-shokunin
+  dc9f587a…`, ancestor of fleet `origin/main` (exit 0); `merge-base --is-ancestor <h> master` exit 0 for d6429e02,
+  d27e9891, bc94923b, 86909f02, dbfc602f, 07e0e332; `jj-lane.sh state` → `ahead=0 behind=0 tracked=0
+  untracked=0`; `git status --porcelain` empty.
+- C1 re-measured from `git archive` of base and `cec54a08` with `LC_ALL=C grep -l -F|-E … corpus/captures/*.txt |
+  LC_ALL=C sort` (sha256 over the newline-terminated list): Q1 7 `69cfc059` / Q2 2 / Q3 3 / Q4 1 / Q5 14 `df36eb98`
+  / Q6 1 / Q7 0 / Q8 1 at base — 8/8 equal to the record; landing tree differs on Q1 (8), Q2 (3), Q3 (4), Q6 (2), Q8
+  (2), same on Q4, Q5, Q7 → `tree_same=3/8`. Agrees with section 2 and `after-f2/c1-verify.txt`.
+- C2 re-measured: 13 `GATE-RECORD` lines, all `capture_sha256=86f1aacd…3871` = `sha256sum` of the capture; 13/13
+  `words=` equal the quote's word count; 8/13 byte-exact, 13/13 after whitespace/curly-quote/hyphen-break
+  normalisation; 7 decision rows. `git diff --stat 86909f02 cec54a08 -- tools corpus/fixtures corpus/captures
+  corpus/knowledge/search-rerun-record-r95.md` empty (F2 = landing).
+- Harm: `git diff --numstat 7b237358 cec54a08` → LOG 50/0, SCORECARD 43/0, SKILL 3/0, QUALITY 11/0, README 11/0,
+  SOURCES 2/0; PROVINCE, `tools/research-gate.sh`, `tools/gate-records.py` absent from the diff. No axis harmed.
+- Ledger: `prefile-falsification.py --lane chousa --round 95` → `PREFILE-FALSIFICATION: pass claims=2 rows=16
+  attack_seats=7 findings=0`, exit 0. Census: exit 0, the same five `W04`.
+- Admit re-opened: `curl -sSL https://jmla.pitt.edu/ojs/jmla/article/download/962/1274` → http 200, 532659 B, raw
+  sha256 `07036f03c4c08ce9…`, `pdftotext -layout` sha256 `86f1aacd55837712…`; "copied and pasted exactly as run"
+  present in reading order — **agree**.
+- Reject re-opened: `curl -sS https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7839230/fullTextXML` → **http 200,
+  226044 B** this pass (the first pass saw 500). The JATS body is the Systematic Reviews co-publication and carries
+  the same item-8 sentence. Still **agree**: the decision is dated (`2026-11-08T22:51:19Z`, http 500) and its stated
+  flip ("worth holding only if the PDF's two-column text form blocks a needed quote") did not fire — all 13 quotes
+  are located in the PDF capture.
+- **D4 revised.** That JATS front matter gives `<volume>10</volume>` and `<elocation-id>39</elocation-id>`: the S222
+  locator "Systematic Reviews 10:39" is true, only unsupported by the lane's own capture. The lesson's correction
+  ("came from a web-search summary, not from the capture") stands as a provenance note; D4 narrows to recording
+  this external confirmation (or a capture of the co-publication) rather than superseding the row.
+- Axis and trend verdicts of sections 3 and 5 re-affirmed unchanged: operability improved, depth improved, others
+  unchanged; expansion improved, quality unchanged, discernment improved. D1–D3 and D5 stand.
