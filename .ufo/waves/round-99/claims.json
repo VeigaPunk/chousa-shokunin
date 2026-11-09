@@ -1,0 +1,67 @@
+{
+ "round": 99,
+ "lane": "chousa",
+ "l1": "ChousaR99",
+ "base": "47ed34fa785288837f84cde9db15c41300854a78",
+ "shape": "two claims, two axes (operability, coverage), no exploratory claim; C2 sourced on S236 and S233 (opened this round)",
+ "claims": {
+  "C1": {
+   "id": "C1-GATE-CHALLENGE-R99",
+   "axis": "operability",
+   "type": "gate rule: tools/gate-records.py refuses a record whose capture is an interstitial challenge page (CHALLENGE)",
+   "counting_command": [
+    "python3 -B corpus/evidence/round99/challenge-controls-r99.py --root . --work <scratch>"
+   ],
+   "predicate": {
+    "controls_stdout_regex": "^NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=(\\d+)/\\1 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=5/5$",
+    "harm_min": 25,
+    "controls_stdout": [
+     "CHALLENGE_CONTROLS_R99=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round99/before/c1-base.txt (base tool under the battery, --no-oracles: FAIL, exit 1)",
+   "sources": []
+  },
+  "C2": {
+   "id": "C2-ENTRY-R99",
+   "axis": "coverage",
+   "type": "knowledge entry (corpus/knowledge/quotation-error-rates-r99.md)",
+   "counting_command": [
+    "python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-rates-r99.md",
+    "bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-rates-r99.md --root .",
+    "python3 -B tools/search-rerun.py verify corpus/knowledge/quotation-error-rates-r99.md --root .",
+    "python3 -B corpus/evidence/round99/entry-controls-r99.py --root ."
+   ],
+   "predicate": {
+    "gate_stdout": [
+     "GATE_RECORDS files=1 records=25 ok=25 fail=0"
+    ],
+    "gate_exit": 0,
+    "metadata_stdout": [
+     "METADATA_COMPLETE=1/1",
+     "RESEARCH_GATE: CLEAN"
+    ],
+    "metadata_exit": 0,
+    "rerun_stdout": [
+     "rev_match=4/4",
+     "SEARCH_RERUN: CLEAN"
+    ],
+    "rerun_exit": 0,
+    "controls_stdout": [
+     "QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2",
+     "ENTRY_CONTROLS_R99=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round99/before/c2-base.txt (entry absent at base: gate exit 2, controls exit 2, BASE_TOPIC_HITS=0)",
+   "sources": [
+    "S236",
+    "S233"
+   ]
+  }
+ },
+ "freeze": {
+  "F": "recorded in plans/round-99.md ## Freeze by the commit after F (a commit cannot carry its own hash)"
+ }
+}

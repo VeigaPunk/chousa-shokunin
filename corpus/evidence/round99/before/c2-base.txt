@@ -1,0 +1,9 @@
+# round 99 C2 before: base clone at 47ed34fa785288837f84cde9db15c41300854a78 (git clone --shared, checkout); the entry is absent
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-rates-r99.md
+GATE_RECORDS_ERROR missing corpus/knowledge/quotation-error-rates-r99.md
+exit=2
+$ python3 -B <F>/corpus/evidence/round99/entry-controls-r99.py --root .   (the round-99 controls run against the base clone)
+ENTRY_CONTROLS_SETUP [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r99/L1/baseclone/corpus/knowledge/quotation-error-rates-r99.md'
+exit=2
+$ for p in $(git ls-tree --name-only 47ed34fa corpus/knowledge/); do git show 47ed34fa:$p | grep -il "quotation error"; done | wc -l
+0
