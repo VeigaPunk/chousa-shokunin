@@ -1,0 +1,57 @@
+{
+ "round": 96,
+ "lane": "chousa",
+ "l1": "ChousaR96",
+ "base": "bbf64970b6c73ca64bcc5f6de2f33b0550459813",
+ "shape": "two claims, two axes (operability, depth), no exploratory claim; C2 sourced on S223 and S224, both opened this round",
+ "claims": {
+  "C1": {
+   "id": "C1-SELFTEST-R96",
+   "axis": "operability",
+   "type": "gate self-invocation (tools/search-rerun.py --selftest) + gate registration",
+   "counting_command": [
+    "python3 -B tools/search-rerun.py --selftest",
+    "python3 -B corpus/evidence/round96/selftest-controls-r96.py --root . --work <scratch>",
+    "grep -c '^| `search-rerun` (r96 re-registration' SKILL.md"
+   ],
+   "predicate": {
+    "selftest_stdout": ["SEARCH_RERUN_SELFTEST: PASS cases=32/32"],
+    "selftest_exit": 0,
+    "controls_stdout": [
+     "POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=1/1 REGRESSION_R95=2/2 CASES=32",
+     "SELFTEST_CONTROLS=PASS"
+    ],
+    "controls_exit": 0,
+    "skill_gate_rows": 1
+   },
+   "before": "corpus/evidence/round96/before/c1-base.txt (exit 2, no --selftest)",
+   "sources": []
+  },
+  "C2": {
+   "id": "C2-ENTRY-R96",
+   "axis": "depth",
+   "type": "knowledge entry (corpus/knowledge/search-peer-review-dedup-r96.md)",
+   "counting_command": [
+    "python3 -B tools/gate-records.py verify --root . corpus/knowledge/search-peer-review-dedup-r96.md",
+    "bash tools/research-gate.sh verify-metadata corpus/knowledge/search-peer-review-dedup-r96.md --root .",
+    "python3 -B tools/search-rerun.py verify corpus/knowledge/search-peer-review-dedup-r96.md --root .",
+    "python3 -B corpus/evidence/round96/entry-controls-r96.py --root . --work <scratch>"
+   ],
+   "predicate": {
+    "gate_stdout": ["GATE_RECORDS files=1 records=31 ok=31 fail=0"],
+    "gate_exit": 0,
+    "metadata_stdout": ["METADATA_COMPLETE=1/1", "RESEARCH_GATE: CLEAN"],
+    "metadata_exit": 0,
+    "rerun_stdout": ["SEARCH_RERUN_SUMMARY searches=8 rev_match=8/8", "SEARCH_RERUN: CLEAN"],
+    "rerun_exit": 0,
+    "controls_stdout": [
+     "POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 SEARCHES=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1",
+     "ENTRY_CONTROLS=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round96/before/c2-base.txt (exit 2, entry absent)",
+   "sources": ["S223", "S224"]
+  }
+ }
+}

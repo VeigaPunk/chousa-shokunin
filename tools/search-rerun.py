@@ -43,6 +43,14 @@ Record form — a section headed exactly `## Searches` holding one Markdown tabl
 
 Usage:
     python3 tools/search-rerun.py verify RECORD [--root LANE] [--strict]
+    python3 tools/search-rerun.py --selftest
+
+`--selftest` (round 96) runs in-memory cases against expectations fixed in the tool — 14 parse cases (13 setup
+refusals and the `\\|` alternation), 8 matching cases (line rule, dotfile rule, segment rule, per-line match, case,
+digest form, static directory, caller `GIT_*` scrub) and 10 judgement cases scored by the same `evaluate` function
+`verify` runs — and prints `SELFTEST <case> ok|FAIL`, then `SEARCH_RERUN_SELFTEST: PASS|FAIL cases=<k>/<n>`; exit 0
+PASS, 1 FAIL. It reads no file, runs no git and opens no socket; the git and disk readers are exercised by the
+round-95 battery, not by the selftest.
 
 Output, one line per search, then a summary and a verdict:
     SEARCH_RERUN <id> rev=<MATCH|DRIFT> tree=<SAME|CHANGED> recorded=<n> at_rev=<n> at_tree=<n> [codes]
@@ -124,9 +132,15 @@ def parse_record(path):
         if os.path.islink(path):
             raise Setup("RECORD_TYPE", f"{path}: the record must be a regular file, not a symlink")
         with open(path, encoding="utf-8") as fh:
-            lines = fh.read().split("\n")
+            text = fh.read()
     except (OSError, UnicodeDecodeError) as exc:
         raise Setup("RECORD_UNREADABLE", f"{path}: {exc}")
+    return parse_text(text)
+
+
+def parse_text(text):
+    """Parse a record's text (the `## Searches` table) into rows; raises Setup on any malformed part."""
+    lines = text.split("\n")
     starts = [i for i, ln in enumerate(lines) if ln.rstrip() == "## Searches"]
     if len(starts) != 1:
         raise Setup("SECTION", f"expected exactly one '## Searches' heading, found {len(starts)}")
@@ -336,18 +350,15 @@ def digest(paths):
     return hashlib.sha256(b"".join(k + b"\n" for k in keys)).hexdigest()
 
 
-def verify(record, root, strict):
-    top_rc, top = git(root, "rev-parse", "--show-toplevel")
-    if top_rc != 0 or os.path.realpath(top.decode().strip()) != os.path.realpath(root):
-        raise Setup("ROOT", f"{root} is not a git toplevel")
-    rows = parse_record(record)
-    cache = {}
-    listing = tree_files(root, sorted({g for r in rows for g in r["globs"]}))
+def evaluate(rows, at_rev_of, at_tree_of, strict):
+    """Judge every row from its two re-runs; `at_rev_of(r)` and `at_tree_of(r)` return sorted matching paths.
+    Shared by `verify` (git and disk re-runs) and `--selftest` (in-memory re-runs), so the selftest scores the same
+    decision code the CLI runs (round 96)."""
     findings, rev_ok, tree_same = 0, 0, 0
     lines = []
     for r in rows:
-        at_rev = run_at_rev(root, r, cache)
-        at_tree = run_on_tree(root, r, listing)
+        at_rev = at_rev_of(r)
+        at_tree = at_tree_of(r)
         codes = []
         if len(at_rev) != r["n"]:
             codes.append("COUNT_DRIFT")
@@ -367,6 +378,25 @@ def verify(record, root, strict):
             f"SEARCH_RERUN {r['id']} rev={'DRIFT' if ('COUNT_DRIFT' in codes or 'SET_DRIFT' in codes) else 'MATCH'}"
             f" tree={'CHANGED' if changed else 'SAME'} recorded={r['n']} at_rev={len(at_rev)}"
             f" at_tree={len(at_tree)}" + ("" if not codes else " " + ",".join(codes)))
+    return findings, rev_ok, tree_same, lines
+
+
+def verify(record, root, strict):
+    top_rc, top = git(root, "rev-parse", "--show-toplevel")
+    if top_rc != 0 or os.path.realpath(top.decode().strip()) != os.path.realpath(root):
+        raise Setup("ROOT", f"{root} is not a git toplevel")
+    rows = parse_record(record)
+    cache = {}
+    listing = tree_files(root, sorted({g for r in rows for g in r["globs"]}))
+
+    def at_rev_of(r):
+        at_rev = run_at_rev(root, r, cache)
+        return at_rev
+
+    def at_tree_of(r):
+        return run_on_tree(root, r, listing)
+
+    findings, rev_ok, tree_same, lines = evaluate(rows, at_rev_of, at_tree_of, strict)
     n = len(rows)
     for ln in lines:
         print(ln)
@@ -375,14 +405,135 @@ def verify(record, root, strict):
     return 0 if findings == 0 else 1
 
 
+ST_HEAD = ("## Searches\n\n| id | engine | where | expression | rev | searched | hits | hit_set |\n"
+           "|---|---|---|---|---|---|---|---|\n")
+ST_REV = "a" * 40
+ST_AB_DIGEST = "1f89e694bffa56052d9fb134ec6d9fbd05d1fdb27003772c06ad4ba8175ecd50"  # sha256 of b"corpus/a.txt\ncorpus/b.txt\n"
+
+
+def st_row(qid="Q1", engine="fixed", where="corpus/*.txt", expr="`PRESS`", rev=ST_REV, hits="1",
+           hit_set="corpus/a.txt"):
+    return f"| {qid} | {engine} | {where} | {expr} | {rev} | 2026-11-09 | {hits} | {hit_set} |\n"
+
+
+def selftest():
+    """In-memory self-test (round 96): parse refusals, matching rules, the digest form and the decision code of
+    `evaluate`, each case against an expectation fixed in this file. No file, git or network access; exit 0 PASS,
+    1 FAIL. It does not exercise the git and disk readers (`run_at_rev`, `run_on_tree`, `tree_files`) — the
+    round-95 battery `corpus/evidence/round95/rerun-controls-r95.py` does, through the CLI."""
+    results = []
+
+    def case(cid, ok, detail=""):
+        results.append((cid, bool(ok)))
+        print(f"SELFTEST {cid} {'ok' if ok else 'FAIL'}" + (f" {detail}" if detail else ""))
+
+    def refused(text):
+        try:
+            parse_text(text)
+        except Setup as exc:
+            return exc.code
+        return None
+
+    good = ST_HEAD + st_row()
+    case("p01-parse-good", len(parse_text(good)) == 1)
+    for cid, text, code in (
+        ("p02-no-section", good.replace("## Searches", "## Search"), "SECTION"),
+        ("p03-header", good.replace("| hits | hit_set |", "| count | hit_set |"), "HEADER"),
+        ("p04-engine", ST_HEAD + st_row(engine="pcre"), "ENGINE"),
+        ("p05-globstar", ST_HEAD + st_row(where="corpus/**/*.txt"), "WHERE"),
+        ("p06-dotdot", ST_HEAD + st_row(where="corpus/../x/*.txt"), "WHERE"),
+        ("p07-posix-class", ST_HEAD + st_row(engine="regex", expr="`[[:alpha:]]+`"), "EXPRESSION"),
+        ("p08-backtick", ST_HEAD + st_row(expr="`a`b`"), "EXPRESSION"),
+        ("p09-short-rev", ST_HEAD + st_row(rev="abc"), "REV"),
+        ("p10-zero-with-set", ST_HEAD + st_row(hits="0"), "HIT_SET"),
+        ("p11-dup-id", ST_HEAD + st_row() + st_row(), "ROW"),
+        ("p12-row-after-break", ST_HEAD + st_row() + "\n" + st_row(qid="Q2"), "TABLE"),
+        ("p13-absolute-glob", ST_HEAD + st_row(where="/corpus/*.txt"), "WHERE"),
+    ):
+        got = refused(text)
+        case(cid, got == code, f"want={code} got={got}")
+    alt = parse_text(ST_HEAD + st_row(engine="regex", expr="`^(x\\|b)$`"))[0]
+    case("p14-escaped-pipe", alt["expr"] == "^(x|b)$" and hit(b"a\nb\n", alt), repr(alt["expr"]))
+
+    case("m01-lines", lines_of(b"a\n") == [b"a"] and lines_of(b"") == [] and lines_of(b"a\n\n") == [b"a", b""])
+    case("m02-dotfile", not matches("d/.x.txt", ["d/*.txt"]) and matches("d/.x.txt", ["d/.*.txt"]))
+    case("m03-segment", not matches("d/e/f.txt", ["d/*.txt"]) and matches("d/f.txt", ["d/*.txt"]))
+    blank = parse_text(ST_HEAD + st_row(engine="regex", expr="`^$`"))[0]
+    needle = parse_text(ST_HEAD + st_row(expr="`PRESS`"))[0]
+    case("m04-per-line", not hit(b"a\n", blank) and hit(b"a\n\nb\n", blank)
+         and not hit(b"PRE\nSS\n", needle) and hit(b"x\nPRESS y\n", needle))
+    case("m05-case", not hit(b"press\n", needle))
+    case("m06-digest", digest(["corpus/b.txt", "corpus/a.txt"]) == ST_AB_DIGEST)
+    case("m07-static-dir", static_dir("corpus/captures/*.txt") == "corpus/captures" and static_dir("*/x.txt") == ""
+         and static_dir("a/b?/c/d.txt") == "a")
+    saved = os.environ.get("GIT_DIR")
+    os.environ["GIT_DIR"] = "/nonexistent"
+    try:
+        env = git_env()
+    finally:
+        if saved is None:
+            del os.environ["GIT_DIR"]
+        else:
+            os.environ["GIT_DIR"] = saved
+    case("m08-env-scrub", "GIT_DIR" not in env and env.get("GIT_NO_LAZY_FETCH") == "1")
+
+    base = {"corpus/a.txt": b"PRESS here\n", "corpus/b.txt": b"no\n", "corpus/c.txt": b"PRESS too\n",
+            "corpus/.d.txt": b"PRESS hidden\n", "corpus/e/f.txt": b"PRESS nested\n"}
+    moved = dict(base, **{"corpus/b.txt": b"PRESS now\n"})
+    swapped = dict(base, **{"corpus/b.txt": b"PRESS now\n", "corpus/c.txt": b"gone\n"})
+
+    def mem(files):
+        return lambda r: sorted(p for p in files if matches(p, r["globs"]) and hit(files[p], r))
+
+    def judge(row, tree, strict=False):
+        rows = parse_text(ST_HEAD + row)
+        f, ok, same, lines = evaluate(rows, mem(base), mem(tree), strict)
+        codes = lines[0].split()[7].split(",") if len(lines[0].split()) > 7 else []
+        return f, ok, same, codes
+
+    exact = st_row(hits="2", hit_set="corpus/a.txt, corpus/c.txt")
+    for cid, row, tree, strict, want in (
+        ("j01-exact", exact, base, False, (0, 1, 1, [])),
+        ("j02-count", st_row(hits="3", hit_set="corpus/a.txt, corpus/c.txt"), base, False, (1, 0, 1, ["COUNT_DRIFT"])),
+        ("j03-set", st_row(hits="2", hit_set="corpus/a.txt, corpus/b.txt"), base, False, (1, 0, 1, ["SET_DRIFT"])),
+        ("j04-digest", st_row(hits="2", hit_set="sha256:" + ST_AB_DIGEST), base, False, (1, 0, 1, ["SET_DRIFT"])),
+        ("j05-dup-path", st_row(hits="2", hit_set="corpus/a.txt, corpus/c.txt, corpus/a.txt"), base, False,
+         (1, 0, 1, ["SET_DRIFT"])),
+        ("j06-tree-moved", exact, moved, False, (0, 1, 0, ["TREE_CHANGED"])),
+        ("j07-tree-strict", exact, moved, True, (1, 1, 0, ["TREE_CHANGED"])),
+        ("j08-tree-swap", exact, swapped, False, (0, 1, 0, ["TREE_CHANGED"])),
+        ("j09-zero", st_row(expr="`absent`", hits="0", hit_set="-"), base, False, (0, 1, 1, [])),
+    ):
+        got = judge(row, tree, strict)
+        case(cid, got == want, f"want={want} got={got}")
+    ab = parse_text(ST_HEAD + st_row(hits="2", hit_set="corpus/a.txt, corpus/c.txt")
+                    + st_row(qid="Q2", expr="`no`", hits="1", hit_set="corpus/a.txt"))
+    f, ok, same, _ = evaluate(ab, mem(base), mem(base), False)
+    case("j10-tally", (f, ok, same) == (1, 1, 2), f"got={(f, ok, same)}")
+
+    n, k = len(results), sum(1 for _, ok in results if ok)
+    bad = [cid for cid, ok in results if not ok]
+    print(f"SEARCH_RERUN_SELFTEST: {'PASS' if k == n else 'FAIL'} cases={k}/{n}" + (f" failed={','.join(bad)}" if bad else ""))
+    return 0 if k == n else 1
+
+
+
+
 def main(argv):
     ap = argparse.ArgumentParser(prog="search-rerun.py")
-    sub = ap.add_subparsers(dest="cmd", required=True)
+    ap.add_argument("--selftest", action="store_true", help="run the in-memory self-test and exit")
+    sub = ap.add_subparsers(dest="cmd")
     v = sub.add_parser("verify")
     v.add_argument("record")
     v.add_argument("--root", default=".")
     v.add_argument("--strict", action="store_true")
     a = ap.parse_args(argv)
+    if a.selftest:
+        if a.cmd:
+            ap.error("--selftest takes no subcommand")
+        return selftest()
+    if not a.cmd:
+        ap.error("a subcommand (verify) or --selftest is required")
     try:
         root = os.path.abspath(a.root)
         record = a.record if os.path.isabs(a.record) else os.path.join(root, a.record)

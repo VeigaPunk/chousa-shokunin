@@ -1,0 +1,46 @@
+# Pre-freeze C1 battery, run 1 — TRANSCRIPTION by the L1 (ChousaR96) of the session tool output, not a captured
+# file: the run printed to the session, not to a receipt. Kept because it is the evidence that the battery can
+# fail (plans/round-96.md P1). Tool state: before fix P1 (j05 = "corpus/a.txt, corpus/a.txt"; m34 present).
+# Command: python3 -B corpus/evidence/round96/selftest-controls-r96.py --root . --work /fast/scratch/hyaku/chousa-r96/L1/c1
+CASE positive rc=0 expect=0 ok
+CASE do-nothing-base rc=2 expect=2 ok
+CASE mutant m10-whole-file rc=1 KILLED failed=p14-escaped-pipe,m04-per-line
+CASE mutant m11-ci-fixed rc=1 KILLED failed=m05-case
+CASE mutant m13-hits-len-set rc=1 KILLED failed=j02-count
+CASE mutant m14-revok-mask rc=1 KILLED failed=j02-count,j03-set,j04-digest,j05-dup-path,j10-tally
+CASE mutant m15-tree-count rc=1 KILLED failed=j08-tree-swap
+CASE mutant m16-set-dedup rc=0 SURVIVED failed=-
+CASE mutant m17-fnmatch rc=1 KILLED failed=m02-dotfile,m03-segment,j01-exact,j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,j10-tally
+CASE mutant m18-phantom-line rc=1 KILLED failed=m01-lines,m04-per-line
+CASE mutant m19-dotglob rc=1 KILLED failed=m02-dotfile,j01-exact,j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,j10-tally
+CASE mutant m20-no-env-scrub rc=1 KILLED failed=m08-env-scrub
+CASE mutant m21-no-count-drift rc=1 KILLED failed=j02-count
+CASE mutant m22-no-digest-compare rc=1 KILLED failed=j04-digest
+CASE mutant m23-strict-ignored rc=1 KILLED failed=j07-tree-strict
+CASE mutant m24-tree-always-bad rc=1 KILLED failed=j06-tree-moved,j08-tree-swap
+CASE mutant m25-digest-unsorted rc=1 KILLED failed=m06-digest
+CASE mutant m26-globstar-allowed rc=1 KILLED failed=p05-globstar
+CASE mutant m27-dotdot-allowed rc=1 KILLED failed=p06-dotdot
+CASE mutant m28-posix-allowed rc=1 KILLED failed=p07-posix-class
+CASE mutant m29-zero-with-set rc=1 KILLED failed=p10-zero-with-set
+CASE mutant m30-dup-id rc=1 KILLED failed=p11-dup-id
+CASE mutant m31-pipe-literal rc=1 KILLED failed=p14-escaped-pipe
+CASE mutant m32-static-dir-skip rc=1 KILLED failed=m07-static-dir
+CASE mutant m33-revok-count-only rc=1 KILLED failed=j03-set,j04-digest,j05-dup-path,j10-tally
+CASE mutant m34-absolute-allowed rc=0 SURVIVED failed=-
+CASE oracle-constant-pass battery_rc=1 expect=1 tally=[POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=0/24 NO_WRITE=1/1 CASES=32] ok
+CASE oracle-hollow-selftest battery_rc=1 expect=1 tally=[POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=0/24 NO_WRITE=1/1 CASES=32] ok
+CASE oracle-always-fail battery_rc=1 expect=1 tally=[POSITIVE=0/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=24/24 NO_WRITE=1/1 CASES=32] ok
+CASE no-write rc=0 left=[] lane_status_same=True ok
+CASE regression-rerun-controls-r95 rc=0 ok
+CASE regression-mutants-r95 rc=0 ok
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=22/24 ORACLES_REJECTED=3/3 NO_WRITE=1/1 REGRESSION_R95=2/2 CASES=32
+SELFTEST_CONTROLS=FAIL
+# rc=1, real 9m54s. The run read the tool source at its start; the j05 edit of fix P1 landed while its
+# regression legs were still running, so those two legs scored the edited tool.
+#
+# Earlier (P0), the refactor's first draft, transcribed: rerun-controls-r95.py printed
+#   CASE oracle-constant-clean battery=FAIL expect=FAIL ... ok
+#   CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+#   SETUP oracle rev-blind mutation did not apply
+# and mutants-r95.py printed MUTANTS_KILLED=0/10 (every mutant rc=2: the battery it calls setup-failed).
