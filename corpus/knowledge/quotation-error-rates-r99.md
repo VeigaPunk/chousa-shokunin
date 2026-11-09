@@ -9,8 +9,9 @@ recheck: on-release
 chousa's province owns claim-vs-source verification (`PROVINCE.md`). The lane's tools check that a quote is
 *located* in its source (`tools/gate-records.py`, QUOTE_ABSENT); no entry held what is known about how often a cited
 source does not *support* the sentence that cites it. Before this round no capture and no knowledge entry contained
-the phrase "quotation error" (`## Searches` Q1-Q4, 0 hits at the round-98 landing). This entry holds the two
-quantitative syntheses of that literature that this host could read:
+the phrase "quotation error" (`## Searches` Q1-Q4, 0 hits at the round-98 landing). This entry holds two
+quantitative syntheses of that literature, the two whose text this round's GETs returned (amended at F3, B3 — it said
+"the two … that this host could read", which `R99ScoutSources` showed false):
 
 1. **Jergas & Baethge 2015 (S236, tier B).** A systematic review, meta-analysis and meta-regression of quotation
    errors in medical journal articles, read through its own published abstract in Europe PMC's index record (the
@@ -19,8 +20,10 @@ quantitative syntheses of that literature that this host could read:
 2. **Mogull 2017 (S233, tier A).** A review that re-derived the rate from the same literature's raw counts with one
    definition of an error and one denominator; read on the publisher's page (full text). Fourteen quotes (G0-G13).
 
-A third route, the authors' 2025 update (Baethge & Jergas, Research Integrity and Peer Review), answered an http 200
-whose body is a "Client Challenge" page (S234); it is rejected for route and nothing here rests on it.
+A third synthesis, the authors' 2025 update (Research Integrity and Peer Review), answered the lane's publisher GET with
+an http 200 whose body is a "Client Challenge" page (S234); it is rejected for route and nothing here rests on it. Its
+Europe PMC record (pmid 40696441) answered a wave seat's read-only re-open with http 200 (`R99ScoutSources`); the lane
+did not GET it this round, so it is not held here.
 
 The column marked *lane* is this lane's reading; it is not what the sources say.
 
@@ -63,7 +66,7 @@ G13 keeps the page's own misspelling "orginal".
 
 | Situation | Do | Never | Warrant | Lane |
 |---|---|---|---|---|
-| Deciding whether a cited claim needs its source re-opened | treat an unchecked citation as unreliable: a meta-analysis of 28 studies put total quotation errors at 25.4% and major ones at 11,9% (as printed), and a re-count per quotation put inaccurate cited assertions at 14.5% | (none stated by the sources) | J1, J2, J5, G10 | the lane re-opens every source it cites (CORPUS.md rule 1); these rates are why a located quote is the floor, not the proof |
+| Deciding whether a cited claim needs its source re-opened | treat an unchecked citation as unreliable: a meta-analysis that included 28 studies in its main analysis put total quotation errors at 25.4% and major ones at 11,9% (as printed), and a re-count put 14.5% of cited assertions in original research articles in medical journals inaccurate | (none stated by the sources) | J1, J2, J5, G10 | the lane re-opens every source it cites (CORPUS.md rule 1); these rates are why a located quote is the floor, not the proof |
 | Classifying a mismatch between a citing sentence and its source | call it major when the source fails to substantiate, is unrelated to, or contradicts the assertion; minor when it is an oversimplification, a generalization or a trivial inaccuracy that keeps the intended meaning | (none stated by the sources) | G4, G5 | `tools/gate-records.py` checks that the quote is in the capture (QUOTE_ABSENT); it cannot tell a supporting quote from one that is unrelated to the sentence citing it |
 | Citing a source through another source | record it as a source error, kept apart from a content error (the cited source was not read); indirect references were less than one sixth of all quotation problems | (none stated by the sources) | G6, J4 | the lane's carrier rule grades a third-party carrier B (S236 itself is such a carrier) |
 | Reporting or comparing an error rate | state the denominator: quotation errors per quotation examined (a percent), not per reference selected | (none stated by the sources) | G2, G3, G9 | a lane count names its unit in the counter (rows, records, lines), the same discipline |
@@ -105,6 +108,11 @@ and searched from `<scratch>` with GNU grep 3.12 (`/usr/bin/grep`):
 - The decision rows' *Do* cells paraphrase their warrant quotes; every number a *Do* cell states is printed in one of
   its own warrant quotes (the controls check this), but a paraphrase can still narrow or widen a quote's meaning.
 - Major/minor are S233's definitions (G4, G5); S236's abstract uses the same words without defining them.
+- S236's abstract ties all three rates to "28 in the main analysis" (J1, J2). The article body, which the lane does not
+  hold, pools the major and minor rates over 27 studies and the total over 28 (`R99ScoutSources`' re-open of
+  PMC4627914, not a lane capture; amendment B5). The first decision row follows the abstract.
+- The controls read numerals only: a spelled-out quantity ("one sixth", "about half") in a Do cell is not checked
+  against its warrants (amendment B6, `R99ScoutSources` F-4).
 
 ## Gate records
 

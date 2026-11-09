@@ -1,0 +1,33 @@
+# round 99 C1 at F2=96d761eec0c006d3df100b1a5d41686568d6d1e1 (clean shared clone checked out at F2), ts=2026-11-09T05:02:26Z
+# instrument bytes F..F2: tools/gate-records.py unchanged; battery docstring only:
+$ git diff --stat d41f4cd8b857c6de683e7be5c5e8125b32763a8e 96d761eec0c006d3df100b1a5d41686568d6d1e1 -- tools/gate-records.py corpus/evidence/round99/challenge-controls-r99.py
+ corpus/evidence/round99/challenge-controls-r99.py | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+$ python3 -B corpus/evidence/round99/challenge-controls-r99.py --root . --work <scratch>
+CASE NEG n1 rc=1 verdict=CHALLENGE PASS
+CASE NEG n2 rc=1 verdict=CHALLENGE PASS
+CASE NEG n3 rc=1 verdict=CHALLENGE PASS
+CASE NEG n4 rc=1 verdict=CHALLENGE PASS
+CASE NEG n5 rc=1 verdict=CHALLENGE PASS
+CASE NEG n6 rc=1 verdict=CHALLENGE PASS
+CASE NEG n7 rc=1 verdict=CHALLENGE PASS
+CASE POS p1 rc=0 verdict=OK PASS
+CASE POS p2 rc=0 verdict=OK PASS
+CASE POS p3 rc=0 verdict=OK PASS
+CASE POS p4 rc=0 verdict=OK PASS
+CASE PROD S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD S234 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S229 rc=1 verdict=CHALLENGE PASS
+CASE ORACLE o1-short-only battery=FAIL PASS
+CASE ORACLE o2-marker-only battery=FAIL PASS
+CASE ORACLE o3-known-bytes battery=FAIL PASS
+CASE ORACLE o4-scratch-only battery=FAIL PASS
+CASE ORACLE o5-lane-only battery=FAIL PASS
+NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=5/5
+CHALLENGE_CONTROLS_R99=PASS
+exit=0
+$ git show 47ed34fa785288837f84cde9db15c41300854a78:tools/gate-records.py > <scratch>/b2.py && python3 -B corpus/evidence/round99/challenge-controls-r99.py --root . --work <scratch> --tool <scratch>/b2.py --no-oracles | tail -2   (do-nothing control at F2; label corrected by hand after the run: the run's echo named F2 where it ran the base blob)
+NEG_REFUSED=0/7 POS_ADMITTED=4/4 PROD_REFUSED=0/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=0/0
+CHALLENGE_CONTROLS_R99=FAIL
+exit=1

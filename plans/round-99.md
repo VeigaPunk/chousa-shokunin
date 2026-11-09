@@ -48,6 +48,10 @@ F = the commit that first carries `claims.md`: `d41f4cd8b857c6de683e7be5c5e8125b
 recorded here by the carrier commit after it. After receipts at F: `corpus/evidence/round99/after/c1-all.txt`,
 `after/c2-all.txt` (clean shared clone checked out at F).
 
+F2 = `96d761eec0c006d3df100b1a5d41686568d6d1e1` (helper `landed` line; the commit that first carries `## Amendments`
+A1-A7, B1-B2), recorded here by the commit after it. C1 at F2: `corpus/evidence/round99/after-f2/c1-all.txt`
+(tool unchanged F..F2, battery docstring only); C2's instrument and entry are unchanged F..F2, so `after/c2-all.txt` grades F2.
+
 ## Amendments (F2)
 
 Wave-forced narrowings, each recorded with its seat artifact in `.ufo/waves/round-99/claims.md` `## Amendments`
@@ -70,3 +74,11 @@ Routed to round 100 (not this round's claims): normalize the rev path before the
 blob under `corpus/captures/`), marker fixtures one per marker plus 199/200/201 boundary fixtures and a whole-blob rev
 fixture whose quoted line carries no marker (kills `R99MutantsC1` survivors and `R99SentinelC1` F-4), a Never-cell
 leg and a number-sense leg for entry controls, the fleet tier rule for index-record abstracts (tameshi A vs chousa B).
+
+## Amendments (F3)
+
+C2 only, after `R99ScoutSources` (the last seat to report): B3 entry scope sentence, B4 row-1 Do cell, B5 named limit
+(27 vs 28 studies), B6 "numeral" in the C2 sentence and limit (c). Recorded with artifacts in `claims.md`
+`## Amendments`. The C2 counters and every C2 tally are unchanged at F3 (`corpus/evidence/round99/after-f3/c2-all.txt`).
+S235's flip condition was met by the seat's re-open, not by a lane GET; routed to round 100 with the 2025 update's
+Europe PMC record (pmid 40696441, PMC12285159).

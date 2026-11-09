@@ -25,3 +25,9 @@ CASE PROD rev-S229 rc=1 verdict=CHALLENGE PASS
 NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=24/24 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=5/5
 CHALLENGE_CONTROLS_R99=PASS
 exit=0
+
+# control (L1): the F2 battery itself, unswapped, on the same tree with C2 files deleted
+$ python3 -B <F2 battery> --root . --work <scratch> 2>&1 | tail -2
+              ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r99/L1/sep/repo/corpus/captures/4b70901ad80c513f0c2f750c.txt'
+exit=1

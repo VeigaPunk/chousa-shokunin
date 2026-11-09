@@ -72,7 +72,7 @@ o3-o5 act "only" under their gate; they patch the url/admit call only and the re
 Jergas & Baethge 2015, the authors' own abstract, tier B) and S233 (Mogull 2017, publisher full text, tier A), both
 opened this round, holds (B2: new to this lane's corpus; tameshi holds a Europe PMC record of the same abstract as its S327) 23 located quotes (J0-J8, G0-G13) and an 8-row decision table on how often a cited source
 fails the citing sentence, how a mismatch is classed (major/minor, source error) and how the rate is counted. Every
-number a Do cell states is printed in one of that row's own warrant quotes. At BASE no knowledge entry contains the
+~~number~~ numeral (B6: digits, as `NUM` reads them) a Do cell states is printed in one of that row's own warrant quotes. At BASE no knowledge entry contains the
 phrase "quotation error" and the entry is absent.
 
 **Counting commands.**
@@ -127,3 +127,23 @@ predicate, counter code, kill rule or target changed (the C1 battery's docstring
   `rejected` for its own question), opened 2026-11-08 (`R99ConnectorSiblings` F4; L1 re-read of tameshi
   `corpus/SOURCES.md` rows S327-S328). The grading difference (A there, B here for an index-record abstract) is
   recorded in the lesson and routed, not absorbed.
+
+F3 = the lane commit that first carries B3-B6 (its hash is written into `plans/round-99.md` `## Freeze` by the commit
+after it). B3-B5 change the entry's prose (two sentences, one Do cell, two named-limit bullets); no quote, warrant
+list, number token, counter, predicate or kill rule changed, and every C2 tally is identical at F3
+(`corpus/evidence/round99/after-f3/c2-all.txt`).
+
+- B3 (C2 entry scope): "the two quantitative syntheses of that literature that this host could read" was false — the
+  2025 update's Europe PMC record answers http 200 (`R99ScoutSources` F-2); now "the two whose text this round's GETs
+  returned", and the entry names the record as not held.
+- B4 (C2 entry row 1, K5): "a meta-analysis of 28 studies put … major ones at 11,9%" and "a re-count per quotation"
+  said more than the row's warrants (`R99ScoutSources` F-3): now "a meta-analysis that included 28 studies in its main
+  analysis" (J1's words) and "a re-count put 14.5% of cited assertions in original research articles in medical
+  journals inaccurate" (G10's words).
+- B5 (C2 named limit): the abstract ties all rates to 28 studies; the body (not held) pools major/minor over 27
+  (`R99ScoutSources` F-3).
+- B6 (C2 sentence and limit (c)): NUMBERS reads numerals only; a spelled-out quantity ("one sixth" → "one third")
+  passes the controls (`R99ScoutSources` F-4).
+- Not an amendment (recorded): S235's flip condition ("a 200 carrying the article XML") was met by a seat's read-only
+  re-open (`R99ScoutSources` F-1: attempt-2-equivalent GET, http 200, 126,445 bytes); the registry row records the
+  lane's own attempt 1 (http 500) truthfully; a lane GET of that route is routed to round 100.
