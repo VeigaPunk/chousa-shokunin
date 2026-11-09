@@ -21,14 +21,16 @@ reporting standard (S098, S107, S112). The column marked *lane* is this lane's r
 or PRESS says.
 
 Text forms: both captures are `pdftotext -layout` of two-column pages, so every quote below is a substring of
-one line of its capture (30/30 measured by `R96ConnectorSiblings`; `tools/gate-records.py` itself matches the
-normalized whole text and does not check this). Fragment groups (L4-L6, L7-L8, L9-L10, L11-L13, L14-L16, L17-L18,
-L19-L23, L31 with L24-L25, L26-L29, L32 with L30) are read as one sentence from the reading-order text form
-(`pdftotext` without `-layout`; `.ufo/waves/round-96/w1/R96ExecC2Repro-d-pdftotext-nolayout.txt`,
-`R96ExecWrap-fragment-adjacency.txt`), not located as one string. In the layout form most groups sit on
-consecutive lines of one column; L17-L18 skip one line, and L24-L25 do not: L24 ends the right column of page 98
-and L25 opens the left column of page 99, with the running header between them (`R96ExecWrap` F2,
-`R96ConnectorSiblings` F3).
+one line of its capture (32/32 measured by `R96ScoutSources`, each in its named capture and in no other;
+`tools/gate-records.py` itself matches the normalized whole text and does not check this). Fragment groups (L4-L6,
+L7-L8, L9-L10, L11-L13, L14-L16, L17-L18, L19-L23, L31 with L24-L25, L26-L29, L32 with L30) are read as one
+sentence from the reading-order text form (`pdftotext` without `-layout`;
+`.ufo/waves/round-96/w1/R96ExecC2Repro-d-pdftotext-nolayout.txt`, `R96ScoutSources-fragment-order.txt`), not
+located as one string — with one exception: in the reading-order form too, the running header "LIGHTNING TALKS /
+PRÉSENTATIONS ÉCLAIR" stands between L24 and L25, so that sentence is read across the header in both forms
+(`R96ScoutSources` §3, `R96ExecWrap` F2). In the layout form most groups sit on consecutive lines of one column;
+L17-L18 skip one line, and L24-L25 do not: L24 ends the right column of page 98 and L25 opens the left column of
+page 99, with the running header between them (`R96ExecWrap` F2, `R96ConnectorSiblings` F3).
 
 ## Located quotes
 

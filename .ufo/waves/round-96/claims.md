@@ -127,3 +127,18 @@ revision with the recorded count and set.
 form L17-L18 skip a line and L24-L25 cross a page break, the running header and a column (named in the entry).
 Each quote remains a substring of one capture line (K3 does not fire; `gate-records.py` does not check this — a
 seat measured it).
+
+### C1 wording amendments recorded after F2 (A6-A7; no instrument byte changed)
+
+- "the self-test leaves an empty cwd/HOME directory empty and `git status --porcelain` unchanged" reads: **the
+  NO_WRITE leg shows the self-test writes nothing into an empty cwd/HOME; it cannot see a lane write (its baseline
+  follows the POSITIVE run; porcelain shows paths, not bytes — `R96SentinelC1` F2). That the shipped self-test
+  writes nothing, runs no git and opens no socket is a seat observation under `strace`, not a battery result.**
+- "8 matching cases" includes `m08`, which asserts **the `GIT_DIR` scrub and the lazy-fetch guard only** (not the
+  replace-ref guard or the full `GIT_*` scrub — `R96SentinelC1` F1, F7).
+
+### C2 named limit (d) after F3 (B7, `R96ScoutSources` §3)
+
+Fragment groups are read as one sentence from the reading-order text form, except `L31 with L24-L25`, which is read
+across the running header in both text forms; in the layout form L17-L18 skip a line and L24-L25 cross a page
+break and a column. C2's predicate and counts are unchanged at F3 (entry text only).

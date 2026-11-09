@@ -95,3 +95,27 @@ The claims are judged at F2 on the amended sentences and predicates below; the F
   compared)"; S224 is a re-scoping of the S222 bytes, S223 the only new bytes.
 - **Counts.** After B1-B2 the entry holds 32 located quotes and 33 GATE-RECORD lines; `entry-controls-r96.py`
   `N_RECORDS` 31 → 33 (the constant only; no leg changed).
+
+### Amendments recorded after F2 (wording only; no tool, battery or entry byte changed — judged on the F2 instruments)
+
+- **A6 (C1, `R96SentinelC1` F2).** The NO_WRITE leg cannot see a lane write: its `before` snapshot is taken after
+  the POSITIVE leg has already run the self-test in the lane (a selftest that writes `tools/lane-side-effect.txt`
+  scores `NO_WRITE=1/1`), and `git status --porcelain` prints paths, not bytes (a selftest that appends to an
+  already-modified tracked file also scores 1/1). It does refuse a write into the empty cwd (`W1` → `NO_WRITE=0/1`).
+  Narrowed: NO_WRITE shows the self-test writes nothing into an empty cwd/HOME; that the shipped self-test writes
+  nothing into the lane, runs no git and opens no socket is a seat observation (`strace`, `R96SentinelC1`,
+  `R96ExecC1Repro`), not a battery result. K4 (A4) narrows the same way.
+- **A7 (C1, `R96SentinelC1` F1, F7).** The matching case `m08-env-scrub` asserts the `GIT_DIR` scrub and the
+  lazy-fetch guard only; dropping `GIT_NO_REPLACE_OBJECTS` (a false CLEAN under a repo-local replace ref) or
+  narrowing the scrub to `GIT_DIR` alone passes the self-test and both batteries. Narrowed: "caller `GIT_*` scrub"
+  reads "the `GIT_DIR` scrub and the lazy-fetch guard"; the replace-ref and full-scrub guards are routed to round 97.
+- **A8 (battery docstring, `R96SentinelC1` F4, F6).** `selftest-controls-r96.py` says "Read-only on the lane" and
+  "removed at exit": `git status` refreshes the lane's `.git/index` stat cache (no content change), and a SIGKILL or
+  SIGTERM mid-run leaves 48 files under `--work`. Recorded as corrections in `LOG.md`; the battery bytes stay as
+  frozen.
+- **B7 (C2 entry text, `R96ScoutSources` §3) — forces re-freeze F3 (entry text only).** The F2 entry said every
+  fragment group reads as one sentence in the reading-order form; for `L31 with L24-L25` the running header stands
+  between L24 and L25 there too, and the "30/30 measured" line under-counted the 32 quotes. The paragraph now names
+  the exception and cites `R96ScoutSources`' 32/32 measurement. C2 named limit (d) narrows the same way. No row,
+  quote or Gate record changed; the C2 receipts are re-run at F3. (The two missing receipts the seat names —
+  `census-end.txt` and `after-f2/lesson-gate.txt` — are landing receipts, written with the landing commit.)
