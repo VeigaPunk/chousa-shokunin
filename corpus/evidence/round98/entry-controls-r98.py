@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """entry-controls-r98 — round-98 C2 (depth) controls for `corpus/knowledge/press-2015-statement-questions-r98.md`.
 
-Recomputes, from committed lane bytes only (no network, no lane write), what the entry says it holds:
+Recomputes what the entry says it holds from the files under --root as they are on disk (the entry, the round-97
+entry and the two captures) plus `git show BASE:<path>` for the do-nothing leg; no network, no write. On a dirty
+tree it scores the uncommitted bytes, so receipts are taken on a clean clone at the freeze (F3 wording,
+`R98SentinelC1` F6; at F2 it said "from committed lane bytes only"):
 
   QUESTION_LINES  S225's capture lines between the line `PRESS 2015 Guideline Evidence-Based Checklist` and the line
                   `Derived from:` that contain `?`; a line is HELD when its whitespace-collapsed text equals one S225

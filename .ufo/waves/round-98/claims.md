@@ -179,3 +179,23 @@ entry did not, so that the S225 checklist lines carrying a question mark are quo
 Kill rules K1-K5 unchanged; K2 now reads "an S231 quote other than M1 is not inside `abstractText`, or M1 is not the
 record's title". Named limits unchanged except (a): S231 is the abstract and title, read through Europe PMC's index
 record, tier B.
+
+## Amendments — F3 (wording only; `R98SentinelC1`)
+
+- **A6 (`R98SentinelC1` F1, F2; C1 named limit (e) fired as worded).** Limit (e) said "'no write, no socket' is
+  observed (NO_WRITE leg for writes)"; the NO_WRITE leg sees only its empty `HOME`/`TMPDIR`/cwd directory and the
+  lane's status/diff, and passes a planted self-test that writes elsewhere (`R98SentinelC1-nowrite-outside-write-battery-stdout.txt`).
+  Limit (e) at F3, the seat's proposed form: the self-test reads `/dev/null` (r30) and runs `git -C /dev/null`
+  twice (r29, r34); each git child opens `/dev/null` O_RDWR, reads the host's global git config and is resolved
+  through `PATH`; no write to any file and no socket was observed by strace at F (`R98SentinelC1` check 1). The
+  battery's NO_WRITE leg observes only an empty `HOME`/`TMPDIR`/cwd and the lane's status/diff; it does not observe
+  writes elsewhere, so K4's "self-test: anywhere" is checked by an external trace, not by a battery leg.
+- **A7 (`R98SentinelC1` F5, F7).** Added to C1's named limits: the battery scores the tool's bytes on disk under
+  `--root` (a dirty tree is scored as it is; the receipts are taken on a clean clone at the freeze), and its full
+  run's regression leg writes clones and fixtures under `--work` beyond what its docstring lists. The battery's
+  bytes are unchanged from F2 (its docstring is not edited, so the F2 receipts grade the landed bytes).
+- **B8 (`R98SentinelC1` F6).** `entry-controls-r98.py`'s docstring said it reads "committed lane bytes only"; it
+  reads the files on disk under `--root` plus `git show BASE`. Docstring corrected at F3; the C2 receipts are
+  re-taken at F3 on a clean clone (`corpus/evidence/round98/after-f3/c2-all.txt`). Predicate unchanged.
+
+C1's sentence and predicate are unchanged from F2; C2's sentence and predicate are unchanged from F2.

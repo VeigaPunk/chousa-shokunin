@@ -1,0 +1,38 @@
+# R98MutantsC1 probe MUTANTS (committed .ufo/waves/round-98/w1/R98MutantsC1-probe98.py.txt) applied to the F2 tool; self-test kill rule; D01-D04 also run through the F2 battery (--tool, --no-regression)
+MUT G01-canary-compare-prefix selftest_rc=0 SURVIVED failed=-
+MUT G02-canary-compare-sorted selftest_rc=0 SURVIVED failed=-
+MUT G03-canary-want-rc-ignored selftest_rc=0 SURVIVED failed=-
+MUT G04-canary-drop-pass-set applies=0 SKIP
+MUT G05-canary-drop-fail-set applies=0 SKIP
+MUT G06-canary-seen-any applies=0 SKIP
+MUT G07-canary-detail-hardcoded applies=0 SKIP
+MUT G08-canary-no-redirect selftest_rc=1 KILLED failed=canary-false,canary-raise,setup
+MUT G09-canary-fail-text applies=2 SKIP
+MUT G10-canary-pass-text selftest_rc=1 KILLED failed=g00-guard-canary
+MUT G11-canary-fail-summary-text selftest_rc=1 KILLED failed=g00-guard-canary
+MUT K01-collect-canary-false-counts selftest_rc=1 KILLED failed=g00-guard-canary
+MUT K02-collect-setup-true selftest_rc=1 KILLED failed=g00-guard-canary
+MUT K03-collect-setup-text selftest_rc=1 KILLED failed=g00-guard-canary
+MUT K04-collect-cases-skipped selftest_rc=1 KILLED failed=g00-guard-canary
+MUT S01-summary-pass-any selftest_rc=1 KILLED failed=g00-guard-canary
+MUT S02-summary-failed-truncated selftest_rc=1 KILLED failed=g00-guard-canary
+MUT S03-summary-rc-tolerant selftest_rc=1 KILLED failed=g00-guard-canary
+MUT D01-direct-fail-id selftest_rc=0 SURVIVED failed=- battery_rc=1 CASE direct-path forced-false rc=1 last='SEARCH_RERUN_SELFTEST: FAIL guard-canary failed=setup' FAIL | CASE direct-path forced-raise rc=1 last='SEARCH_RERUN_SELFTEST: FAIL guard-canary failed=setup' FAIL
+MUT D02-direct-fail-rc0 selftest_rc=0 SURVIVED failed=- battery_rc=1 CASE direct-path forced-false rc=0 last='SEARCH_RERUN_SELFTEST: FAIL guard-canary failed=g00-guard-canary' FAIL | CASE direct-path forced-raise rc=0 last='SEARCH_RERUN_SELFTEST: FAIL guard-canary failed=g00-guard-canary' FAIL
+MUT D03-canary-except-narrow selftest_rc=0 SURVIVED failed=- battery_rc=1 CASE direct-path forced-false rc=1 last='SEARCH_RERUN_SELFTEST: FAIL guard-canary failed=g00-guard-canary' ok | CASE direct-path forced-raise rc=1 last='' FAIL
+MUT D04-direct-fail-skipped selftest_rc=0 SURVIVED failed=- battery_rc=1 CASE direct-path forced-false rc=1 last='SEARCH_RERUN_SELFTEST: FAIL cases=66/67 failed=g00-guard-canary' FAIL | CASE direct-path forced-raise rc=1 last='SEARCH_RERUN_SELFTEST: FAIL cases=66/67 failed=g00-guard-canary' FAIL
+MUT D05-g00-label selftest_rc=0 SURVIVED failed=-
+MUT R17-row-no-end-pipe-kept selftest_rc=1 KILLED failed=r17-row-no-end-pipe
+MUT R18-heading-startswith selftest_rc=1 KILLED failed=r18-heading-suffix
+MUT R19-two-sections-allowed selftest_rc=1 KILLED failed=p02-no-section,r18-heading-suffix,r19-two-sections,r30-record-not-symlink
+MUT R20-separator-2-to-3-dash selftest_rc=1 KILLED failed=r20-two-dash-sep
+MUT R22-dot-segment-first-only selftest_rc=1 KILLED failed=r22-dot-segment
+MUT R25-digest-replace-encode selftest_rc=1 KILLED failed=r25-digest-byte-order
+MUT R27-static-dir-first-seg selftest_rc=1 KILLED failed=m07-static-dir
+MUT R28-at-rev-one-top applies=2 SKIP
+MUT R29-blob-empty-bytes selftest_rc=1 KILLED failed=r29-blob-unreadable
+MUT R30-devnull-as-symlink selftest_rc=1 KILLED failed=r30-record-not-symlink
+MUT R31-fixed-drop-last-char selftest_rc=1 KILLED failed=j10-tally,r28-at-rev-two-static-dirs,r31-fixed-mid-line
+MUT R32-rev-token-double-space selftest_rc=0 SURVIVED failed=-
+MUT R33-count-over-by-one selftest_rc=1 KILLED failed=j02-count,r14-two-codes,r32-rev-token,r33-count-over
+MUT R34-git-rc-zero selftest_rc=1 KILLED failed=r34-git-runs-bounded
