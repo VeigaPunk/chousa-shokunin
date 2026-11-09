@@ -1,0 +1,73 @@
+{
+ "round": 100,
+ "lane": "chousa",
+ "l1": "ChousaR100",
+ "base": "929c784c63a1fd17961d21742101b2b109b7b8ff",
+ "shape": "two claims, two axes (operability, freshness), no exploratory claim; C2 sourced on S238 (opened this round)",
+ "claims": {
+  "C1": {
+   "id": "C1-GATE-REVCAP-R100",
+   "axis": "operability",
+   "type": "gate rule: tools/gate-records.py fails (CHALLENGE) a rev record whose blob, as git resolves rev:path, has the object id of a corpus/captures/<24 hex>.txt|.raw entry at that rev and whose capture text (a .raw's sibling .txt when present) is a challenge page by the round-99 rule",
+   "counting_command": [
+    "python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work <scratch>"
+   ],
+   "predicate": {
+    "controls_stdout_regex": "^NEG=7/7 MARK=11/11 BOUND=3/3 NORM=2/2 POS=4/4 REV=11/11 REVPOS=3/3 PROD=6/6 HARM_SAME=(\\d+)/\\1 BASE_REV_ADMITTED=8/11 ORACLES_REJECTED=12/12$",
+    "harm_min": 26,
+    "controls_stdout": [
+     "CHALLENGE_CONTROLS_R100=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round100/before/c1-base.txt (base tool under the battery, --no-oracles: REV=3/11 PROD=4/6, FAIL, exit 1)",
+   "sources": []
+  },
+  "C2": {
+   "id": "C2-ENTRY-UPDATE-R100",
+   "axis": "freshness",
+   "type": "knowledge entry (corpus/knowledge/quotation-error-update-r100.md) answering the round-99 entry's on-release recheck, plus a ## Update flag in corpus/knowledge/quotation-error-rates-r99.md",
+   "counting_command": [
+    "python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-update-r100.md",
+    "bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-update-r100.md --root .",
+    "python3 -B tools/search-rerun.py verify corpus/knowledge/quotation-error-update-r100.md --root .",
+    "python3 -B corpus/evidence/round100/entry-controls-r100.py --root .",
+    "python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-rates-r99.md",
+    "python3 -B corpus/evidence/round99/entry-controls-r99.py --root ."
+   ],
+   "predicate": {
+    "gate_stdout": [
+     "GATE_RECORDS files=1 records=17 ok=17 fail=0"
+    ],
+    "gate_exit": 0,
+    "metadata_stdout": [
+     "METADATA_COMPLETE=1/1",
+     "RESEARCH_GATE: CLEAN"
+    ],
+    "metadata_exit": 0,
+    "rerun_stdout": [
+     "rev_match=3/3",
+     "SEARCH_RERUN: CLEAN"
+    ],
+    "rerun_exit": 0,
+    "controls_stdout": [
+     "QUOTES=16/16 FIELD=16/16 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=24/24 NEVER=8/8 FRESH=1/1 TOPIC=1/1 NUMBERS_SOURCED=24/24 BASE_TOPIC_HITS=0 BASE_ENTRY=absent BASE_UPDATE_LINK=0 FORGERY_REFUSED=13/13 ACCEPTED=2/2",
+     "ENTRY_CONTROLS_R100=PASS"
+    ],
+    "controls_exit": 0,
+    "harm_stdout": [
+     "GATE_RECORDS files=1 records=25 ok=25 fail=0",
+     "ENTRY_CONTROLS_R99=PASS"
+    ]
+   },
+   "before": "corpus/evidence/round100/before/c2-base.txt (entry absent at base: gate exit 2, controls exit 2) and before/c2-prelink.txt (entry present, round-99 entry without ## Update: FRESH=0/1, FAIL, exit 1)",
+   "sources": [
+    "S238"
+   ]
+  }
+ },
+ "freeze": {
+  "P": "recorded in plans/round-100.md ## Freeze (pre-freeze build commit the before/ receipts ran against)",
+  "F": "recorded in plans/round-100.md ## Freeze by the commit after F (a commit cannot carry its own hash)"
+ }
+}
