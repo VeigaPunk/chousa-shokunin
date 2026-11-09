@@ -4391,3 +4391,46 @@ after the round-97 one.
 4. carried debt: the four gate-kind tools with no `--selftest`, the round-94 planned items, the round-74 source-blind
    order oracle, the r82 clip range, QUALITY 173's successful-refused record form, the r80 backlog Gate ids, the
    tracked absolute symlink `R84ExecForge/forge/linkcap.txt` (`R98SentinelC1` F8).
+
+## Round 99 verdict — the gate refuses challenge pages it can name, and the lane holds how often citations fail their sources (2026-11-09)
+
+Base `47ed34fa`; freeze F `d41f4cd8`; wave-forced re-freezes F2 `96d761ee` (A1-A7, B1-B2, wording only; the C1 tool and
+both counters' code identical F..F2) and F3 `c3bad643` (B3-B6: C2 entry prose and named limits after `R99ScoutSources`;
+quotes, warrants, numerals and counters unchanged). C1 numbers from `corpus/evidence/round99/after-f2/c1-all.txt`, C2
+from `corpus/evidence/round99/after-f3/c2-all.txt`. Two claims, two axes, no exploratory claim; C2
+sourced on `S236` and `S233` (opened this round). One v1 wave, 12 seats.
+
+| claim | axis | before | after | delta | verdict |
+|---|---|---|---|---|---|
+| C1 `C1-GATE-CHALLENGE-R99` | operability (lowest, historical 3/10) | base tool under the battery: `NEG_REFUSED=0/7 POS_ADMITTED=4/4 PROD_REFUSED=0/4 HARM_SAME=25/25`, `CHALLENGE_CONTROLS_R99=FAIL`, exit 1 (`before/c1-base.txt`) | `NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=5/5`, `CHALLENGE_CONTROLS_R99=PASS`, exit 0 | the gate refuses 7 + 4 challenge-page records (S230, S229, S234 and four written pages; on the production path too) that it admitted; output on 25 committed files unchanged; numeric score unchanged (historical 3/10 frozen by its own rule) | **verified at F2 on the amended sentence (author-measured; limits (d), (g), (h) narrowed after `R99SentinelC1`, `R99MutantsC1`, `R99RevenPrior`)** |
+| C2 `C2-ENTRY-R99` | coverage | no knowledge entry or capture contains "quotation error"; entry absent (gate exit 2; `before/c2-base.txt`) | `GATE_RECORDS files=1 records=25 ok=25 fail=0`, `METADATA_COMPLETE=1/1`, `rev_match=4/4 SEARCH_RERUN: CLEAN`, `ENTRY_CONTROLS_R99=PASS` with `QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS_SOURCED=6/6 FORGERY_REFUSED=10/10 ACCEPTED=2/2` | one knowledge entry on new province ground (quotation-error rates and how they are counted), two sources admitted | **verified at F3 on the amended entry and sentence (author-measured; scope sentence, row 1 and limits narrowed at F2/F3, B1-B6, after `R99MutantsC2`, `R99ConnectorSiblings`, `R99ScoutSources`)** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | the gate refuses a GATE-RECORD whose capture is a short page carrying one of 11 challenge markers, where the round-98 tool admitted all 11 test records (C1) |
+| depth | unchanged | no depth claim |
+| coverage | **improved** | claim-vs-source verification gains its empirical side: measured quotation-error rates and their counting rules (C2) |
+| freshness | unchanged | no re-verification claim |
+| calibration | unchanged | both sentences narrowed to their instruments before filing (A1-A7, B1-B2); QUALITY 230 added; no calibration claim |
+| adjacency | unchanged | tameshi's overlapping rows routed by `R99ConnectorSiblings`, not absorbed |
+
+No axis harmed: `gate-records verify` prints byte-identical output and exit codes to the round-98 tool on every committed
+knowledge/lesson file carrying GATE-RECORD lines (`HARM_SAME=25/25`); no committed GATE-RECORD cites a challenge
+capture (`R99SentinelC1` part 2: the five flagged captures are cited by none); the registry diff is five appended rows
+and one `## Search log` entry; `SKILL.md` gains one correction line after the round-98 one.
+
+## Planned — round 100 (intent, not a predicate)
+
+1. **operability (lowest)** — close the C1 limits the wave measured: normalize the rev path before the capture guard
+   (`R99SentinelC1` F-1), one NEG fixture per marker and 199/200/201 boundary fixtures (`R99MutantsC1` survivors), a rev
+   fixture whose quoted line carries no marker (`R99SentinelC1` F-4), SETUP instead of a crash on a missing fixture
+   capture; the battery loosenings b1-b8.
+2. **coverage/depth** — the 2025 update's Europe PMC record (pmid 40696441, PMC12285159) answered a seat's re-open with
+   http 200 and Jergas & Baethge 2015's Europe PMC full text (S235's route) answered 200 on the seat's second try
+   (`R99ScoutSources`): open both through the lane's own GETs; the article body pools the major/minor rates over 27
+   studies (B5); the lane's own citation-support rate is unmeasured.
+3. carried debt: Never-cell and number-sense legs for entry controls (`R99MutantsC2`); the fleet tier rule for
+   index-record abstracts (tameshi S327 A vs chousa S236 B); `R98MutantsC1` G01-G03/D05 and R32 (round-98 spot-check
+   routed defect 2); D1; the four gate-kind tools with no `--selftest`; the round-94 planned items; the round-74
+   source-blind order oracle; the r82 clip range; QUALITY 173's successful-refused record form; the r80 backlog Gate
+   ids; the tracked absolute symlink `R84ExecForge/forge/linkcap.txt`.

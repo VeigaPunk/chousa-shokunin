@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""Stand-in C1 forgery B (second variant): matches ONLY on S9xx sid range + capture byte-fingerprint,
+never word-counts or matches markers. Complements A: A keys on URL host; B keys on sid magnitude."""
+import sys
+import importlib.machinery, importlib.util
+_spec = importlib.util.spec_from_file_location('_gate', '/fast/scratch/hyaku/chousa-r99/R99CriticClaims/repo/tools/gate-records.py')
+import importlib.machinery
+_loader = importlib.machinery.SourceFileLoader('_gate', '/fast/scratch/hyaku/chousa-r99/R99CriticClaims/repo/tools/gate-records.py')
+_spec.loader = _loader
+_mod = importlib.util.module_from_spec(_spec)
+_loader.exec_module(_mod)
+import hashlib, os
+
+PROD_SHA = {
+    '4f25f0b14fb2450c633eefc0bfc0b09db390dab39f51e357866703da5c187802',  # S230
+    'c42ccd00e8305111f9269436ae4dd8a66cba6188df6a5a44e5478ce00b4e94f8',  # S234 placeholder; also match by path
+}
+PROD_PATHS = {'corpus/captures/b5b8d050eea0c638e95ba674.txt', 'corpus/captures/b90988847e704a08aabc8321.txt',
+              'corpus/captures/0954149536aaad411000e1fb.txt'}
+_orig = _mod.check
+
+def _sid_num(sid):
+    try:
+        return int(sid[1:])
+    except Exception:
+        return -1
+
+def check(rec, root, repo, reg, refetch):
+    sid, kv, quote, form = rec
+    # Scratch NEG legs use S901..S911 (Lab starts at 900, increments per add)
+    # POS legs also use S9xx — discriminate by whether url has /n vs /p suffix OR capture is big
+    if form == 'admit' and _sid_num(sid) >= 900:
+        if '/n' in kv.get('url', ''):
+            return ['CHALLENGE']
+        return _orig(rec, root, repo, reg, refetch)
+    if form == 'admit' and kv.get('capture') in PROD_PATHS:
+        return ['CHALLENGE']
+    if form == 'rev' and kv.get('path') in PROD_PATHS:
+        return ['CHALLENGE']
+    return _orig(rec, root, repo, reg, refetch)
+
+_mod.check = check
+sys.exit(_mod.main())

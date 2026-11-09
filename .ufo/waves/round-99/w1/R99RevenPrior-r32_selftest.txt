@@ -1,0 +1,68 @@
+SELFTEST g00-guard-canary ok fail_set=ok pass_set=ok
+SELFTEST p01-parse-good ok
+SELFTEST p02-no-section ok want=SECTION got=SECTION
+SELFTEST p03-header ok want=HEADER got=HEADER
+SELFTEST p04-engine ok want=ENGINE got=ENGINE
+SELFTEST p05-globstar ok want=WHERE got=WHERE
+SELFTEST p06-dotdot ok want=WHERE got=WHERE
+SELFTEST p07-posix-class ok want=EXPRESSION got=EXPRESSION
+SELFTEST p08-backtick ok want=EXPRESSION got=EXPRESSION
+SELFTEST p09-short-rev ok want=REV got=REV
+SELFTEST p10-zero-with-set ok want=HIT_SET got=HIT_SET
+SELFTEST p11-dup-id ok want=ROW got=ROW
+SELFTEST p12-row-after-break ok want=TABLE got=TABLE
+SELFTEST p13-absolute-glob ok want=WHERE got=WHERE
+SELFTEST r01-signed-hits ok want=HITS got=HITS
+SELFTEST r02-bad-date ok want=DATE got=DATE
+SELFTEST r03-upper-rev ok want=REV got=REV
+SELFTEST r04-q0-id ok want=ROW got=ROW
+SELFTEST r05-empty-expression ok want=EXPRESSION got=EXPRESSION
+SELFTEST r06-empty-segment ok want=WHERE got=WHERE
+SELFTEST r07-trailing-comma ok want=HIT_SET got=HIT_SET
+SELFTEST r16-sep-width ok want=TABLE got=TABLE
+SELFTEST p14-escaped-pipe ok '^(x|b)$'
+SELFTEST r08-upper-digest-is-a-path ok ['engine', 'expr', 'expression', 'globs', 'hit_set', 'hits', 'id', 'n', 'needle', 'rev', 'searched', 'set', 'where']
+SELFTEST m01-lines ok
+SELFTEST m02-dotfile ok
+SELFTEST m03-segment ok
+SELFTEST r09-glob-longer ok
+SELFTEST m04-per-line ok
+SELFTEST m05-case ok
+SELFTEST r10-regex-mid-line ok
+SELFTEST r11-regex-non-utf8 ok
+SELFTEST m06-digest ok
+SELFTEST m07-static-dir ok
+SELFTEST r12-static-dir-literal ok
+SELFTEST m08-env-scrub ok
+SELFTEST r13-env-guards ok ['GIT_NO_LAZY_FETCH', 'GIT_NO_REPLACE_OBJECTS', 'GIT_TERMINAL_PROMPT']
+SELFTEST j01-exact ok want=(0, 1, 1, []) got=(0, 1, 1, [])
+SELFTEST j02-count ok want=(1, 0, 1, ['COUNT_DRIFT']) got=(1, 0, 1, ['COUNT_DRIFT'])
+SELFTEST j03-set ok want=(1, 0, 1, ['SET_DRIFT']) got=(1, 0, 1, ['SET_DRIFT'])
+SELFTEST j04-digest ok want=(1, 0, 1, ['SET_DRIFT']) got=(1, 0, 1, ['SET_DRIFT'])
+SELFTEST j05-dup-path ok want=(1, 0, 1, ['SET_DRIFT']) got=(1, 0, 1, ['SET_DRIFT'])
+SELFTEST j06-tree-moved ok want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 1, 0, ['TREE_CHANGED'])
+SELFTEST j07-tree-strict ok want=(1, 1, 0, ['TREE_CHANGED']) got=(1, 1, 0, ['TREE_CHANGED'])
+SELFTEST j08-tree-swap ok want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 1, 0, ['TREE_CHANGED'])
+SELFTEST j09-zero ok want=(0, 1, 1, []) got=(0, 1, 1, [])
+SELFTEST r14-two-codes ok want=(3, 0, 0, ['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED']) got=(3, 0, 0, ['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED'])
+SELFTEST r15-digest-at-rev ok want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 1, 0, ['TREE_CHANGED'])
+SELFTEST j10-tally ok got=(1, 1, 2)
+SELFTEST r17-row-no-end-pipe ok want=ROW got=ROW
+SELFTEST r18-heading-suffix ok want=SECTION got=SECTION
+SELFTEST r19-two-sections ok want=SECTION got=SECTION
+SELFTEST r20-two-dash-sep ok want=TABLE got=TABLE
+SELFTEST r21-dash-set-nonzero ok want=HIT_SET got=HIT_SET
+SELFTEST r22-dot-segment ok want=WHERE got=WHERE
+SELFTEST r23-open-backtick ok want=EXPRESSION got=EXPRESSION
+SELFTEST r24-posix-upper ok want=EXPRESSION got=EXPRESSION
+SELFTEST r25-digest-byte-order ok
+SELFTEST r26-git-prefix-not-git-underscore ok
+SELFTEST r27-static-dir-bracket ok
+SELFTEST r28-at-rev-two-static-dirs ok got=['a/x.txt', 'b/y.txt']
+SELFTEST r29-blob-unreadable ok code=REV
+SELFTEST r30-record-not-symlink ok code=SECTION
+SELFTEST r31-fixed-mid-line ok
+SELFTEST r32-rev-token ok got=['rev=MATCH', 'rev=DRIFT']
+SELFTEST r33-count-over ok got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT'])
+SELFTEST r34-git-runs-bounded ok rc=128
+SEARCH_RERUN_SELFTEST: PASS cases=67/67

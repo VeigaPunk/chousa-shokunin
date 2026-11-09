@@ -1,0 +1,22 @@
+Round-98 defect class re-opened at F: a GATE-RECORD quoting S230's http-200 reCAPTCHA page
+is ADMITTED (exit 0) when the rev record's path is spelled './corpus/captures/<24hex>.txt'.
+The git blob is byte-identical to the canonical spelling's blob.
+
+$ git rev-parse d41f4cd8b857c6de683e7be5c5e8125b32763a8e:corpus/captures/b5b8d050eea0c638e95ba674.txt d41f4cd8b857c6de683e7be5c5e8125b32763a8e:./corpus/captures/b5b8d050eea0c638e95ba674.txt
+66f24cb2b71fc4ff29c439e0c994b2a28e9dbde6
+66f24cb2b71fc4ff29c439e0c994b2a28e9dbde6
+
+$ cat /fast/scratch/hyaku/chousa-r99/R99SentinelC1/w1/probes/final-corpus_captures_b5b8d050eea0c638e95ba674.txt.md
+GATE-RECORD S230 rev=d41f4cd8b857c6de683e7be5c5e8125b32763a8e path=corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+$ python3 -B tools/gate-records.py verify --root . /fast/scratch/hyaku/chousa-r99/R99SentinelC1/w1/probes/final-corpus_captures_b5b8d050eea0c638e95ba674.txt.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r99/R99SentinelC1/w1/probes/final-corpus_captures_b5b8d050eea0c638e95ba674.txt.md:3 S230 FAIL CHALLENGE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+$ cat /fast/scratch/hyaku/chousa-r99/R99SentinelC1/w1/probes/final-._corpus_captures_b5b8d050eea0c638e95ba674.txt.md
+GATE-RECORD S230 rev=d41f4cd8b857c6de683e7be5c5e8125b32763a8e path=./corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+$ python3 -B tools/gate-records.py verify --root . /fast/scratch/hyaku/chousa-r99/R99SentinelC1/w1/probes/final-._corpus_captures_b5b8d050eea0c638e95ba674.txt.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r99/R99SentinelC1/w1/probes/final-._corpus_captures_b5b8d050eea0c638e95ba674.txt.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+

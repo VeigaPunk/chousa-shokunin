@@ -1,0 +1,38 @@
+# R99MutantsC2 — mutation test of the C2 instrument (`corpus/evidence/round99/entry-controls-r99.py`)
+
+Target: `entry-controls-r99.py` @ F d41f4cd8. Tree: scratch clone `$S/repo` (verified toplevel, then removed before yield).
+Baseline (pristine): `python3 -B corpus/evidence/round99/entry-controls-r99.py --root .` → ENTRY_CONTROLS_R99=PASS exit 0 (`R99MutantsC2-baseline.txt`).
+
+## Method
+16 one-site mutants (`$S/mutants/M*.py`, each run `--root $S/repo`); KILLED = prints ENTRY_CONTROLS_R99=FAIL or SETUP. All 16 are single-line/surgical (norm, NUM regex, NUMBERS scope, FIELD, IDENTITY, WARRANTS, TOPIC, BASE, ACCEPT, `passes`, word cap, forgery `changed`, NUMBERS-off, S233 leg). Restoration: entry file restored after forgery probe, `sha256sum` pristine (`R99MutantsC2-hashes.txt`).
+
+## Verdicts
+KILLED (6/16): M04 numbers-global, M07 warrants-nolane, M09 base-inverted, M10 accept-inverted, M12 quotes-no-wordcap, M15 numbers-off.
+SURVIVED (10/16): M01 norm→identity, M02 NUM-no-%, M03 NUM-no-comma, M05 FIELD `in`, M06 IDENTITY-drop-pubYear, M08 TOPIC-case-sensitive, M11 `passes`-accepts-n=0, M13 forgery-`changed`-removed, M14 FIELD-j0only, M16 IDENTITY-S233-off.
+
+Every survivor was traced to its mechanism (see receipt outputs + analysis below); none is a wiring error — each is a coverage gap in the forgery set or a letter-only weakening. Details in receipts `M01-…-output.txt` … `M16-…-output.txt`.
+
+### Why the survivors survive (each quotable from the source)
+- M01 `norm`→identity: all 23 quotes occur RAW in their captures today, so the check passes with or without normalization. The curly/double-space path is untested: an entry with `’` vs `'` (or a double space) would be wrongly refused by M01 and correctly admitted by pristine. This falsifies the docstring line "normalized as tools/gate-records.py normalizes" — the controls never prove the normalization is applied.
+- M02 NUM-no-% / M03 NUM-no-comma: numeric tokens are matched by substring. `25.4` ⊂ `25.4%`, and `11` ⊂ `11,9%` (verified). Dropping `%` or the `,` alternative cannot fail on the pristine corpus — the comma-decimal and percent flags are decoration for f6's purpose only insofar as f6's OWN replacement breaks the substring match, not the regex.
+- M05 FIELD `in` for J0: J0's text is the title, so `"title" in title` is true both ways (verified equality). Only a J0-prefix forgery would kill it; f4 replaces with a full abstract sentence, which is neither prefix nor title — killed by the `==` discipline only, not by `in`.
+- M06 IDENTITY-drop-pubYear: the forgery set changes `pmid` (f8) but never `pubYear`/`doi`/`hitCount`/journal/volume, so dropping any single field survives. Same for M16 (S233 leg): no forgery corrupts the S233 capture or the G0 title.
+- M08 TOPIC-case-sensitive: the entry writes "quotation error" in lower case exactly. A capitalised variant would defeat M08 while pristine refuses it.
+- M11 `passes`-accepts-n=0: every leg has n>0 on the pristine corpus; the mutant is only observable on an empty-table input. This is a genuine latent hole: a future edit that empties the decision table (NUMBERS n=0, WARRANTS n=0) would PASS under M11 and is only blocked by pristine's `v>0`.
+- M13 forgery-`changed`-removed: f1–f10 as written ALL change the text (each `replace` target verified present: f1 `I estimate that 14.5%`, f2/f6 `first_do` contains `14.5%` and `11,9%`, f9 `rows[1][4]` non-empty). So removing the `changed` guard is currently equivalent. The danger is future: a no-op `replace` (e.g. a quote reworded) would silently count as `refused` under M13. The script's `changed` counter is doing real work TODAY but is invisible in the output (it prints only PASS/FAIL per forgery, never `changed=`).
+- M14 FIELD-j0only: dropping the abstract-membership check for J1–J8 survives because no forgery puts a J1–J8 quote outside `abstractText`. F-C (below) kills M14 only because I replayed it — the shipped f4 does not (it corrupts J0, not J1).
+
+## Forgery probe (6+1 entry forgeries, both instruments)
+`R99MutantsC2-forgery-probe.txt` holds: F-A (Do reverses G4/G5 major/minor, no number), F-B (`15%` rate reuse via G9's `15`), F-B2 (`15 studies` mislabel of G9's `15 articles`), F-C (J5 = title, not abstract), F-D (`95%` CI as the rate), F-E (`heterogeneity is negligible`, no number), F-F (Never cell smuggles a claim).
+
+Results: score() passes F-A, F-B2, F-D(partially — see note), F-E, F-F; full controls PASS F-A, F-B2, F-E, F-F (exit 0, FORGERY_REFUSED 10/10, ACCEPTED 2/2) while `gate-records verify` stays `ok=25 fail=0` throughout. F-B and F-C are caught by NUMBERS/FIELD (proving those legs work). F-D is the sharp one: score() itself passes (`NUMBERS 6/6`), but the FULL controls FAIL for an accidental reason — f2 (`first_do.replace("14.5%","24.5%")`) becomes a no-op once F-D has already replaced 14.5%→95%, so `changed=false` and f2 reads "accepted FAIL". That is a test-interference artifact, not a detector catching the 95% sense-swap. The `95%`-as-rate forgery therefore survives the instrument that claims to catch it.
+
+### Do any survivors falsify a C2 sentence?
+- **Yes — F-B2 / F-D** (NUM-leftover-possession vs sense-swap): the claim's K2 ("a Do-cell number not printed in that row's warrant quotes") is letter-true but the probe shows a Do cell can print a number that IS in its warrants while stating a different quantity (articles ≠ studies, CI ≠ rate). The controls enforce the letter of K2, not its intent, and the frozen claim's Named limits (d) already concedes "the controls check numbers … not that a paraphrase is faithful" — so this is a disclosed limit, NOT a falsified sentence. It is the sharpest coverage gap in the probe.
+- **F-A / F-E** are the same class (numberless reversal). The entry transparently claims "a paraphrase can still narrow or widen a quote's meaning" (`## Named limits`) and K5 is reviewer-judged — pristine rows reviewed K5-clean, so no falsification.
+- **F-F (Never smuggle)** is the only new gap with no Named-limit cover: `decisions()` parses 5 columns but `score()` never reads column 2 (`Never`), and `gate-records` does not check it either. The frozen claim's WARRANTS leg is defined as "Warrant names only qids; every Lane cell non-empty" — it never promises the Never column either. So this is a protocol-level blind spot worth a future leg, but as frozen it does not falsify a stated sentence.
+- **M01** touches the docstring ("matched after tools/gate-records.py's normalization") — the instrument does apply `norm()` (`R99MutantsC2` receipts verify), but the forgery set never exercises it, so the claim "controls test every leg on a forgery" over-reads what the battery proves. Disclosed in spirit by (c), but not literally false.
+- **M06/M16**: IDENTITY is an AND of unequal parts; the frozen K3 names pmid/doi/year/journal/volume for S236. The controls check all of them (they're in code, not just docstring), but only pmid is forgery-tested.
+
+### Verdict
+The instrument is honest: every claimed CHECK is in the code and the 6 killed mutants prove the skeleton (BASE/ACCEPT/NUMBERS-off/WARRANTS-Lane/wordcap) is load-bearing. The 10 survivors map to two real, fixable coverage gaps: (1) no forgery varies ~curly whitespace, %-only tokens, comma-decimals, year/doi/S233-title fields, or abstract-membership of J1–J8; (2) number-presence without number-sense — the letter of K2 holds while sense swaps (F-B2, F-D) pass. Neither falsifies a frozen C2 sentence (both are within the disclosed Named limits (c)/(d)), but F-D and F-F are the first forgeries that a reviewer-free pipeline would admit, and they justify a Named-limit note before the freeze hardens.

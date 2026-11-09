@@ -1,0 +1,27 @@
+=== P1 marker presence post-norm ===
+CF 28 ['just a moment', 'enable javascript and cookies to continue']
+TURN 21 ['verify you are human']
+ATTN 33 ['attention required']
+ARTICLE 381 ['recaptcha', 'just a moment']
+SHORT 28 []
+S230 23 ['checking your browser', 'recaptcha']
+S229 18 ['cookies must be enabled']
+S234 37 ['client challenge', "a required part of this site couldn't load"]
+S233 8455 []
+S236 307 []
+=== P2 boundary F: 199/200/201 ===
+199 True
+200 True
+201 False
+202 False
+=== P3 norm-in-is_challenge ===
+'Release\nnotes.  Just   a   moment\nplease' True False
+'Just  a  moment please wait while the pa' True False
+'a required part of this site couldn’t lo' True False
+=== P4 lower vs casefold ===
+True
+True
+True
+casefold ß: jusst a moment vs lower: jußt a moment
+=== P5 CAP_RE noop ===
+rev branch F gates on CAP_RE.fullmatch(path); m22 checks all paths; battery rev fixtures are only S230/S229 capture-path

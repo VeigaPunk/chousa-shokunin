@@ -1,0 +1,122 @@
+# R99ConnectorSiblings — cross-lane scan receipts (read-only git reads)
+chousa-shokunin f8f480ffd738cda9b427e0fe8fa8e79c78fb409d
+tameshi-shokunin ab60e13444d83d0af58d5bdf052d8bfde21d277c
+kotodama-shokunin 5fa04a9bbda25aa31c8270265fd9997eb97d9ebb
+tabi-shokunin 020ce05fc5d695a295103f53c25c6199210f3050
+kama-shokunin 65d027131327ca4434827f3fbc04b4fea794be95
+
+=== (b) tameshi already holds the same abstract and rejected the same Mogull URL ===
+$ git -C tameshi-shokunin grep -n "^| S327 \|^| S328 " -- corpus/SOURCES.md | cut -c1-120
+HEAD:corpus/SOURCES.md:203:| S327 | Quotation accuracy in medical journal articles — a systematic review and meta-analys
+HEAD:corpus/SOURCES.md:204:| S328 | Accuracy of cited "facts" in medical research articles: a review of study methodolog
+$ (tier + status cells of S327/S328 at tameshi HEAD)
+203 S327 kind=paper tier=A status=mined
+204 S328 kind=paper tier=A status=rejected
+$ git -C tameshi-shokunin show HEAD:corpus/knowledge/gate-line-pointer-recheck.md | sed -n "1,8p;33,40p"
+# Gate line-pointer recheck — a cited `line N` is re-derived from the snapshot it names
+
+source: S327 — Jergas, Baethge, "Quotation accuracy in medical journal articles — a systematic
+review and meta-analysis", PeerJ 2015 (e1364), Europe PMC REST record (abstract) fetched
+2026-11-08, snapshot `.ufo/evidence/round-100/sources/s327.json` 4722 B sha256
+`bbd5b0fbb8bafe42b6dbc8a43fcf64b49ba6060f5fbd8f834020a66e2c310c5f`
+verified-at: 2026-11-08; receipts `.ufo/evidence/round-100/records/c2-population.out`,
+`c2-red-r95-only.out`, `c2-green-r97-only.out`, `c2-green-r99-only.out`, `c2-selftest.out`,
+
+S327 pooled 28 studies of quotation accuracy in medical articles and states the class plainly:
+"Studies indicate, however, that quotations not serving their purpose-quotation errors-may be
+prevalent." (12 words, `abstractText`). Its ascertainment distinguishes a citation that
+supports the claim from one that merely names a real source; the lane's analogue is a Gate
+whose quote is real but whose pointer does not locate it. The lesson taken: a pointer is a
+separate claim from the quote and needs its own mechanical check. S328 (Mogull 2017) was
+opened and rejected: it re-weights the same error rate per quotation rather than per
+
+$ (same paper? tameshi s327.json abstractText vs chousa S236 capture abstractText at F)
+tameshi title = Quotation accuracy in medical journal articles-a systematic review and meta-analysis.
+chousa  title = Quotation accuracy in medical journal articles-a systematic review and meta-analysis.
+tameshi pmid/doi = 26528420 10.7717/peerj.1364
+chousa  pmid/doi = 26528420 10.7717/peerj.1364
+abstractText equal = True len 1459
+tameshi record sha256 = bbd5b0fbb8bafe42b6dbc8a43fcf64b49ba6060f5fbd8f834020a66e2c310c5f
+
+=== chousa's S236/S233 rows at F: tier cells ===
+245 S233 kind=paper tier=A status=mined
+248 S236 kind=paper tier=B status=mined
+
+=== chousa round 99 does not name tameshi's entry or the S327/S328 rows ===
+$ git -C chousa-shokunin grep -nE "tameshi|S327|S328|gate-line-pointer" HEAD -- corpus/knowledge corpus/SOURCES.md .ufo/waves/round-99 ; echo rc=$?
+rc=1
+
+=== C2 base-absence claim re-derived at BASE 47ed34fa ===
+$ git -C chousa-shokunin grep -i -l "quotation error" 47ed34fa -- corpus/knowledge/* | wc -l
+0
+$ git -C chousa-shokunin grep -i -l "quotation error" 47ed34fa -- corpus/captures/* | wc -l
+0
+
+=== (a) kotodama: content refusals of access-control-reached rows, with ordinary-route exemption ===
+$ git -C kotodama-shokunin show HEAD:corpus/QUALITY.md | sed -n "37p" | cut -c1-600
+10. **Sources are opened by ordinary means** — a row may record a source as opened only when it was reached by a plain request, a public copy, an archive capture or a library scan that a fresh session could repeat. A row whose own cells record getting past an access control (a headless browser or other browser-automation tool through a bot challenge, a solved captcha, a bypassed paywall, login or geo block) counts as unopened: its status is `rejected`, a superseding row keeps the reason and the flip, and no knowledge entry cites it. A challenge met and then routed around by an ordinary copy (f
+$ git -C kotodama-shokunin show HEAD:tools/check-source-access.py | sed -n "1,16p;120,123p"
+#!/usr/bin/env python3
+"""Ordinary-access check for corpus/SOURCES.md (QUALITY criterion 10, round 52).
+
+A registry row whose source, anchor or teaches cell records that the source was
+reached by getting past an access control (a headless browser, a solved captcha
+or bot challenge, a bypassed paywall or login) counts as unopened. Such a row
+supports nothing:
+
+  * status leg: the row's status must be `rejected`;
+  * cited leg: no corpus/knowledge entry may cite the row's S-id.
+
+A row that met a challenge and was then read through an ordinary route (for
+example a Wayback capture) does not carry a bypass marker and is not flagged.
+
+Usage:
+  python3 -B tools/check-source-access.py [--root LANE_ROOT] [--sources PATH]
+        ("wayback-after-challenge", row("S001", "A — https://a.example (direct page served a JS challenge; read via Wayback capture)", "t", "mined"), "x (S001)\n", 0, 0),
+        ("wayback-after-live-captcha", row("S001", "A — https://a.example (live page CAPTCHA; read via Wayback captures)", "t", "mined"), "x (S001)\n", 0, 0),
+        ("captcha-in-teaches", row("S001", "A — https://a.example", "solved a captcha to read", "queued"), "x\n", 1, 1),
+        ("bypass-in-anchor", row("S001", "A — https://a.example", "t", "mined", anchor="paywall bypassed, p. 3"), "x\n", 1, 1),
+
+=== (b) tabi: quote fidelity is a byte-level claim, with an errata convention ===
+$ git -C tabi-shokunin show HEAD:corpus/knowledge/committed-bytes-verification-round-42.md | sed -n "38,43p"
+   the digit; an empty control file is a missing control, not a zero (D3:
+   `c1-baseline-noop.out` committed 0 bytes in round 41).
+3. Sources rows carry quotes as verbatim substrings of a committed staged copy of
+   the source, so quote fidelity is checkable from bytes alone (D2: spliced S146
+   quote; corrected by S148).
+4. Large evidence files must be committed as explicitly named files: the lane
+$ git -C tabi-shokunin show HEAD:corpus/knowledge/environment-injection-measurement-integrity-round-41.md | sed -n "71,83p"
+  bound, but do not eliminate, short-lived-connection blindness.
+
+## Errata (round 42, 2026-10-28 — quote fidelity, r41 verifier defect D2)
+
+The registry quote first carried for S146 ("A space-separated list of
+command-line options; interpreted before command-line options") spliced two
+source fragments with a semicolon and is not a verbatim substring of the
+committed staged copy (`.ufo/waves/round-41/sources/node-cli-v24.21.0.html`,
+§`NODE_OPTIONS=options...`). Per the SOURCES append-only contract the
+correction is a new row: **S148** (`supersedes S146 — A space-separated list
+of command-line options.`, verbatim, 7 words); S146 status changed
+`mined` → `rejected` and its `used-by` moved to `corpus/lessons/round-42.md`
+(old→new logged in the round-42 lesson). This entry's loader-channel source
+
+=== (b) kama KQ45: byte-exact verbatim quote; a bot wall makes a row unverifiable-by-fetch, not drift ===
+$ git -C kama-shokunin show HEAD:corpus/QUALITY.md | sed -n "322p" | cut -c1-700
+| KQ45 | Every new SOURCES row's located quote is checked against the source bytes at its cited anchor in the round that writes the row: a quote labeled "verbatim" is checked byte-exact, and a row whose quote drops a word, strips markup, or sits at a line other than the one its anchor names is a defect, corrected by an appended superseding row (CORPUS.md rule 2) and never by editing the quoted cell. A row whose source the check cannot reach (a client-rendered body, a paywall, a bot wall) records the access route in its anchor cell and is marked unverifiable-by-fetch, which is not drift. | A row is admitted on the strength of a quote a reader cannot find at the cited anchor, and the drift is 
+
+=== (a) chousa's own prior rule 229 and criterion 59 (capture form) at F ===
+$ git -C chousa-shokunin show F:corpus/QUALITY.md | sed -n "1432,1439p;512,517p"
+    capture behind it: a bot wall saved as a successful fetch, a binary document
+    decoded as bytes, and a stale summary table are three ways to make a verdict sound
+    that no source supports. Before a class is used to refuse or admit a row, name the
+    committed bytes the class rests on AND the form of those bytes (a rendered text, an
+    extracted PDF text, a binary decoding, an interstitial). A row whose evidence is
+    not in that form is `unverifiable`, never a fabrication. Check: for each refusal,
+229. **A capture is quoted only when its text is the document — an http 200 can carry a challenge page.** Round 98's
+    NCBI Bookshelf GET (S230) answered http 200 with a reCAPTCHA page ("Checking your browser before accessing
+    www.ncbi.nlm.nih.gov"); `tools/capture-fetch.py` stored it and `tools/gate-records.py` accepts a GATE-RECORD
+    quoting it (`OK`, exit 0, `corpus/evidence/round98/gate-records-challenge-200.txt`) — the round-85 repair
+    narrowed admission to http 200, which does not rule this out. Check: `for k in $(grep -ohE
+    'capture=corpus/captures/[0-9a-f]{24}\.txt' corpus/knowledge/*.md corpus/lessons/*.md | cut -d= -f2 | sort -u);
+    do grep -lE 'Checking your browser|Cookies must be enabled|Just a moment|reCAPTCHA' "$k"; done` prints nothing
+    (a lexical floor: a challenge page in other words passes it; the gate-records rule is routed to round 99).

@@ -1,0 +1,31 @@
+# R99ScoutSources receipt 9 — read at yield time (after F): the round-99 lesson and the sibling lane's DOI query
+# NOTE: corpus/lessons/round-99.md was landed by the L1 AFTER the freeze commit d41f4cd, while this seat worked.
+# It is read here as evidence about the round's route inventory, not as part of the frozen claim.
+
+$ grep -n 'S327' corpus/lessons/round-99.md
+51:records of both papers on 2026-11-08 — its S327 (Jergas & Baethge, DOI query, tier **A**, `mined`) and S328 (Mogull,
+
+$ sed -n '36,42p' corpus/lessons/round-99.md   # the S234 schema gap (QUALITY 173) and the S235 verdict
+- **S234 rejected (route).** URL `https://researchintegrityjournal.biomedcentral.com/articles/10.1186/s41073-025-00173-z`,
+  attempted `2026-11-09T04:00:33Z`, curl rc 0, http **200**; the body (capture key `b90988847e704a08aabc8321`, 37 words)
+  is "Client Challenge … A required part of this site couldn’t load". No `GATE-RECORD`: the url/unreach form refuses a 2xx
+  status and, from F, the url/admit form refuses the capture (CHALLENGE). The article's identity rests on a search
+  result only. Flip: a 200 carrying the article text.
+- **S235 rejected (unreachable).** URL `https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4627914/fullTextXML`,
+  attempted `2026-11-09T04:00:42Z`, curl rc 22, http 500. Flip: a 200 carrying the article XML.
+
+$ sed -n '25,28p' corpus/lessons/round-99.md   # the web-search note and which routes were tried
+Web search (one query, the session's search tool, 2026-11-09): `Jergas Baethge 2015 Quotation accuracy in medical
+journal articles systematic review meta-analysis PeerJ`. It returned PMC4627914 (the review), PMC5599002 (Mogull 2017),
+the 2025 update on the Springer/BMC host and the PeerJ review history; the publisher routes were tried first, Europe
+PMC's after the PeerJ 403.
+
+=== consequence for the findings ===
+  F-2/F-7 : the round-99 route inventory tried Europe PMC for the 2015 paper (EXT_ID query -> S236, tier B)
+             but not for the 2025 paper, whose Europe PMC DOI query answers 200 (receipt 5) and which a
+             sibling lane had already mined at tier A on 2026-11-08 (S327). The entry's claim to hold
+             'the two quantitative syntheses of that literature that this host could read' is therefore
+             falsified from inside the lane's own corpus.
+  F-1     : the lesson's S235 line still records one attempt at http 500 and a flip condition
+             ('a 200 carrying the article XML') that receipt 4 shows is now met.
+  QUALITY 173: DISCHARGED for S234 -- the lesson names the schema gap explicitly (lines 36-40).

@@ -1438,3 +1438,15 @@ the admitted entry that motivates it. Tier definitions live in
     do grep -lE 'Checking your browser|Cookies must be enabled|Just a moment|reCAPTCHA' "$k"; done` prints nothing
     (a lexical floor: a challenge page in other words passes it; the gate-records rule is routed to round 99).
     — `lessons/round-98.md` Mistakes 2.
+
+230. **The challenge-page rule is the gate's, not a grep's: a capture that is a challenge page fails its GATE-RECORD.**
+    QUALITY 229's lexical check listed the four wordings already seen; round 99's S234 answered http 200 with a
+    "Client Challenge" page that carries none of them, and the round-98 gate admitted a record quoting it
+    (`corpus/evidence/round99/before/c1-base.txt`, `CASE PROD S234 rc=0 verdict=OK`). From round 99,
+    `tools/gate-records.py` refuses such a record with code CHALLENGE (11 markers, at most 200 words; url/admit and rev
+    records on `corpus/captures/<key>.txt`). Check: `python3 -B tools/gate-records.py verify --root .
+    corpus/knowledge/*.md corpus/lessons/*.md | /usr/bin/grep -c 'FAIL.*CHALLENGE'` prints 0, and the battery
+    `python3 -B corpus/evidence/round99/challenge-controls-r99.py --root . --work <scratch>` prints
+    `CHALLENGE_CONTROLS_R99=PASS`. Limits: still lexical (round-99 claim C1 named limits (a)-(f)); a new challenge
+    wording seen in a capture is added to `CHALLENGE_MARKERS` with its capture key, never only to a grep.
+    — `lessons/round-99.md` Mistakes 1.

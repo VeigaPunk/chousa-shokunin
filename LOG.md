@@ -2914,3 +2914,38 @@ mutation-tester 2, reviewer 2, critic 1, sentinel 1, scout 1, revenger 1, connec
   F8 (tracked absolute symlink `.ufo/waves/round-84/w1/R84ExecForge/forge/linkcap.txt` into a scratch path); D1
   (`R98RevenPrior` proposes requiring the content-addressed key in both `gate-records.py` refetch branches).
 - Census: start exit 0, end exit 0 (rows 226 → 230). QUALITY 229 added; mistakes mined: 4 (`corpus/lessons/round-98.md`).
+
+## Round 99 — 2026-11-09
+
+Lane `chousa`, round 99 (attempt 1, L1 `ChousaR99`). Base `47ed34fa`; F `d41f4cd8`; carrier `f8f480ff`; F2 `96d761ee`
+(wave-forced narrowings, wording only); F3 `c3bad643` (C2 entry prose and limits, B3-B6). No predicate, counter code,
+kill rule or target changed. Claims `.ufo/waves/round-99/claims.md` (judged at the F2/F3 sentences). One v1 wave, 12 seats (executor 2, mutation-tester 2,
+reviewer 2, critic 1, sentinel 1, scout 1, revenger 1, connector 1, scribe 1); ledger
+`.ufo/waves/round-99/claim-falsification.tsv`.
+
+- Motivating evidence C1: round-98 spot-check routed defect 3 and SCORECARD planned item 1 — `tools/gate-records.py`
+  admits a quote from an http-200 challenge page (`corpus/evidence/round98/gate-records-challenge-200.txt`); this
+  round's S234 answered http 200 with a "Client Challenge" page that QUALITY 229's grep misses. After: CHALLENGE code;
+  battery `NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7
+  ORACLES_REJECTED=5/5`, PASS; base tool `NEG_REFUSED=0/7 … PROD_REFUSED=0/4`, FAIL
+  (`corpus/evidence/round99/after-f2/c1-all.txt`, `before/c1-base.txt`).
+- Motivating evidence C2: no entry or capture held "quotation error" (claim-vs-source verification's empirical
+  side). Routes: PeerJ 403 (S232), PLoS One 200 (S233), RIPR 2025 "Client Challenge" at http 200 (S234), Europe PMC
+  full text 500 (S235), Europe PMC core record 200 (S236). After: `corpus/knowledge/quotation-error-rates-r99.md`,
+  `records=25 ok=25`, `ENTRY_CONTROLS_R99=PASS` with `NUMBERS_SOURCED=6/6 FORGERY_REFUSED=10/10`
+  (`corpus/evidence/round99/after/c2-all.txt`).
+- Corrections at F2 (claims.md `## Amendments`): A1 "28-word" fixture; A2 battery docstring o3-o5; A3 separability
+  (the C1 battery reads two C2 captures and the C2 entry; probe `after-f2/c1-separability.txt`); A4 the rev guard is
+  keyed to the exact path spelling (`R99SentinelC1` F-1); A5/A7 the battery does not show each marker, the bound or
+  the whole-blob rev check live (`R99MutantsC1` 13/28 survive; `R99SentinelC1` F-4); A6 a committed marker-less
+  Chinese verification page is admitted (`R99RevenPrior`); B1 the entry controls read neither Never cells nor a
+  number's sense (`R99MutantsC2`); B2 tameshi holds Europe PMC records of both papers (S327 A, S328 A rejected).
+  F3 (C2, `R99ScoutSources`): B3 the entry's "the two … this host could read" was false (the 2025 update's Europe PMC
+  record answers 200); B4 row 1's "of 28 studies … major" and "per quotation" said more than its warrants; B5 the body
+  pools major/minor over 27 studies; B6 spelled-out quantities are unchecked. C2 tallies identical at F3
+  (`after-f3/c2-all.txt`).
+- Routed to round 100: rev-path normalization before the capture guard; one fixture per marker, 199/200/201 boundary
+  fixtures and a rev fixture whose quoted line carries no marker; the battery's crash (not SETUP) when a fixture
+  capture is missing (`after-f2/c1-separability.txt` control); Never-cell and number-sense legs for entry controls;
+  the fleet tier rule for index-record abstracts.
+- Census: start exit 0, end exit 0 (rows 230 → 235). QUALITY 230 added; mistakes mined: 4 (`corpus/lessons/round-99.md`).

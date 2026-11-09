@@ -1,0 +1,70 @@
+diff --git a/tools/gate-records.py b/tools/gate-records.py
+index dc7a4176..5a3189e0 100755
+--- a/tools/gate-records.py
++++ b/tools/gate-records.py
+@@ -42,6 +42,13 @@ Python's Unicode digit class had admitted `line=2٢٢` as line 222, `R83ExecForg
+   QUOTE_ABSENT  url/admit: the quote, normalized, does not occur in the normalized capture text
+   REV           rev form: rev is not a commit in GITDIR or path is not a blob at rev
+   LINE          rev form: line is outside the blob, or the normalized quote does not occur in that one line
++  CHALLENGE     url/admit, and rev when path is corpus/captures/<24 hex>.txt: the capture is an interstitial challenge
++                page, not the document (round-99 repair: S230 answered http 200 with a reCAPTCHA page and S234 with a
++                "Client Challenge" page, and a record quoting either passed every check above,
++                `corpus/evidence/round98/gate-records-challenge-200.txt`). The rule is lexical: the capture's
++                normalized, lower-cased text has at most CHALLENGE_MAX_WORDS (200) words AND contains one of
++                CHALLENGE_MARKERS. A challenge page in other words, or longer than 200 words, passes; a document of
++                more than 200 words that mentions a marker (an article about CAPTCHAs) is admitted.
+ 
+ Normalization (quote and text alike): U+2018/U+2019 -> ', U+201C/U+201D -> ", then whitespace runs (Python
+ str.split) collapse to one space. Matching is otherwise exact (case, punctuation and markup are kept).
+@@ -94,6 +101,33 @@ def norm(s):
+     return " ".join(s.split())
+ 
+ 
++# round 99: interstitial challenge pages (the capture is the gate, not the document). Markers are matched against the
++# normalized, lower-cased capture text; each is from an observed capture or a widely served interstitial:
++# S229/S021/S022/S032 "cookies must be enabled", S230 "checking your browser" and "recaptcha", S234 "client
++# challenge" and "a required part of this site couldn't load"; Cloudflare "just a moment", "verify you are human",
++# "enable javascript and cookies to continue", "attention required", "ddos protection"; generic "are you a robot".
++CHALLENGE_MAX_WORDS = 200
++CHALLENGE_MARKERS = (
++    "cookies must be enabled",
++    "checking your browser",
++    "recaptcha",
++    "client challenge",
++    "a required part of this site couldn't load",
++    "just a moment",
++    "verify you are human",
++    "enable javascript and cookies to continue",
++    "attention required",
++    "ddos protection",
++    "are you a robot",
++)
++
++
++def is_challenge(text):
++    """True when normalized TEXT is a short page carrying a challenge marker (CHALLENGE, round 99)."""
++    t = norm(text).lower()
++    return len(t.split()) <= CHALLENGE_MAX_WORDS and any(m in t for m in CHALLENGE_MARKERS)
++
++
+ def sha256_file(path):
+     with open(path, "rb") as fh:
+         return hashlib.sha256(fh.read()).hexdigest()
+@@ -243,6 +277,8 @@ def check(rec, root, repo, reg, refetch):
+                 text = norm(fh.read())
+             if not quote.strip() or norm(quote) not in text:
+                 codes.append("QUOTE_ABSENT")
++            if is_challenge(text):
++                codes.append("CHALLENGE")
+         else:
+             codes.append("QUOTE_ABSENT")
+     elif form == "unreach":
+@@ -268,6 +304,8 @@ def check(rec, root, repo, reg, refetch):
+             i = int(kv["line"])
+             if i > len(lines) or not quote.strip() or norm(quote) not in norm(lines[i - 1]):
+                 codes.append("LINE")
++            if CAP_RE.fullmatch(kv["path"]) and is_challenge("\n".join(lines)):
++                codes.append("CHALLENGE")
+     return sorted(set(codes))
+ 
+ 

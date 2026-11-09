@@ -1,0 +1,38 @@
+# R99ScoutSources receipt 7 — C2: the frozen controls accept a Do cell whose NUMBER was changed
+# tree: $S/repo @ d41f4cd8b857c6de683e7be5c5e8125b32763a8e
+# each test lane is a --shared clone of the lane at F with ONLY corpus/knowledge/quotation-error-rates-r99.md
+# edited; the frozen battery corpus/evidence/round99/entry-controls-r99.py is unmodified.
+# command in every lane: python3 -B corpus/evidence/round99/entry-controls-r99.py --root .
+
+=== the NUMBERS leg as implemented (entry-controls-r99.py:100-104) ===
+  100:         wok += all(i in qmap for i in ids) and bool(row[4])
+  101:         wtext = " ".join(norm(qmap[i][1]) for i in ids if i in qmap)
+  102:         for n in NUM.findall(row[1]):
+  103:             nums_n += 1
+  104:             nums_ok += n in wtext
+  105:     r["WARRANTS"] = (wok, len(rows))
+
+=== A. word-number substitutions in a Do cell ===
+  row 3 Do: 'less than one sixth of all quotation problems'  ->  'less than one third of all quotation problems'
+      CASE NUMBERS 6/6 PASS ; ENTRY_CONTROLS_R99=PASS ; exit=0
+  row 5 Do: 'source errors counted as minor in about half the studies'  ->  '... about two thirds of the studies'
+      CASE NUMBERS 6/6 PASS ; ENTRY_CONTROLS_R99=PASS ; exit=0
+  => NUM = r'[0-9]+(?:[.,][0-9]+)*%?' matches digit-forms only; a spelled-out number is never
+     collected, so it is never tested. J4 prints 'less than one sixth of all quotation problems';
+     G7 prints 'source errors are considered minor errors in approximately half of the studies'.
+
+=== B. digit-form substitution the substring test still satisfies ===
+  row 1 Do: 'quotation errors at 25.4%'  ->  'quotation errors at 5.4%'
+      CASE NUMBERS 6/6 PASS ; ENTRY_CONTROLS_R99=PASS ; exit=0
+  => the leg tests `n in wtext` (substring), not token equality; '5.4%' is a substring of the
+     warrant's '25.4%'. Contrast row 1 Do 'at 14.5%' -> 'at 4.5%': REFUSED (exit 1), because
+     '4.5%' is not a substring of any warrant number. The test is substring, not token.
+
+=== C. the frozen forgery set never changes a word-number ===
+  entry-controls-r99.py:162  "f10": (text.replace(first_do, first_do + " (lowest 6.7%)", 1), caps),
+  -> f10 moves a digit-form number between rows; no forgery mutates a spelled-out number.
+
+=== D. the claim's K2 as stated ===
+  claims.md C2 kill rule K2: 'a Do-cell number not printed in that row's warrant quotes'
+  -> 'one third' and 'two thirds' are numbers in a Do cell and are printed in NO warrant of that row;
+     the battery reports NUMBERS 6/6 and PASS. The kill rule is not enforced by the frozen controls.

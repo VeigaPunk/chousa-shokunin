@@ -1,0 +1,47 @@
+# R99ScoutSources receipt 2 — C1 battery at F and with the BASE tool
+# tree: /fast/scratch/hyaku/chousa-r99/R99ScoutSources/repo @ d41f4cd8b857c6de683e7be5c5e8125b32763a8e (clone --shared)
+
+$ python3 -B corpus/evidence/round99/challenge-controls-r99.py --root . --work /fast/scratch/hyaku/chousa-r99/R99ScoutSources/work
+CASE NEG n1 rc=1 verdict=CHALLENGE PASS
+CASE NEG n2 rc=1 verdict=CHALLENGE PASS
+CASE NEG n3 rc=1 verdict=CHALLENGE PASS
+CASE NEG n4 rc=1 verdict=CHALLENGE PASS
+CASE NEG n5 rc=1 verdict=CHALLENGE PASS
+CASE NEG n6 rc=1 verdict=CHALLENGE PASS
+CASE NEG n7 rc=1 verdict=CHALLENGE PASS
+CASE POS p1 rc=0 verdict=OK PASS
+CASE POS p2 rc=0 verdict=OK PASS
+CASE POS p3 rc=0 verdict=OK PASS
+CASE POS p4 rc=0 verdict=OK PASS
+CASE PROD S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD S234 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S229 rc=1 verdict=CHALLENGE PASS
+CASE ORACLE o1-short-only battery=FAIL PASS
+CASE ORACLE o2-marker-only battery=FAIL PASS
+CASE ORACLE o3-known-bytes battery=FAIL PASS
+CASE ORACLE o4-scratch-only battery=FAIL PASS
+CASE ORACLE o5-lane-only battery=FAIL PASS
+NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=5/5
+CHALLENGE_CONTROLS_R99=PASS
+exit=0
+
+$ python3 -B corpus/evidence/round99/challenge-controls-r99.py --root . --work /fast/scratch/hyaku/chousa-r99/R99ScoutSources/work-base --tool /fast/scratch/hyaku/chousa-r99/R99ScoutSources/base-gate-records.py --no-oracles
+CASE NEG n1 rc=0 verdict=OK FAIL
+CASE NEG n2 rc=0 verdict=OK FAIL
+CASE NEG n3 rc=0 verdict=OK FAIL
+CASE NEG n4 rc=0 verdict=OK FAIL
+CASE NEG n5 rc=0 verdict=OK FAIL
+CASE NEG n6 rc=0 verdict=OK FAIL
+CASE NEG n7 rc=0 verdict=OK FAIL
+CASE POS p1 rc=0 verdict=OK PASS
+CASE POS p2 rc=0 verdict=OK PASS
+CASE POS p3 rc=0 verdict=OK PASS
+CASE POS p4 rc=0 verdict=OK PASS
+CASE PROD S230 rc=0 verdict=OK FAIL
+CASE PROD S234 rc=0 verdict=OK FAIL
+CASE PROD rev-S230 rc=0 verdict=OK FAIL
+CASE PROD rev-S229 rc=0 verdict=OK FAIL
+NEG_REFUSED=0/7 POS_ADMITTED=4/4 PROD_REFUSED=0/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=0/0
+CHALLENGE_CONTROLS_R99=FAIL
+exit=1

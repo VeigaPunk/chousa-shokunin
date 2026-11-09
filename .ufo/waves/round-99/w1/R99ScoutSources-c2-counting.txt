@@ -1,0 +1,30 @@
+# R99ScoutSources receipt 3 — C2 counting commands at F
+# tree: /fast/scratch/hyaku/chousa-r99/R99ScoutSources/repo @ d41f4cd8b857c6de683e7be5c5e8125b32763a8e
+
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-rates-r99.md
+GATE_RECORD corpus/knowledge/quotation-error-rates-r99.md:134 S232 OK
+GATE_RECORD corpus/knowledge/quotation-error-rates-r99.md:135 S235 OK
+GATE_RECORDS files=1 records=25 ok=25 fail=0
+exit=0
+
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-rates-r99.md --root .
+research-gate v2 — ts=2026-11-09T04:55:37Z — mode=verify-metadata — path=corpus/knowledge/quotation-error-rates-r99.md — root=.
+META entry=quotation-error-rates-r99.md source=present verified_at=dated recheck=scheduled verdict=clean
+METADATA_COMPLETE=1/1
+RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)
+exit=0
+
+$ python3 -B tools/search-rerun.py verify corpus/knowledge/quotation-error-rates-r99.md --root .
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=2 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=2 TREE_CHANGED
+SEARCH_RERUN Q3 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q4 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=4 rev_match=4/4 tree_same=0/4 findings=0
+SEARCH_RERUN: CLEAN
+exit=0
+
+$ python3 -B corpus/evidence/round99/entry-controls-r99.py --root .
+CASE ACCEPT a2 PASS
+QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2
+ENTRY_CONTROLS_R99=PASS
+exit=0

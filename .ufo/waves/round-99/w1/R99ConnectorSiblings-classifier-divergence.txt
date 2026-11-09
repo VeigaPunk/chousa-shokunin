@@ -1,0 +1,100 @@
+# R99ConnectorSiblings — chousa ships two interstitial classifiers with different marker sets and semantics
+$ git -C chousa-shokunin rev-parse HEAD
+f8f480ffd738cda9b427e0fe8fa8e79c78fb409d
+$ git -C chousa-shokunin log --oneline -1 -- tools/quarantine-check.py
+e0f4895c round-42: quarantine adjudication of the 24-row register slice (C1 gate + C2 verdicts, lesson, S077)
+
+=== gate-records.py CHALLENGE_MARKERS / is_challenge (extracted at HEAD) ===
+$ git -C chousa-shokunin show HEAD:tools/gate-records.py | sed -n "104,128p"
+# round 99: interstitial challenge pages (the capture is the gate, not the document). Markers are matched against the
+# normalized, lower-cased capture text; each is from an observed capture or a widely served interstitial:
+# S229/S021/S022/S032 "cookies must be enabled", S230 "checking your browser" and "recaptcha", S234 "client
+# challenge" and "a required part of this site couldn't load"; Cloudflare "just a moment", "verify you are human",
+# "enable javascript and cookies to continue", "attention required", "ddos protection"; generic "are you a robot".
+CHALLENGE_MAX_WORDS = 200
+CHALLENGE_MARKERS = (
+    "cookies must be enabled",
+    "checking your browser",
+    "recaptcha",
+    "client challenge",
+    "a required part of this site couldn't load",
+    "just a moment",
+    "verify you are human",
+    "enable javascript and cookies to continue",
+    "attention required",
+    "ddos protection",
+    "are you a robot",
+)
+
+
+def is_challenge(text):
+    """True when normalized TEXT is a short page carrying a challenge marker (CHALLENGE, round 99)."""
+    t = norm(text).lower()
+    return len(t.split()) <= CHALLENGE_MAX_WORDS and any(m in t for m in CHALLENGE_MARKERS)
+
+=== quarantine-check.py INTERSTITIAL_MARKERS / capture_kind (extracted at HEAD) ===
+$ git -C chousa-shokunin show HEAD:tools/quarantine-check.py | sed -n "116,142p"
+
+FOLDS = [("exact", f_exact), ("whitespace", f_ws), ("case", f_case),
+         ("no-whitespace", f_nows), ("markdown", f_md), ("nfkc", f_nfkc),
+         ("typographic", f_typo), ("c-escape", f_cescape), ("de-wrapped", f_dewrap),
+         ("html", f_html), ("md-link", f_mdlink)]
+
+# --- a capture that is not the cited document, but a bot wall or an error page ---
+INTERSTITIAL_MARKERS = (
+    "client challenge", "just a moment", "cf-browser-verification", "attention required",
+    "enable javascript and cookies to continue", "checking your browser before accessing",
+    "attention required! | cloudflare", "error 1020", "access denied", "captcha",
+    "verify you are human", "robot check", "checking your browser",
+    "请开启javascript", "验证码", "checking your browser before accessing",
+    "the request could not be satisfied", "request blocked", "unusual traffic",
+)
+
+
+def capture_kind(text: str) -> str:
+    """Classify a cached document: page | interstitial."""
+    low = text[:4000].lower()
+    for marker in INTERSTITIAL_MARKERS:
+        if marker in low:
+            return "interstitial"
+    return "page"
+
+
+def cache_key(url: str) -> str:
+
+=== the old classifier is imported by a live tool (absent-split.py), not dead code ===
+$ git -C chousa-shokunin show HEAD:tools/absent-split.py | sed -n "44,48p;70,76p"
+    "/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache"
+)
+GATE = LANE / "tools" / "quarantine-check.py"
+BOUND = 1 / 2
+
+
+
+def load_gate():
+    spec = importlib.util.spec_from_file_location("quarantine_check", GATE)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+=== marker-set differences and per-fixture verdicts ===
+gate markers (11): cookies must be enabled,checking your browser,recaptcha,client challenge,a required part of this site couldn't load,just a moment,verify you are human,enable javascript and cookies to continue,attention required,ddos protection,are you a robot
+quarantine markers (19): client challenge,just a moment,cf-browser-verification,attention required,enable javascript and cookies to continue,checking your browser before accessing,attention required! | cloudflare,error 1020,access denied,captcha,verify you are human,robot check,checking your browser,请开启javascript,验证码,checking your browser before accessing,the request could not be satisfied,request blocked,unusual traffic
+only-gate-records: ["a required part of this site couldn't load", 'are you a robot', 'cookies must be enabled', 'ddos protection', 'recaptcha']
+only-quarantine: ['access denied', 'attention required! | cloudflare', 'captcha', 'cf-browser-verification', 'checking your browser before accessing', 'error 1020', 'request blocked', 'robot check', 'the request could not be satisfied', 'unusual traffic', '请开启javascript', '验证码']
+fixture                  gate       quarantine words 
+capture-b90988847e704a08aabc8321 CHALLENGE  interstitial 37    
+capture-4b70901ad80c513f0c2f750c page       page       8455  
+capture-405a0054e1f6dbd1854a3618 page       page       307   
+cf1020-250w              page       interstitial 254   
+captcha-article-400w     page       interstitial 410   
+captcha-mention-700w     page       interstitial 704   
+short-marker-30w         CHALLENGE  interstitial 33    
+fullwidth-30w            page       page       33    
+exit=0
+
+=== committed captures at F: where the two verdicts disagree ===
+captures(.txt)=100  quarantine-only-walls=0  gate-only-walls=3
+gate-only: 0954149536aaad411000e1fb.txt 58725f5e0ac436166546a5ec.txt ff9013bd7d9387e45cd6e000.txt
+quarantine-only: (none)
+exit=0

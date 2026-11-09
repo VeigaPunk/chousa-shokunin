@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+import os, sys
+S="/fast/scratch/hyaku/chousa-r99/R99MutantsC1"
+src=open(f"{S}/repo/tools/gate-records.py",encoding="utf-8").read()
+os.makedirs(f"{S}/mutants",exist_ok=True)
+
+def one(id_, old, new, note):
+    n = src.count(old) if old else -1
+    if n != 1:
+        print(f"MUTGEN {id_} OLD-COUNT={n} (want 1) {'NOTE:'+note if note else ''}")
+        return False
+    out = src.replace(old,new,1)
+    open(f"{S}/mutants/{id_}.py","w",encoding="utf-8").write(out)
+    print(f"MUTGEN {id_} ok")
+    return True
+
+muts=[]
+marks=["cookies must be enabled","checking your browser","recaptcha","client challenge","a required part of this site couldn't load","just a moment","verify you are human","enable javascript and cookies to continue","attention required","ddos protection","are you a robot"]
+for i,mk in enumerate(marks,1):
+    # drop the marker line entirely
+    muts.append((f"m{i:02d}-drop-{mk[:12].replace(' ','-')}", f'    "{mk}",\n', ''))
+
+muts += [
+ ("m12-le-to-lt", "len(t.split()) <= CHALLENGE_MAX_WORDS", "len(t.split()) < CHALLENGE_MAX_WORDS"),
+ ("m13-max-199", "CHALLENGE_MAX_WORDS = 200", "CHALLENGE_MAX_WORDS = 199"),
+ ("m14-max-201", "CHALLENGE_MAX_WORDS = 200", "CHALLENGE_MAX_WORDS = 201"),
+ ("m15-max-1000", "CHALLENGE_MAX_WORDS = 200", "CHALLENGE_MAX_WORDS = 1000"),
+ # norm dropped inside is_challenge: old appears only in is_challenge? check
+ ("m16-no-norm-challenge", "    t = norm(text).lower()", "    t = text.lower()"),
+ ("m17-no-lower", "    t = norm(text).lower()", "    t = norm(text)"),
+ ("m18-any-to-all", "any(m in t for m in CHALLENGE_MARKERS)", "all(m in t for m in CHALLENGE_MARKERS)"),
+ ("m19-and-to-or", "len(t.split()) <= CHALLENGE_MAX_WORDS and any(m in t for m in CHALLENGE_MARKERS)",
+                   "len(t.split()) <= CHALLENGE_MAX_WORDS or any(m in t for m in CHALLENGE_MARKERS)"),
+ ("m20-no-admit-call", "            if is_challenge(text):\n                codes.append(\"CHALLENGE\")", "            pass  # admit call removed"),
+ ("m21-no-rev-call", "            if CAP_RE.fullmatch(kv[\"path\"]) and is_challenge(\"\\n\".join(lines)):\n                codes.append(\"CHALLENGE\")",
+                     "            pass  # rev call removed"),
+ ("m22-cap-noop-rev", "            if CAP_RE.fullmatch(kv[\"path\"]) and is_challenge", "            if True and is_challenge"),
+ ("m23-challenge-only-when-quote-absent", "            if is_challenge(text):\n                codes.append(\"CHALLENGE\")",
+                     "            if is_challenge(text) and (not quote.strip() or norm(quote) not in text):\n                codes.append(\"CHALLENGE\")"),
+ ("m24-rev-challenge-only-when-line-bad", "            if CAP_RE.fullmatch(kv[\"path\"]) and is_challenge(\"\\n\".join(lines)):\n                codes.append(\"CHALLENGE\")",
+                     "            if CAP_RE.fullmatch(kv[\"path\"]) and is_challenge(\"\\n\".join(lines)) and (i > len(lines) or norm(quote) not in norm(lines[i-1] if 0<i<=len(lines) else '')):\n                codes.append(\"CHALLENGE\")"),
+ ("m25-norm-drop-everywhere-is-challenge-mirror", "    t = norm(text).lower()", "    t = text.lower()"),
+ ("m26-case-fold-swap", "    t = norm(text).lower()", "    t = norm(text).casefold()"),
+ ("m27-first-marker-only", "any(m in t for m in CHALLENGE_MARKERS)", "CHALLENGE_MARKERS[0] in t"),
+ ("m28-slice-first-5-markers", "any(m in t for m in CHALLENGE_MARKERS)", "any(m in t for m in CHALLENGE_MARKERS[:5])"),
+ ("m29-negated-length", "len(t.split()) <= CHALLENGE_MAX_WORDS", "len(t.split()) >= CHALLENGE_MAX_WORDS"),
+]
+for id_,old,new in muts:
+    one(id_,old,new,"")

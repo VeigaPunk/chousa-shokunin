@@ -1,0 +1,13 @@
+plain 'just a moment'                      words=3    is_challenge=True
+U+200B inside 'just a moment'              words=3    is_challenge=False
+U+200B inside 'client challenge'           words=2    is_challenge=False
+full-width 'Ｊｕｓｔ　ａ　ｍｏｍｅｎｔ'                 words=3    is_challenge=False
+U+2019 curly apostrophe in 'couldn't load' words=8    is_challenge=True
+straight apostrophe                        words=8    is_challenge=True
+no marker                                  words=8    is_challenge=False
+200-word doc with marker (at limit)        words=393  is_challenge=False
+201-word doc with marker (over limit)      words=395  is_challenge=False
+
+MARKERS count: 11 MAX_WORDS: 200
+named limit (c) says: no NFKC, so full-width letters or a zero-width character inside a marker pass
+-> full-width: True | zero-width: True

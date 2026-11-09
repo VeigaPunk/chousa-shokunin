@@ -1,0 +1,49 @@
+# R99ConnectorSiblings — C1 rev-leg path bypass, measured at F d41f4cd8b857c6de683e7be5c5e8125b32763a8e
+# runs: shared scratch clone $S/repo; python3 -B tools/gate-records.py verify --root $S/repo --repo $S/repo <record>
+
+$ git -C $S/repo rev-parse HEAD
+d41f4cd8b857c6de683e7be5c5e8125b32763a8e
+$ git -C $S/repo rev-parse --show-toplevel
+/fast/scratch/hyaku/chousa-r99/R99ConnectorSiblings/repo
+
+$ git -C $S/repo cat-file -e $F:<path>   (exit 0 = the rev:path resolves to a blob)
+resolvable      corpus/captures/b90988847e704a08aabc8321.txt
+resolvable      ./corpus/captures/b90988847e704a08aabc8321.txt
+resolvable      corpus/captures/b90988847e704a08aabc8321.raw
+
+=== 1) canonical path (the guarded spelling) ===
+$ python3 -B tools/gate-records.py verify --root $S/repo --repo $S/repo $S/canonpath.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r99/R99ConnectorSiblings/canonpath.md:1 S234 FAIL CHALLENGE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+=== 2) dot-slash spelling: REV resolves it, CAP_RE.fullmatch('corpus/captures/<24 hex>.txt') does not match it ===
+GATE_RECORD /fast/scratch/hyaku/chousa-r99/R99ConnectorSiblings/dotpath.md:1 S234 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+=== 3) .raw twin of the same served bytes (.raw 3038 B HTML; .txt 267 B text extract) ===
+GATE_RECORD /fast/scratch/hyaku/chousa-r99/R99ConnectorSiblings/rawpath.md:1 S234 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+=== 4) the same http-200 wall as url/unreach (the only other record form) ===
+GATE_RECORD /fast/scratch/hyaku/chousa-r99/R99ConnectorSiblings/s234-unreach.md:1 S234 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+=== record bodies ===
+--- canonpath.md
+GATE-RECORD S234 rev=d41f4cd8b857c6de683e7be5c5e8125b32763a8e path=corpus/captures/b90988847e704a08aabc8321.txt line=8 words=2 quote=Client Challenge
+--- dotpath.md
+GATE-RECORD S234 rev=d41f4cd8b857c6de683e7be5c5e8125b32763a8e path=./corpus/captures/b90988847e704a08aabc8321.txt line=8 words=2 quote=Client Challenge
+--- rawpath.md
+GATE-RECORD S234 rev=d41f4cd8b857c6de683e7be5c5e8125b32763a8e path=corpus/captures/b90988847e704a08aabc8321.raw line=17 words=2 quote=Client Challenge
+--- s234-unreach.md
+GATE-RECORD S234 url=https://researchintegrityjournal.biomedcentral.com/articles/10.1186/s41073-025-00173-z fetched=2026-11-09T04:00:33Z tier=A decision=reject capture=none curl_rc=0 http=200 words=0 quote=none
+
+=== battery rev-leg path spelling at F (canonical only) ===
+176:        path = f"corpus/captures/{CAP[sid][1]}.txt"
+
+=== bytes of the two capture spellings ===
+txt 267 raw 3038 equal False

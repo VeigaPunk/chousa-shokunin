@@ -1,0 +1,31 @@
+# R99ScoutSources receipt 5 — the 2025 update's Europe PMC core record ANSWERS (http 200)
+# seat scratch: /fast/scratch/hyaku/chousa-r99/R99ScoutSources/web ; read-only re-open into scratch, never written to corpus/
+
+$ curl -sS -L --max-time 45 -o body-a5cf41ef.bin -w '%{http_code}' -A 'Mozilla/5.0 ... Chrome/124' 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1186/s41073-025-00173-z&resultType=core&format=json'
+http=200 bytes=5123 sha256=d929144f68bc21fdb4643baaaa89f26e851753c5533fc789c9012d0bd9b2d7de
+
+hitCount      : 1
+pmid          : 40696441
+pmcid         : PMC12285159
+doi           : 10.1186/s41073-025-00173-z
+title         : Systematic review and meta-analysis of quotation inaccuracy in medicine.
+authorString  : Baethge C, Jergas H.
+journal       : Research integrity and peer review vol 10 2025 art 13
+license       : cc by inEPMC Y inPMC Y hasPDF Y
+
+--- abstract (each line a <=25-word quote from the record's own abstractText) ---
+FOUND   a reference not supporting the authors' claim
+FOUND   identified 46 studies analyzing 32,000 quotations/references
+FOUND   16.9% (95% CI: 14.1%-20.0%) of quotations were incorrect
+FOUND   approximately half classified as major errors (8.0% [95% CI: 6.4%-10.0%])
+FOUND   Heterogeneity was high, and Egger's test for small study effects remained negative throughout
+FOUND   Meta-regression showed no significant improvement in quotation accuracy over recent years
+FOUND   journal impact factor was: Spearman's
+FOUND   Quotation errors remain a problem in the medical literature, with no improvement over time.
+
+## The lane's approval table already permitted an unused Europe PMC route for this document.
+   (corpus/evidence/round99/egress-approval.md, row: 'any of the three documents' Europe PMC full-text
+    record, only if its publisher row ends in a non-200 status or a challenge page' -- S234's publisher
+    row DID end in a challenge page, so PMC12285159/fullTextXML was approved for up to 3 attempts.)
+   Attempts actually recorded for S234 in refetch.tsv:
+1

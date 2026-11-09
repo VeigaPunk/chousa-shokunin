@@ -1,0 +1,38 @@
+# R99SentinelC1 — remediation variants, measured at F (variants NOT applied to production)
+# variant A: posixpath.normpath(kv['path']) then CAP_RE.fullmatch
+# variant B: posixpath.normpath(kv['path']) then rp.startswith('corpus/captures/')
+--- F-shipped
+    corpus/captures/b5b8d050eea0c638e95ba674.txt         rc=1 CHALLENGE
+    ./corpus/captures/b5b8d050eea0c638e95ba674.txt       rc=0 OK   <-- ADMITTED
+    .//corpus/captures/b5b8d050eea0c638e95ba674.txt      rc=0 OK   <-- ADMITTED
+    ././corpus/captures/b5b8d050eea0c638e95ba674.txt     rc=0 OK   <-- ADMITTED
+    ./corpus/captures//b5b8d050eea0c638e95ba674.txt      rc=0 OK   <-- ADMITTED
+    ./corpus//captures/b5b8d050eea0c638e95ba674.txt      rc=0 OK   <-- ADMITTED
+    corpus/captures/b5b8d050eea0c638e95ba674.raw         rc=0 OK   <-- ADMITTED
+    ./corpus/captures/b5b8d050eea0c638e95ba674.raw       rc=0 OK   <-- ADMITTED
+--- FIXED-A
+    corpus/captures/b5b8d050eea0c638e95ba674.txt         rc=1 CHALLENGE
+    ./corpus/captures/b5b8d050eea0c638e95ba674.txt       rc=1 CHALLENGE
+    .//corpus/captures/b5b8d050eea0c638e95ba674.txt      rc=1 CHALLENGE
+    ././corpus/captures/b5b8d050eea0c638e95ba674.txt     rc=1 CHALLENGE
+    ./corpus/captures//b5b8d050eea0c638e95ba674.txt      rc=1 CHALLENGE
+    ./corpus//captures/b5b8d050eea0c638e95ba674.txt      rc=1 CHALLENGE
+    corpus/captures/b5b8d050eea0c638e95ba674.raw         rc=0 OK   <-- ADMITTED
+    ./corpus/captures/b5b8d050eea0c638e95ba674.raw       rc=0 OK   <-- ADMITTED
+--- FIXED-B
+    corpus/captures/b5b8d050eea0c638e95ba674.txt         rc=1 CHALLENGE
+    ./corpus/captures/b5b8d050eea0c638e95ba674.txt       rc=1 CHALLENGE
+    .//corpus/captures/b5b8d050eea0c638e95ba674.txt      rc=1 CHALLENGE
+    ././corpus/captures/b5b8d050eea0c638e95ba674.txt     rc=1 CHALLENGE
+    ./corpus/captures//b5b8d050eea0c638e95ba674.txt      rc=1 CHALLENGE
+    ./corpus//captures/b5b8d050eea0c638e95ba674.txt      rc=1 CHALLENGE
+    corpus/captures/b5b8d050eea0c638e95ba674.raw         rc=0 OK   <-- ADMITTED
+    ./corpus/captures/b5b8d050eea0c638e95ba674.raw       rc=0 OK   <-- ADMITTED
+
+--- FIXED-A and FIXED-B through the frozen battery (must still PASS)
+  FIXED-A: exit=0
+     NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=5/5
+     CHALLENGE_CONTROLS_R99=PASS
+  FIXED-B: exit=0
+     NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=5/5
+     CHALLENGE_CONTROLS_R99=PASS

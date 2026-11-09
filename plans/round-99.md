@@ -52,6 +52,9 @@ F2 = `96d761eec0c006d3df100b1a5d41686568d6d1e1` (helper `landed` line; the commi
 A1-A7, B1-B2), recorded here by the commit after it. C1 at F2: `corpus/evidence/round99/after-f2/c1-all.txt`
 (tool unchanged F..F2, battery docstring only); C2's instrument and entry are unchanged F..F2, so `after/c2-all.txt` grades F2.
 
+F3 = `c3bad643c42ecd1f04620bd6acfddb01d69c4aa3` (helper `landed` line; the commit that first carries B3-B6), recorded
+here by the landing commit. C2 at F3: `corpus/evidence/round99/after-f3/c2-all.txt`; C1 bytes unchanged F2..F3.
+
 ## Amendments (F2)
 
 Wave-forced narrowings, each recorded with its seat artifact in `.ufo/waves/round-99/claims.md` `## Amendments`

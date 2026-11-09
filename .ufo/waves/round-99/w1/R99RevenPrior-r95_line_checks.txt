@@ -1,0 +1,66 @@
+        t[group] = (a + (1 if ok else 0), b + 1)
+
+    rec = os.path.join(root, RECORD)
+    rc, out, err = tool_run(tool, rec, root)
+    ok = rc == 0 and "SEARCH_RERUN: CLEAN" in out and "rev_match=8/8" in out
+    emit(f"CASE positive rc={rc} expect=0 {'ok' if ok else 'FAIL'}")
+    tally("POSITIVE", ok)
+
+    rc, out, err = tool_run(tool, rec, root, strict=True)
+    rev_lines = [ln for ln in out.splitlines() if ln.startswith("SEARCH_RERUN Q")]
+    ok = (rc == 1 and len(rev_lines) == 8 and all("rev=MATCH" in ln for ln in rev_lines)
+          and codes_of(out) == {"TREE_CHANGED"})
+    emit(f"CASE strict-tree rc={rc} expect=1 codes={sorted(codes_of(out))} {'ok' if ok else 'FAIL'}")
+    tally("STRICT_TREE", ok)
+
+    forgeries = [
+        ("f1-count", "Q5", "hits", "15", {"COUNT_DRIFT"}),
+        ("f2-set-swap", "Q2", "hit_set",
+         "corpus/captures/c52a1f15884a78028febcf43.txt, corpus/captures/0ae65ac01b93119d3c2f3fed.txt",
+         {"SET_DRIFT"}),
+        ("f3-expression", "Q3", "expression", "`deduplicate`", None),
+        ("f4-digest", "Q1", "hit_set",
+         "sha256:69cfc05988a6ea78b149d8027c0c0405171429c1aff812090b6aed4da1a00dc0", {"SET_DRIFT"}),
+        ("f5-zero", "Q7", "expression", "`PRISMA`", {"COUNT_DRIFT", "SET_DRIFT"}),
+        ("f6-engine", "Q6", "engine", "fixed", {"COUNT_DRIFT", "SET_DRIFT"}),
+        ("f7-rev", "Q2", "rev", prior_rev, None),
+        ("f8-where", "Q1", "where", "corpus/captures/0*.txt", None),
+        # Amendment 3 (R95MutantsC1 m13, m16): list-form count and a duplicated path.
+        ("f9-list-count", "Q2", "hits", "3", {"COUNT_DRIFT"}),
+        ("f10-dup-path", "Q2", "hit_set",
+         "corpus/captures/c52a1f15884a78028febcf43.txt, corpus/captures/c9d1e74c3ac8d9eb332c9770.txt, "
+         "corpus/captures/c9d1e74c3ac8d9eb332c9770.txt", {"SET_DRIFT"}),
+    ]
+    for name, qid, col, value, want in forgeries:
+        path = write(os.path.join(work, "forge", name + ".md"), edit_row(base_text, qid, col, value))
+        rc, out, err = tool_run(tool, path, root)
+        line = next((ln for ln in out.splitlines() if ln.startswith(f"SEARCH_RERUN {qid} ")), "")
+        got = codes_of(line) - {"TREE_CHANGED"}
+        ok = rc == 1 and "rev=DRIFT" in line and (got == want if want else bool(got))
+        others = [ln for ln in out.splitlines() if ln.startswith("SEARCH_RERUN Q") and not ln.startswith(
+            f"SEARCH_RERUN {qid} ")]
+        ok = ok and len(others) == 7 and all("rev=MATCH" in ln for ln in others)
+        # Amendment 3 (R95MutantsC1 m14): the printed tally must agree with the per-search lines.
+        ok = ok and "rev_match=7/8" in out
+        emit(f"CASE {name} rc={rc} expect=1 codes={sorted(got)} want={sorted(want) if want else 'any-rev-code'}"
+             f" {'ok' if ok else 'FAIL'}")
+        tally("FORGERY", ok)
+        prc, pout, perr = run(["bash", os.path.join(root, "tools/research-gate.sh"), "verify-sweeps", path,
+                               "--root", ".."], cwd=root)
+        pok = prc == 0 and "RESEARCH_GATE: CLEAN" in pout
+        emit(f"CASE prior-{name} research-gate-verify-sweeps rc={prc} expect=0 {'ok' if pok else 'FAIL'}")
+        tally("PRIOR", pok)
+
+    head_bad = base_text.replace("| id | engine | where |", "| id | engine | scope |")
+    setups = [
+        ("s1-missing", None, "RECORD_UNREADABLE"),
+        ("s2-no-section", base_text.replace("## Searches", "## Search"), "SECTION"),
+        ("s3-header", head_bad, "HEADER"),
+        ("s4-engine", edit_row(base_text, "Q4", "engine", "pcre"), "ENGINE"),
+        ("s5-dotdot", edit_row(base_text, "Q4", "where", "corpus/../../x/*.txt"), "WHERE"),
+        ("s6-absolute", edit_row(base_text, "Q4", "where", "/etc/*"), "WHERE"),
+        ("s7-rev", edit_row(base_text, "Q4", "rev", "deadbeef" * 5), "REV"),
+        ("s8-regex", edit_row(base_text, "Q8", "expression", "`(`"), "EXPRESSION"),
+        ("s9-empty", edit_row(base_text, "Q4", "expression", "``"), "EXPRESSION"),
+        ("s10-zero-set", edit_row(base_text, "Q7", "hit_set", "corpus/captures/x.txt"), "HIT_SET"),
+        ("s11-dup-id", edit_row(base_text, "Q4", "id", "Q3"), "ROW"),

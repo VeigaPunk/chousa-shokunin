@@ -1,0 +1,47 @@
+# R99ScoutSources receipt 6 — C1 instrument: the battery does not pin CHALLENGE_MAX_WORDS=200 nor the 11 markers
+# tree: /fast/scratch/hyaku/chousa-r99/R99ScoutSources/repo @ d41f4cd8b857c6de683e7be5c5e8125b32763a8e ; mutants written under /fast/scratch/hyaku/chousa-r99/R99ScoutSources/mut*, /fast/scratch/hyaku/chousa-r99/R99ScoutSources/mut2
+
+=== A. CHALLENGE_MAX_WORDS mutants (the claim freezes 200) ===
+$ for n in 36 37 50 201 300 380 381: patch tools/gate-records.py, run the battery with --tool <mutant> --no-oracles
+  n=36  -> CHALLENGE_CONTROLS_R99=FAIL   (POS p3 or NEG n3 breaks)
+  n=37  -> CHALLENGE_CONTROLS_R99=PASS
+  n=50  -> CHALLENGE_CONTROLS_R99=PASS
+  n=201 -> CHALLENGE_CONTROLS_R99=PASS
+  n=300 -> CHALLENGE_CONTROLS_R99=PASS
+  n=380 -> CHALLENGE_CONTROLS_R99=PASS
+  n=381 -> CHALLENGE_CONTROLS_R99=FAIL
+  => the battery accepts any threshold in [37,380]; 200 is not pinned.
+
+=== B. each CHALLENGE_MARKERS entry removed one at a time ===
+  remove 'cookies must be enabled'                 -> FAIL
+  remove 'verify you are human'                    -> FAIL
+  remove 'attention required'                      -> FAIL
+  remove 'checking your browser'                   -> PASS
+  remove 'recaptcha'                               -> PASS
+  remove 'client challenge'                        -> PASS
+  remove "a required part of this site couldn't load" -> PASS
+  remove 'just a moment'                           -> PASS
+  remove 'enable javascript and cookies to continue'-> PASS
+  remove 'ddos protection'                         -> PASS
+  remove 'are you a robot'                        -> PASS
+  => only 3 of the 11 markers are load-bearing; 8 may be deleted with the battery still PASSing.
+  => 'ddos protection' and 'are you a robot' are carried by NO NEG fixture at all.
+
+=== C. marker-coverage of the NEG fixtures (which marker each exercises) ===
+  n1 S230         ['checking your browser', 'recaptcha']
+  n2 S229         ['cookies must be enabled']
+  n3 S234         ['client challenge', "a required part of this site couldn't load"]
+  n4 CF           ['just a moment', 'enable javascript and cookies to continue']
+  n5 TURNSTILE    ['verify you are human']
+  n6 ATTN         ['attention required']
+  n7 S230-upper   ['checking your browser', 'recaptcha']
+  markers exercised: 9 of 11
+  never exercised : ['are you a robot', 'ddos protection']
+
+=== D. does the check fire on a challenge capture whose quoted text is NOT located? (multi-code) ===
+$ python3 -B tools/gate-records.py verify --root . /fast/scratch/hyaku/chousa-r99/R99ScoutSources/probe2/A_nonlocated_quote.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r99/R99ScoutSources/probe2/A_nonlocated_quote.md:3 S234 FAIL CHALLENGE,QUOTE_ABSENT,WORDS
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+$ python3 -B tools/gate-records.py verify --root . /fast/scratch/hyaku/chousa-r99/R99ScoutSources/probe2/C_wrong_tier.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r99/R99ScoutSources/probe2/C_wrong_tier.md:3 S234 FAIL CHALLENGE,TIER
+GATE_RECORDS files=1 records=1 ok=0 fail=1

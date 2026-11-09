@@ -1477,3 +1477,14 @@ successful-refused record form remain carried.
 - `lessons/round-98.md` — S231 admitted (B, the statement's abstract through Europe PMC's record); S228 (CADTH report 477 appendices, 403), S229 (PubMed, cookie challenge), S230 (NCBI Bookshelf, an http-200 reCAPTCHA page) rejected for route.
 - Frontier advanced: README Round97's "17 of S225's 33 question lines are not quoted" is closed (every question-mark line of the checklist is quoted whole); the guideline statement is held at abstract level; round-97 routed defects 1 (19 uncovered survivors, 18 now killed) and 2 (hash-of-self) are closed for the self-test.
 - Left open: the statement's body, the E&E and Table 9 (403 or challenge pages here); which reprint's question wording is the guideline's; `tools/gate-records.py` admits a quote from an http-200 challenge page (QUALITY 229, routed); `u01`/`u05` and the self-test's own exit path are not scored by the self-test.
+
+## Round99 coverage and frontier (2026-11-09)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/quotation-error-rates-r99.md` | how often a cited source fails the sentence that cites it in medical journal articles (a pooled 25.4% total and 11,9% major quotation errors over 28 studies; 14.5% of cited assertions when re-counted per quotation over 15 studies), how a mismatch is classed (major, minor, source error) and how the rate is counted (per quotation examined, not per reference selected) — new ground: no entry or capture held "quotation error" before | S236 (B), S233 (A); S232, S234, S235 rejected for route |
+| `../tools/gate-records.py` CHALLENGE | Round-99 gate rule: a GATE-RECORD whose capture text has at most 200 words and carries one of 11 challenge markers fails (a challenge page in other words passes); battery `corpus/evidence/round99/challenge-controls-r99.py` | `.ufo/waves/round-99/claims.md`; `corpus/evidence/round99/` |
+
+- `lessons/round-99.md` — S233 admitted (A, Mogull 2017 publisher full text), S236 admitted (B, Jergas & Baethge 2015's abstract through Europe PMC's record); S232 (PeerJ, 403), S234 (RIPR 2025 update, an http-200 "Client Challenge" page), S235 (Europe PMC full text, 500) rejected.
+- Frontier advanced: README Round98's "`tools/gate-records.py` admits a quote from an http-200 challenge page" is closed for the 11 marker wordings (QUALITY 230); claim-vs-source verification gains its empirical side (how often citations fail).
+- Left open: the 2025 update's publisher page is a challenge page here, its Europe PMC record (pmid 40696441) is reachable but not opened by the lane; Jergas & Baethge 2015's body (403/500); the lane has not measured its own citation-support rate; challenge pages in other wordings pass the gate (C1 named limit (a)).

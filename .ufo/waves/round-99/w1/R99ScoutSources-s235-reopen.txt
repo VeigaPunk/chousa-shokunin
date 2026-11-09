@@ -1,0 +1,32 @@
+# R99ScoutSources receipt 4 — F-1: S235's route is NOT unreachable today (the second attempt answered 200)
+# tree: /fast/scratch/hyaku/chousa-r99/R99ScoutSources/repo @ d41f4cd8b857c6de683e7be5c5e8125b32763a8e
+
+## The lane recorded S235 as unreachable: http 500 on ONE attempt.
+$ git show 47ed34fa...:corpus/evidence/round57/refetch.tsv | grep -E '^S23[0-9]'
+S230	https://www.ncbi.nlm.nih.gov/books/NBK98350/	b5b8d050eea0c638e95ba674	1	2026-11-09T02:48:10Z	0	200	4f86b2a6320e4aab
+S231	https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:27005575%20AND%20SRC:MED&resultType=core&forma
+
+$ grep -c '^S235' corpus/evidence/round57/refetch.tsv   # attempts recorded for S235 at F
+1
+
+## RE-OPEN of the same URL, attempt 2 (seat scratch only; never written to corpus/):
+$ curl -sS -L --max-time 45 -o body2-fulltext.bin -w '%{http_code}' -A 'Mozilla/5.0 ... Chrome/124' https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4627914/fullTextXML
+http=200 bytes=126445 sha256=c033b0493a09832723507c96fb0e2a13b4d2f3a168e9fe1e5d2147c4c543b0ab
+
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Archiving and Interchange DTD with MathML3 v1.4 20241031//EN" "JATS-archivearticle1-4-mathml3.dtd">
+<article article-type="research-artic
+
+## The body IS the article (JATS), not an error page. Markers:
+$ grep -c 'client challenge\|checking your browser\|just a moment' body2-fulltext.bin   # 0 = no challenge marker
+0
+
+## Its abstract and rates (the very numbers the entry takes as tier-B abstract-only):
+FOUND | Out of 559 studies screened we included 28 in the main analysis, and estimated major, minor and total quotation error rates of 11,9%, 95% CI [8.4, 16.
+FOUND | 25.4% [19.5, 32.5], n = 28). Again, heterogeneity was large (I 2 : 97%). Sensitivity, subgroup analyses and meta-regression Seperately analyzing all t
+FOUND | major quotation errors [8.4, 16.6]), with considerable heterogeneity among the 27 studies included (I 2 : 95%). A similar picture emerged for minor qu
+
+## The lane's own unreachable-attestation rule (tools/capture-fetch.py docstring):
+20:absent (failure rows). UNREACHABLE attestations (c2-count) need >= 2 failed
+21-attempts recorded >= 600 s apart — the caller spaces passes; this tool
+22-never sleeps and never retries.

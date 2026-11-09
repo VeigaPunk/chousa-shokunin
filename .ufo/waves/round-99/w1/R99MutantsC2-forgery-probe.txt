@@ -1,0 +1,32 @@
+== score() on forgeries ==
+F-A reverse major (no num): changed=True passes=True r={'QUOTES': '23/23', 'FIELD': '9/9', 'IDENTITY': '2/2', 'WARRANTS': '8/8', 'NUMBERS': '6/6', 'TOPIC': '1/1'}
+F-B 15%-rate reuse: changed=True passes=False r={'QUOTES': '23/23', 'FIELD': '9/9', 'IDENTITY': '2/2', 'WARRANTS': '8/8', 'NUMBERS': '6/7', 'TOPIC': '1/1'}
+F-B2 15-studies reuse: changed=True passes=True r={'QUOTES': '23/23', 'FIELD': '9/9', 'IDENTITY': '2/2', 'WARRANTS': '8/8', 'NUMBERS': '7/7', 'TOPIC': '1/1'}
+F-C J5 title-as-abstract: changed=True passes=False r={'QUOTES': '23/23', 'FIELD': '8/9', 'IDENTITY': '2/2', 'WARRANTS': '8/8', 'NUMBERS': '6/6', 'TOPIC': '1/1'}
+F-D 95%-as-rate: changed=True passes=True r={'QUOTES': '23/23', 'FIELD': '9/9', 'IDENTITY': '2/2', 'WARRANTS': '8/8', 'NUMBERS': '6/6', 'TOPIC': '1/1'}
+F-E negligeable: changed=True passes=True r={'QUOTES': '23/23', 'FIELD': '9/9', 'IDENTITY': '2/2', 'WARRANTS': '8/8', 'NUMBERS': '6/6', 'TOPIC': '1/1'}
+F-F Never-smuggle: changed=True passes=True r={'QUOTES': '23/23', 'FIELD': '9/9', 'IDENTITY': '2/2', 'WARRANTS': '8/8', 'NUMBERS': '6/6', 'TOPIC': '1/1'}
+
+== full instruments ==
+F-A reverse major (no num):
+  controls rc=0 tail=['QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2', 'ENTRY_CONTROLS_R99=PASS']
+  gate rc=0 last=GATE_RECORDS files=1 records=25 ok=25 fail=0
+F-B 15%-rate reuse:
+  controls rc=1 tail=['QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/7 TOPIC=1/1 NUMBERS_SOURCED=6/7 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=0/2', 'ENTRY_CONTROLS_R99=FAIL']
+  gate rc=0 last=GATE_RECORDS files=1 records=25 ok=25 fail=0
+F-B2 15-studies reuse:
+  controls rc=0 tail=['QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=7/7 TOPIC=1/1 NUMBERS_SOURCED=7/7 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2', 'ENTRY_CONTROLS_R99=PASS']
+  gate rc=0 last=GATE_RECORDS files=1 records=25 ok=25 fail=0
+F-C J5 title-as-abstract:
+  controls rc=1 tail=['QUOTES=23/23 FIELD=8/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=0/2', 'ENTRY_CONTROLS_R99=FAIL']
+  gate rc=0 last=GATE_RECORDS files=1 records=25 ok=25 fail=0
+F-D 95%-as-rate:
+  controls rc=1 tail=['QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=9/10 ACCEPTED=2/2', 'ENTRY_CONTROLS_R99=FAIL']
+  gate rc=0 last=GATE_RECORDS files=1 records=25 ok=25 fail=0
+F-E negligeable:
+  controls rc=0 tail=['QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2', 'ENTRY_CONTROLS_R99=PASS']
+  gate rc=0 last=GATE_RECORDS files=1 records=25 ok=25 fail=0
+F-F Never-smuggle:
+  controls rc=0 tail=['QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2', 'ENTRY_CONTROLS_R99=PASS']
+  gate rc=0 last=GATE_RECORDS files=1 records=25 ok=25 fail=0
+restored entry, sha ok: True

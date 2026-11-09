@@ -1,0 +1,24 @@
+# R99ScoutSources receipt 1 — source re-open of the four named URLs (read-only, into seat scratch)
+# seat scratch: /fast/scratch/hyaku/chousa-r99/R99ScoutSources/web ; attacked tree: git clone --shared of the lane, checkout d41f4cd8b857c6de683e7be5c5e8125b32763a8e
+# command: curl -sS -L --max-time 45 -o body-<md5>.bin -w '%{http_code}' -A 'Mozilla/5.0 ... Chrome/124' <url>
+
+$ python3 -B - (classify each body with tools/gate-records.py is_challenge + CHALLENGE_MARKERS)
+# R99ScoutSources — source re-open receipts (read-only, into seat scratch $S/web)
+# scratch: /fast/scratch/hyaku/chousa-r99/R99ScoutSources/web
+# markers = tools/gate-records.py CHALLENGE_MARKERS (11 phrases), matched on norm(text).lower()
+
+[A_peerj_1364] file=body-34b40c99.bin bytes=5644 sha256=18cc1e04f45bce8aa05e93ba8c4aad1aa62e18180a666effcc9197189294445d
+   words(normalized)=138 challenge(is_challenge)=True
+   CHALLENGE_MARKERS carried: ['just a moment', 'enable javascript and cookies to continue']
+
+[B_epmc_fulltextXML_PMC4627914] file=body-bbf2de98.bin bytes=150 sha256=9df004f3c8afa3940cff1a1ffaa8a775d768a33cd23f80fb6b8ddd63cf44e1da
+   words(normalized)=3 challenge(is_challenge)=False
+   CHALLENGE_MARKERS carried: (none)
+
+[C_ripr_2025_publisher] file=body-782a6cbb.bin bytes=3038 sha256=32ed63159c77e21ee19ca1b9aa3213ccf0218eb59539560b132a8e68ef0e18ea
+   words(normalized)=230 challenge(is_challenge)=False
+   CHALLENGE_MARKERS carried: ['client challenge', "a required part of this site couldn't load"]
+
+[D_epmc_core_DOI_2025] file=body-a5cf41ef.bin bytes=5123 sha256=d929144f68bc21fdb4643baaaa89f26e851753c5533fc789c9012d0bd9b2d7de
+   words(normalized)=323 challenge(is_challenge)=False
+   CHALLENGE_MARKERS carried: (none)

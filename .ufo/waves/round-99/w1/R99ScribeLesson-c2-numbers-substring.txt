@@ -1,0 +1,20 @@
+# R99ScribeLesson — the C2 controls' NUMBERS leg accepts a Do-cell number that is NOT printed in its warrant
+# (it tests the number as a SUBSTRING of the warrant text, not as a printed token)
+
+--- forgery: '64.8% of content errors were major' -> '8% of content errors were major'   (row 7 Do cell, warrant G11)
+CASE NUMBERS 6/6 PASS
+ENTRY_CONTROLS_R99=PASS
+    exit=0
+--- forgery: '25.4% and major ones at 11,9%' -> '5.4% and major ones at 11,9%'   (row 1 Do cell, warrant J2)
+CASE NUMBERS 6/6 PASS
+ENTRY_CONTROLS_R99=PASS
+    exit=0
+--- forgery: '64.8% of content errors were major' -> '2% of content errors were major'   (row 7 Do cell, warrant G11)
+CASE NUMBERS 6/6 PASS
+ENTRY_CONTROLS_R99=PASS
+    exit=0
+
+--- control: a number that is NOT a substring of any warrant number (63.8%) is refused ---
+CASE NUMBERS 5/6 FAIL
+ENTRY_CONTROLS_R99=FAIL
+    exit=1

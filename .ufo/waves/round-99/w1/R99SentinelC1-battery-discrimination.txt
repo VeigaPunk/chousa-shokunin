@@ -1,0 +1,25 @@
+# R99SentinelC1 — F-4: the frozen battery cannot discriminate the rev branch
+# measured at F d41f4cd8b857c6de683e7be5c5e8125b32763a8e; scratch $S/repo
+
+--- mutant 1: rev-branch CHALLENGE disabled entirely (should FAIL the battery) ---
+CASE PROD S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD S234 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S230 rc=0 verdict=OK FAIL
+CASE PROD rev-S229 rc=0 verdict=OK FAIL
+NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=2/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=0/0
+CHALLENGE_CONTROLS_R99=FAIL
+exit=1
+
+--- mutant 2: rev-branch checks only the QUOTED LINE (PASSES the battery -- F-4) ---
+CASE PROD S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD S234 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S230 rc=1 verdict=CHALLENGE PASS
+CASE PROD rev-S229 rc=1 verdict=CHALLENGE PASS
+NEG_REFUSED=7/7 POS_ADMITTED=4/4 PROD_REFUSED=4/4 HARM_SAME=25/25 BASE_NEG_ADMITTED=7/7 ORACLES_REJECTED=0/0
+CHALLENGE_CONTROLS_R99=PASS
+exit=0
+
+--- mutant 2 admits S234's challenge capture quoted on a NON-MARKER line (line 15) ---
+record: GATE-RECORD S234 rev=d41f4cd8b857c6de683e7be5c5e8125b32763a8e path=corpus/captures/b90988847e704a08aabc8321.txt line=15 words=3 quote=extension, network issues,
+  F-shipped          rc=1 CHALLENGE
+  line-only mutant   rc=0 OK
