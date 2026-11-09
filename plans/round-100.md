@@ -55,3 +55,6 @@ Pre-freeze controls ran on a clean shared clone at P and landed in R = `6f837487
 `ORACLES_REJECTED=12/12`, `c1-setup.txt` exit 2, `c2-base.txt` exit 2, `c2-prelink.txt` FAIL exit 1,
 `c2-candidate.txt` all exit 0).
 F = the commit that first carries `claims.md`; recorded here by the commit after it.
+F = `6d4e8487ee6a16823c24a8e085c6559b92b9fec8` (helper `landed` line; the commit that first carries `claims.md`),
+recorded here by the carrier commit after it (which also carries the wave spec, `build_spec.py`, `w1-spec.json`,
+the validated `w1-dispatch.json` and `w1.ready`).
