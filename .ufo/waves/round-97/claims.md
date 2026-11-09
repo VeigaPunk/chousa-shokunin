@@ -130,7 +130,7 @@ distinguished. Limits (c)-(f) stand; (f) now reads: `n08` is excluded because it
 
 The lane holds `corpus/knowledge/press-checklist-questions-r97.md`, whose 8 decision rows each cite at least one
 located quote of the PRESS 2015 checklist questions as Cochrane reprints them for editors (`S225`, tier B, opened
-this round) — 16 of the 33 question lines that reprint prints — with a second reprint on another host (`S226`,
+this round) with a second reprint on another host (`S226`,
 Karolinska Institutet University Library, tier C, opened this round) used for corroboration, every row that cites it
 also naming an S225 quote: its 30 `GATE-RECORD` lines (29 located quotes and 1 unreachable-route reject of the CADTH
 Table 9 PDF, `S227`) all verify; the Located-quotes strings equal the 29 quoted records as a multiset; each quote is a
@@ -152,3 +152,9 @@ while sharing a content word passes WARRANT_TERMS (`R97CriticClaims` F3, `R97Mut
 repaired by the reviewer's reading (B5). (e) (new) SOLE_SUPPORT checks that an S225 quote is named, not that it
 carries the row's point (`R97MutantsC2` F2). (f) (new) S226 links CADTH's 2016 report as its source; the two reprints
 are separate transcriptions, not shown independent of one upstream.
+
+### C2 wording amendment recorded after F2 (B11; no instrument byte changed)
+
+The F2 sentence carried "16 of the 33 question lines that reprint prints", a count no C2 instrument recomputes
+(QUALITY 228, `lessons/round-97.md` Mistakes 4); it is removed from the sentence and stays in the entry's prose,
+marked there as seat-measured.

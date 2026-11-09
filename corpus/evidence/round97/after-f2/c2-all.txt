@@ -1,0 +1,46 @@
+# computed_against F2=d84f4e1e77b681088e72f215f49a1c4e70114e02
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/press-checklist-questions-r97.md
+GATE_RECORDS files=1 records=30 ok=30 fail=0
+exit=0
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/press-checklist-questions-r97.md --root .
+research-gate v2 — ts=2026-11-09T02:28:57Z — mode=verify-metadata — path=corpus/knowledge/press-checklist-questions-r97.md — root=.
+META entry=press-checklist-questions-r97.md source=present verified_at=dated recheck=scheduled verdict=clean
+METADATA_COMPLETE=1/1
+RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)
+exit=0
+$ python3 -B tools/search-rerun.py verify corpus/knowledge/press-checklist-questions-r97.md --root .
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=2 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=2 TREE_CHANGED
+SEARCH_RERUN Q3 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=2 TREE_CHANGED
+SEARCH_RERUN Q4 rev=MATCH tree=CHANGED recorded=3 at_rev=3 at_tree=5 TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=CHANGED recorded=4 at_rev=4 at_tree=6 TREE_CHANGED
+SEARCH_RERUN Q6 rev=MATCH tree=CHANGED recorded=3 at_rev=3 at_tree=5 TREE_CHANGED
+SEARCH_RERUN Q7 rev=MATCH tree=CHANGED recorded=12 at_rev=12 at_tree=14 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=7 rev_match=7/7 tree_same=0/7 findings=0
+SEARCH_RERUN: CLEAN
+exit=0
+$ python3 -B corpus/evidence/round97/entry-controls-r97.py --root . --work <scratch>
+CASE positive gate_rc=0 meta_rc=0 LQ_BOUND=29/29 records=29 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8 SOLE_SUPPORT=8/8 ONE_LINE=29/29 ok
+CASE g1-word rc=1 expect=1 fail=['QUOTE_ABSENT,WORDS'] want=QUOTE_ABSENT ok
+CASE g2-skip-line rc=1 expect=1 fail=['QUOTE_ABSENT'] want=QUOTE_ABSENT ok
+CASE g3-capture-key rc=1 expect=1 fail=['CAPTURE_KEY,CAPTURE_SHA,QUOTE_ABSENT,REFETCH'] want=CAPTURE_KEY ok
+CASE g4-words rc=1 expect=1 fail=['WORDS'] want=WORDS ok
+CASE g5-tier rc=1 expect=1 fail=['TIER'] want=TIER ok
+CASE g6-fetched rc=1 expect=1 fail=['REFETCH'] want=REFETCH ok
+CASE g7-long rc=1 expect=1 fail=['QUOTE_ABSENT,QUOTE_LEN'] want=QUOTE_LEN ok
+CASE g8-sourceless rc=1 expect=1 records=0 ok
+CASE b1-nonsense-do WARRANT_TERMS=7/8 LANE_FILLED=8/8 expect=terms-drop ok
+CASE b2-wrong-qid WARRANT_TERMS=7/8 LANE_FILLED=8/8 expect=terms-drop ok
+CASE b3-empty-lane WARRANT_TERMS=8/8 LANE_FILLED=7/8 expect=lane-drop ok
+CASE sole-support-tierC SOLE_SUPPORT=7/8 expect=7 ok
+CASE corroboration-stated stated=(10, 14, 26) lane_misses=(16, 12, 26) computed=(10, 14, 26) ok
+CASE corroboration-forged stated=(12, 14, 26) ok
+CASE corroboration-lane-forged lane_misses=(12, 12, 26) ok
+CASE searches-positive rc=0 expect=0 ok
+CASE s1-count rc=1 expect=1 want=COUNT_DRIFT ok
+CASE s2-path rc=1 expect=1 want=SET_DRIFT ok
+CASE do-nothing-base entry_at_base=absent gate_rc=2 expect=2 ok
+CASE oracle-constant-gate rc=1 expect=1 ok
+POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 SOLE_SUPPORT=2/2 CORROBORATION=3/3 SEARCHES=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1 GATE_RECORDS=30/30 LQ_BOUND=29/29 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8 SOLE_SUPPORT=8/8 ONE_LINE=29/29 VERBATIM=10/26 LETTERS=14/26 METADATA=clean
+ENTRY_CONTROLS=PASS
+exit=0

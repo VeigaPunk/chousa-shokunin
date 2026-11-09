@@ -126,6 +126,10 @@ one at `c8087ac5` and over the current tree.
 - S226 is tier C: a university library's guide page; it corroborates, and every decision row also names an S225
   quote (the controls check that an S225 quote is named, not that it carries the row's point). S226 links CADTH's
   2016 report as its source, so its agreement with S225 is two transcriptions agreeing, not two independent witnesses.
+- Counts in this entry that its controls do not recompute (QUALITY 228): "16 of the checklist's questions (of the
+  33 question lines S225 prints)" (`R97ScoutSources` F-C3), "12 captures" in row 4's Lane cell (`R97ReviewerC2` F5)
+  and "20/26 with digits deleted" (`R97ReviewerC2` F3) are seat-measured at F; the controls recompute the 10/26 and
+  14/26 and the Lane cell's 16 and 12.
 - `## Two reprints compared` is a string test: *letters* can match across a line break in S226 and cannot see a
   reordering; its numbers depend on keeping digits (14/26 with digits, 20/26 without).
 - The checklist's assessment form, the E&E's explanation of each element and the evidence behind each element are
