@@ -58,3 +58,22 @@ F = the commit that first carries `claims.md`; recorded here by the commit after
 F = `6d4e8487ee6a16823c24a8e085c6559b92b9fec8` (helper `landed` line; the commit that first carries `claims.md`),
 recorded here by the carrier commit after it (which also carries the wave spec, `build_spec.py`, `w1-spec.json`,
 the validated `w1-dispatch.json` and `w1.ready`).
+
+## Amendments (F2, F3)
+
+Wave-forced narrowings, each recorded with its seat artifact in `.ufo/waves/round-100/claims.md` `## Amendments`
+(A1-A6 for C1, B1-B9 for C2). None changes a predicate, a counter's code, a kill rule's text or a target; the C1 tool
+and battery and the C2 controls are byte-identical F..F2..F3. C2's entry prose and the round-99 `## Update` prose were
+repaired at F2 (B1-B3, B6-B9), every C2 tally unchanged (`corpus/evidence/round100/after-f2/c2-all.txt`).
+
+- C1: A1 "of that rev's tree" is not enforced by the one-commit fixture (limit (f)); A2 the `.raw` sibling reading of
+  the kill rule (limit (g)); A3 the battery's own PASS is weaker than the predicate line (limit (h)); A4 the "not
+  judged" quadrant is covered by REVPOS q3 (no narrowing); A5 a duplicate object id rebinds which sibling is read
+  (limit (i)); A6 `--repo` at a worktree subdirectory empties the capture set (limit (j)). A5 and A6 artifacts meet the
+  frozen kill rule's literal text; the report says so.
+- C2: B1 row-2 trend clause moved to the Lane cell, row-4 qualifier restored; B2 GET count; B3 located after
+  normalization; B4 "fired and was answered" not instrumented (limit (e)); B5 Never cells; B6-B9 the update's article
+  body as reported by a seat's re-open (not held).
+
+F2 = `0a3da3dab7bab333fc3789b909740bb62c64da87` (helper `landed` line; A1-A4, B1-B5 and the first entry repairs; B6-B9
+landed in the same commit). F3 = the commit that first carries A5-A6; recorded by the landing commit's report.

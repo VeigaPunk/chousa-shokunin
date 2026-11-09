@@ -141,3 +141,26 @@ tally is unchanged at F2.
   points" said more than the abstract's "binomial test, N = 25"; reworded.
 
 C2 tallies after B1-B9 (entry and Update prose only): identical to F (`corpus/evidence/round100/after-f2/c2-all.txt`).
+
+### F3 amendments (C1, after `R100SentinelC1`, the last seat to report; tool, battery and predicate unchanged)
+
+- **A5 (C1, which sibling).** `R100SentinelC1` F-1: `capture_oids` keeps one path per object id (`.txt` wins, else the
+  last listed), and `rev_capture_text` reads the sibling of that mapped path, not of the path the record names. A
+  byte-identical copy of S230's `.raw` added under an earlier capture key with a benign sibling makes a rev record on
+  the honest `b5b8d050….raw` print OK (`R100SentinelC1-oid-collision-evidence.txt`, rows B-D). This wave artifact meets
+  the frozen kill rule's literal text ("a rev record whose blob has a capture's object id at that rev, whose capture
+  text is a challenge page … and which this tool prints OK"), reading "capture text" as the text of the capture the
+  record names. The sentence is judged as: **for a `.raw` entry, the sibling `.txt` of the one capture path the tool
+  binds to that object id (when several capture entries share the id, the binding, not the record's path, decides)**.
+  Named limit (i). The lane's tree at F has 14 duplicate-id groups, none with diverging sibling status (measured by the
+  seat), so no committed record changes verdict. Remediation (bind `oid -> [paths]` and use the record's own capture
+  path when it is among them, or refuse when any sharing entry's sibling is a challenge page) routed to round 101.
+- **A6 (C1, `--repo` at a subdirectory).** `R100SentinelC1` F-2: `git ls-tree … -- corpus/captures/` takes the pathspec
+  relative to `--repo`'s directory while `rev:path` is root-relative, so `--repo <worktree>/corpus` yields an empty
+  capture set and a rev record on S230's challenge capture prints OK (`R100SentinelC1-repo-subdir-evidence.txt`). Every
+  lane call site passes the worktree root. The sentence is judged with **`--repo` (or `--root`) naming the worktree
+  root**. Named limit (j). Remediation (`--full-name` and `:(top)corpus/captures/`, and a loud error on an empty capture
+  set when the tree has `corpus/captures/`) routed to round 101.
+
+The C1 verdict is filed on the A1-A6 sentence. The frozen kill rule's literal text is met by the A5 and A6 artifacts;
+the report states this and lets the closure rule.
