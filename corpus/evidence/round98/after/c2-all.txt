@@ -1,0 +1,71 @@
+# computed_against F=aac826848dda5029ba459568b29d9a92176dc2b6 (shared clone at F in scratch)
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/press-2015-statement-questions-r98.md
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:156 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:157 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:158 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:159 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:160 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:161 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:162 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:163 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:164 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:165 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:166 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:167 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:168 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:169 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:170 S231 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:171 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:172 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:173 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:174 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:175 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:176 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:177 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:178 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:179 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:180 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:181 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:182 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:183 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:184 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:185 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:186 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:187 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:188 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:189 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:190 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:191 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:192 S225 OK
+GATE_RECORD corpus/knowledge/press-2015-statement-questions-r98.md:193 S228 OK
+GATE_RECORDS files=1 records=38 ok=38 fail=0
+exit=0
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/press-2015-statement-questions-r98.md --root .
+research-gate v2 — ts=2026-11-09T03:03:11Z — mode=verify-metadata — path=corpus/knowledge/press-2015-statement-questions-r98.md — root=.
+META entry=press-2015-statement-questions-r98.md source=present verified_at=dated recheck=scheduled verdict=clean
+METADATA_COMPLETE=1/1
+RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)
+exit=0
+$ python3 -B tools/search-rerun.py verify corpus/knowledge/press-2015-statement-questions-r98.md --root .
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q3 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q4 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=2 TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN_SUMMARY searches=5 rev_match=5/5 tree_same=1/5 findings=0
+SEARCH_RERUN: CLEAN
+exit=0
+$ python3 -B corpus/evidence/round98/entry-controls-r98.py --root .
+CASE positive held=36/36 bad_quotes=- elements231=7/7 elements225=6/6 warrants=10/10 lane_filled=10/10 ok
+CASE do-nothing-base entry_at_base=absent BASE_HELD=16/36 ok
+CASE new-only prior=16 own=20 overlap=- ok
+CASE forgery f1-drop-word held=35/36 bad_quotes=['K2'] elements=7/6 warrants=10/10 refused ok
+CASE forgery f2-swap-k18-k19 held=35/36 bad_quotes=- elements=7/6 warrants=10/10 refused ok
+CASE forgery f3-widen-across-lines held=35/36 bad_quotes=['K1'] elements=7/6 warrants=10/10 refused ok
+CASE forgery f4-s223-grouping held=36/36 bad_quotes=- elements=7/5 warrants=10/10 refused ok
+CASE forgery f5-s231-in-s225-words held=36/36 bad_quotes=- elements=6/6 warrants=10/10 refused ok
+CASE forgery f6-unknown-qid held=36/36 bad_quotes=- elements=7/6 warrants=9/10 refused ok
+CASE forgery f7-wrong-source held=36/36 bad_quotes=- elements=7/6 warrants=9/10 refused ok
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 NEW_ONLY=1/1 FORGERY_REFUSED=7/7 QUESTION_LINES_HELD=36/36 BASE_HELD=16/36 ELEMENTS=7+6/7+6 WARRANTS_OK=10/10 LANE_FILLED=10/10
+ENTRY_CONTROLS_R98=PASS
+exit=0
