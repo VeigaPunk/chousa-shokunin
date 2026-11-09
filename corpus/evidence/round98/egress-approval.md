@@ -2,8 +2,10 @@
 
 SKILL.md `## Boundaries`: a window without an approval table is loopback-only; the approval table is itself a
 chousa deliverable. This table is the round-97 table (`corpus/evidence/round97/egress-approval.md`) narrowed to
-this round's documents. It does not answer L0 `8d77e6c1` (fetch scope in general). It was written before any
-round-98 GET.
+this round's documents. It does not answer L0 `8d77e6c1` (fetch scope in general). Its first four rows (CADTH
+appendices, CADTH main PDF, web search, and the seats row, now last) were written before any round-98 GET; the
+PubMed, NCBI Bookshelf and Europe PMC rows were appended after the GETs their own text names, each before its own
+GET (corrected at F2 after `R98ScribeLesson`'s note: this sentence first said the whole table preceded every GET).
 
 Context: SCORECARD `## Planned — round 98` item 2 — the PRESS 2015 checklist is held only through two third-party
 reprints (S225 tier B, S226 tier C); the primary routes answered 403 in round 97; `R97ScoutSources` §4 names one

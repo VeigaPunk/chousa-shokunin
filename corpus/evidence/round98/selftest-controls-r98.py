@@ -24,11 +24,20 @@ processes (cwd = a scratch directory under --work, never the lane):
   ORACLES       five stand-ins scored by this battery must FAIL it: a constant PASS printer, a hollow self-test,
                 an always-FAIL self-test, a guard-blind self-test (canary result forced ok), and a hash-of-self
                 self-test (the real tool plus a check of its own sha256 that fails on any byte change)
+  KILL_RULE     (F2, `R98MutantsC1` B1) `killed()` is scored on four planted stand-ins: FAIL with exit 0, FAIL with a
+                `Traceback`, FAIL naming no known case, and FAIL exit 1 naming `setup`; only the last counts as KILLED
+  DIRECT_PATH   (F2, `R98MutantsC1` D01-D04, X3) the tool under test with its canary call forced to fail, and forced to
+                raise: each must exit 1, print exactly `SEARCH_RERUN_SELFTEST: FAIL guard-canary failed=g00-guard-canary`
+                as its last line and no `Traceback`
   NO_WRITE      the lane's `git status --porcelain` and `git diff` digest at battery start; `--selftest` run with cwd,
                 HOME and TMPDIR in an empty directory under --work; the directory stays empty and the lane status and
                 diff digest equal the battery-start ones
   REGRESSION    `corpus/evidence/round95/rerun-controls-r95.py --tool <tool>` prints `RERUN_CONTROLS=PASS` and
                 `corpus/evidence/round95/mutants-r95.py` prints `MUTANTS_KILLED=10/10` (only with the default tool)
+
+Pinned sizes (F2, `R98MutantsC1` B3, B5): the battery refuses to run (SETUP, exit 2) unless the required set has 35
+mutants, the prior sets 34 and 23, the equivalent set 3 and the oracle set 5, so a widened exclusion or a dropped
+oracle cannot keep the printed tallies whole.
 
 Named survivors (not required to die; the self-test does not exercise these readers): `u01-verify-return-0`
 (`verify`'s exit code; the round-95 battery catches it) and `u05-tree-files-jj` (the disk reader's `.jj` pruning;
@@ -78,6 +87,14 @@ EQUIVALENT = {
     "e2-digest-docstring": ("    \"\"\"sha256 of the paths as bytes, byte-sorted,",
                             "    \"\"\"SHA-256 of the paths as bytes, byte-sorted,"),
     "e3-lines-not-empty": ('    if lines and lines[-1] == b"":', "    if lines and not lines[-1]:"),
+}
+CANARY_CALL = "        guard_ok, guard_detail = _guard_canary()\n"
+DIRECT_LINE = "SEARCH_RERUN_SELFTEST: FAIL guard-canary failed=g00-guard-canary"
+KILL_RULE_STUBS = {  # name: (stub source, expected killed())
+    "fail-exit-0": ("import sys\nprint('SEARCH_RERUN_SELFTEST: FAIL cases=0/1 failed=setup')\nsys.exit(0)\n", False),
+    "fail-traceback": ("print('SEARCH_RERUN_SELFTEST: FAIL cases=0/1 failed=setup')\nraise RuntimeError('stub')\n", False),
+    "fail-unnamed": ("import sys\nprint('SEARCH_RERUN_SELFTEST: FAIL cases=0/1 failed=no-such-case')\nsys.exit(1)\n", False),
+    "fail-named": ("import sys\nprint('SEARCH_RERUN_SELFTEST: FAIL cases=0/1 failed=setup')\nsys.exit(1)\n", True),
 }
 HASH_ANCHOR = "    try:\n        guard_ok, guard_detail = _guard_canary()\n"
 HASH_CHECK = ('    import hashlib as _h\n'
@@ -208,6 +225,41 @@ def main(argv):
             return 2
         required = sorted(set(external) - set(NAMED_SURVIVORS))
         src = open(tool, encoding="utf-8").read()
+        prior = {m[0]: (m[1], m[2]) for m in literal(r96_probe, "MUTANTS") if m[0] not in r97_lits["EXCLUDED"]}
+        prior.update(r97_lits["SENTINEL"])
+        prior.update(r97_lits["RESIDUE"])
+        r96_mutants = literal(reads["r96"], "MUTANTS")
+        sizes = (len(required), len(prior), len(r96_mutants), len(EQUIVALENT))
+        if sizes != (35, 34, 23, 3):
+            print(f"SETUP pinned sizes (required, prior, r96, equivalent) expected (35, 34, 23, 3), got {sizes}")
+            return 2
+
+        calib = 0
+        for name, (body, want) in KILL_RULE_STUBS.items():
+            sp = os.path.join(work, f"calib-{name}.py")
+            with open(sp, "w", encoding="utf-8") as fh:
+                fh.write(body)
+            dead = rn.killed(sp)[0]
+            ok = dead == want
+            print(f"CASE kill-rule {name} killed={dead} expect={want} {'ok' if ok else 'FAIL'}")
+            calib += 1 if ok else 0
+        t["KILL_RULE"] = (calib, len(KILL_RULE_STUBS))
+
+        direct = 0
+        for name, repl in (("forced-false", "        guard_ok, guard_detail = False, \"forced\"\n"),
+                           ("forced-raise", "        guard_ok, guard_detail = (_ for _ in ()).throw(ValueError(\"forced\"))\n")):
+            if src.count(CANARY_CALL) != 1:
+                print(f"CASE direct-path {name} canary call not found FAIL")
+                continue
+            dp = os.path.join(work, f"direct-{name}.py")
+            with open(dp, "w", encoding="utf-8") as fh:
+                fh.write(src.replace(CANARY_CALL, repl))
+            drc, dout, derr = rn.selftest(dp)
+            dl = dout.splitlines()
+            ok = drc == 1 and bool(dl) and dl[-1] == DIRECT_LINE and "Traceback" not in derr
+            print(f"CASE direct-path {name} rc={drc} last={dl[-1] if dl else ''!r} {'ok' if ok else 'FAIL'}")
+            direct += 1 if ok else 0
+        t["DIRECT_PATH"] = (direct, 2)
 
         res, setup = rn.score(src, external, work, "r97ext")
         k_req = sum(1 for m in required if res.get(m))
@@ -225,13 +277,10 @@ def main(argv):
               f" setup={bsetup} expect<{len(required)} {'ok' if ok else 'FAIL'}")
         t["DO_NOTHING_REFUSED"] = (1 if ok else 0, 1)
 
-        prior = {m[0]: (m[1], m[2]) for m in literal(r96_probe, "MUTANTS") if m[0] not in r97_lits["EXCLUDED"]}
-        prior.update(r97_lits["SENTINEL"])
-        prior.update(r97_lits["RESIDUE"])
         pres, psetup = rn.score(src, prior, work, "r97prior")
         t["PRIOR_R97_KILLED"] = (sum(pres.values()) if not psetup else 0, len(prior))
-        r96res, r96setup = rn.score(src, literal(reads["r96"], "MUTANTS"), work, "r96")
-        t["R96_MUTANTS_KILLED"] = (sum(r96res.values()) if not r96setup else 0, len(literal(reads["r96"], "MUTANTS")))
+        r96res, r96setup = rn.score(src, r96_mutants, work, "r96")
+        t["R96_MUTANTS_KILLED"] = (sum(r96res.values()) if not r96setup else 0, len(r96_mutants))
 
         surv = 0
         for name, (old, new) in EQUIVALENT.items():
@@ -257,10 +306,12 @@ def main(argv):
                 "hollow-selftest": src.replace(HASH_ANCHOR, f"    print({PASS_LINE!r})\n    return 0\n" + HASH_ANCHOR),
                 "always-fail": src.replace(HASH_ANCHOR, f"    print('SEARCH_RERUN_SELFTEST: FAIL cases=0/{N_CASES}"
                                                         " failed=setup')\n    return 1\n" + HASH_ANCHOR),
-                "guard-blind": src.replace("        guard_ok, guard_detail = _guard_canary()\n",
-                                           "        guard_ok, guard_detail = True, \"fail_set=ok pass_set=ok\"\n"),
+                "guard-blind": src.replace(CANARY_CALL, "        guard_ok, guard_detail = True, \"fail_set=ok pass_set=ok\"\n"),
                 "hash-of-self": hos,
             }
+            if len(stubs) != 5:
+                print(f"SETUP pinned oracle count expected 5, got {len(stubs)}")
+                return 2
             rejected = 0
             for name, body in stubs.items():
                 if body is None or body == src:

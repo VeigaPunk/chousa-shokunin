@@ -671,14 +671,20 @@ CANARY_FAIL = ("SELFTEST canary-pass ok", "SELFTEST canary-false FAIL", "SELFTES
                "SELFTEST setup FAIL raised RuntimeError: canary set-up",
                "SEARCH_RERUN_SELFTEST: FAIL cases=1/4 failed=canary-false,canary-raise,setup")
 CANARY_PASS = ("SELFTEST canary-pass ok", "SEARCH_RERUN_SELFTEST: PASS cases=1/1")
+# F2 (R98MutantsC1 S02, S03, X4): one failure among two cases, and four failures, each with its exact lines and rc 1
+CANARY_ONE = ("SELFTEST canary-pass ok", "SELFTEST canary-false FAIL", "SEARCH_RERUN_SELFTEST: FAIL cases=1/2 failed=canary-false")
+CANARY_FOUR = ("SELFTEST canary-f1 FAIL", "SELFTEST canary-f2 FAIL", "SELFTEST canary-f3 FAIL", "SELFTEST canary-f4 FAIL",
+               "SEARCH_RERUN_SELFTEST: FAIL cases=0/4 failed=canary-f1,canary-f2,canary-f3,canary-f4")
 
 
 def _guard_canary():
-    """Round 98 (R97MutantsC1 g01-g05): run `_collect` and `_summary` themselves on two fixed case sets — one with a
-    passing case, a False case, a raising case and a raising set-up; one with a single passing case — with their
-    output captured in memory, and compare every printed line and the exit code with the expected ones. A guard or
-    summary that records a failure as a pass, lets an exception escape, miscounts, prints PASS for a failure or
-    returns 0 for one fails this check."""
+    """Round 98 (R97MutantsC1 g01-g05): run `_collect` and `_summary` themselves on four fixed case sets — a passing
+    case, a False case, a raising case and a raising set-up; a single passing case; one passing and one False case;
+    four False cases — with their output captured in memory, and compare every printed line and the exit code with
+    the expected ones. Within those four sets, a guard or summary that records a failure as a pass, lets an exception
+    escape, miscounts, prints PASS for a failure, drops a failed id or returns 0 for a failing set fails this check.
+    It checks `_collect` and `_summary`, not itself: a weakened comparison here, or a wrong exit code on the direct
+    FAIL path in `selftest()`, is visible only to a battery that plants a fault (round-98 named limit (d))."""
     def failing(case):
         def boom():
             raise ValueError("canary")
@@ -690,13 +696,23 @@ def _guard_canary():
     def passing(case):
         case("canary-pass", lambda: True)
 
+    def one(case):
+        case("canary-pass", lambda: True)
+        case("canary-false", lambda: False)
+
+    def four(case):
+        for i in range(1, 5):
+            case(f"canary-f{i}", lambda: False)
+
     seen = []
-    for cases, want, want_rc in ((failing, CANARY_FAIL, 1), (passing, CANARY_PASS, 0)):
+    for cases, want, want_rc in ((failing, CANARY_FAIL, 1), (passing, CANARY_PASS, 0), (one, CANARY_ONE, 1),
+                                 (four, CANARY_FOUR, 1)):
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
             rc = _summary(_collect(cases))
         seen.append(rc == want_rc and tuple(buf.getvalue().splitlines()) == want)
-    return all(seen), f"fail_set={'ok' if seen[0] else 'WRONG'} pass_set={'ok' if seen[1] else 'WRONG'}"
+    names = ("fail_set", "pass_set", "one_set", "four_set")
+    return all(seen), " ".join(f"{n}={'ok' if s else 'WRONG'}" for n, s in zip(names, seen))
 
 
 def selftest():

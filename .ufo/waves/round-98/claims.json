@@ -3,7 +3,7 @@
  "lane": "chousa",
  "l1": "ChousaR98",
  "base": "98b8177c1e8b39cdf1167928e4f5d609f6fa81b6",
- "shape": "two claims, two axes (operability, depth), no exploratory claim; C2 sourced on S231, opened this round",
+ "shape": "two claims, two axes (operability, depth), no exploratory claim; C2 sourced on S231 (opened this round, tier B at F2)",
  "claims": {
   "C1": {
    "id": "C1-SELFTEST-R97MUTANTS-R98",
@@ -17,12 +17,12 @@
     "selftest_last_line": "SEARCH_RERUN_SELFTEST: PASS cases=67/67",
     "selftest_exit": 0,
     "controls_stdout": [
-     "POSITIVE=1/1 KILL_REQUIRED=35/35 DO_NOTHING_REFUSED=1/1 PRIOR_R97_KILLED=34/34 R96_MUTANTS_KILLED=23/23 EQUIVALENT_SURVIVED=3/3 ORACLES_REJECTED=5/5 NO_WRITE=1/1 REGRESSION_R95=2/2 EXTERNAL_R97_KILLED=35/37 BASE_KILLED=12/37 CASES=67",
+     "POSITIVE=1/1 KILL_RULE=4/4 DIRECT_PATH=2/2 KILL_REQUIRED=35/35 DO_NOTHING_REFUSED=1/1 PRIOR_R97_KILLED=34/34 R96_MUTANTS_KILLED=23/23 EQUIVALENT_SURVIVED=3/3 ORACLES_REJECTED=5/5 NO_WRITE=1/1 REGRESSION_R95=2/2 EXTERNAL_R97_KILLED=35/37 BASE_KILLED=12/37 CASES=67",
      "SELFTEST_CONTROLS_R98=PASS"
     ],
     "controls_exit": 0
    },
-   "before": "corpus/evidence/round98/before/c1-base.txt (base tool under the battery: KILL_REQUIRED=12/35, SELFTEST_CONTROLS_R98=FAIL)",
+   "before": "corpus/evidence/round98/before-f2/c1-base.txt (base tool under the F2 battery)",
    "sources": []
   },
   "C2": {
@@ -36,23 +36,36 @@
     "python3 -B corpus/evidence/round98/entry-controls-r98.py --root ."
    ],
    "predicate": {
-    "gate_stdout": ["GATE_RECORDS files=1 records=38 ok=38 fail=0"],
+    "gate_stdout": [
+     "GATE_RECORDS files=1 records=38 ok=38 fail=0"
+    ],
     "gate_exit": 0,
-    "metadata_stdout": ["METADATA_COMPLETE=1/1", "RESEARCH_GATE: CLEAN"],
+    "metadata_stdout": [
+     "METADATA_COMPLETE=1/1",
+     "RESEARCH_GATE: CLEAN"
+    ],
     "metadata_exit": 0,
-    "rerun_stdout": ["rev_match=5/5", "SEARCH_RERUN: CLEAN"],
+    "rerun_stdout": [
+     "rev_match=5/5",
+     "SEARCH_RERUN: CLEAN"
+    ],
     "rerun_exit": 0,
     "controls_stdout": [
-     "POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 NEW_ONLY=1/1 FORGERY_REFUSED=7/7 QUESTION_LINES_HELD=36/36 BASE_HELD=16/36 ELEMENTS=7+6/7+6 WARRANTS_OK=10/10 LANE_FILLED=10/10",
+     "POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 NEW_ONLY=1/1 FORGERY_REFUSED=12/12 IDENTITY=1/1 FIELD_SCOPED=15/15 ACCEPTED=2/2 QUESTION_LINES_HELD=36/36 BASE_HELD=16/36 ELEMENTS=7+6/7+6 WARRANTS_OK=10/10 LANE_FILLED=10/10",
      "ENTRY_CONTROLS_R98=PASS"
     ],
     "controls_exit": 0
    },
    "before": "corpus/evidence/round98/before/c2-base.txt (entry absent, gate exit 2; BASE_HELD=16/36)",
-   "sources": ["S231", "S225"]
+   "sources": [
+    "S231",
+    "S225"
+   ]
   }
  },
  "freeze": {
-  "F": "<the lane commit that first carries this file>"
+  "F": "aac826848dda5029ba459568b29d9a92176dc2b6",
+  "F2": "<the lane commit that first carries the F2 amendments>",
+  "note": "claims judged at F2 sentences and predicates (claims.md \u00a7 Amendments)"
  }
 }
