@@ -1,0 +1,33 @@
+# receipt R96SentinelC1-no-write-ordering-detail
+# WHY the lane write is invisible: the battery invokes the tool under test in the POSITIVE
+# leg FIRST (selftest(tool), cwd = the lane root, ambient HOME), long before the NO_WRITE
+# leg takes its 'before' snapshot. So a lane write the selftest performs is ALREADY in the
+# baseline. And 'git status --porcelain' prints only path + status letter, so a second,
+# further change to the SAME path is byte-identical in the before/after strings.
+
+=== step 1: clean lane ===
+(clean)
+
+=== step 2: run the battery with a tool whose selftest writes tools/lane-side-effect.txt ===
+CASE no-write rc=0 left=[] lane_status_same=True ok
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 NO_WRITE=1/1 CASES=32
+SELFTEST_CONTROLS=PASS
+
+=== step 3: how many times did the selftest run? (POSITIVE leg + NO_WRITE leg = 2) ===
+the file exists: -rw-r--r-- 1 vgpnk vgpnk 1 Nov  8 22:32 tools/lane-side-effect.txt
+lane status now:
+?? tools/lane-side-effect.txt
+?? tools/mutant-W3-tmp.py
+
+=== step 4: the before/after strings the battery compared ===
+before (taken AFTER the POSITIVE leg had already written the file):
+  '?? tools/lane-side-effect.txt\n?? tools/mutant-W3-tmp.py'
+after  (the NO_WRITE leg wrote it again - same path, same status letter):
+  '?? tools/lane-side-effect.txt\n?? tools/mutant-W3-tmp.py'
+-> identical strings -> lane_status_same=True -> NO_WRITE=1/1 'ok'
+
+=== step 5: CONTROL -- the same tool, NO_WRITE leg run in ISOLATION on a clean lane ===
+  before = '?? tools/mutant-W3-tmp.py\n'
+  after  = '?? tools/lane-side-effect.txt\n?? tools/mutant-W3-tmp.py\n'
+  equal?  False   <- in isolation the write IS detected
+(restored clean)

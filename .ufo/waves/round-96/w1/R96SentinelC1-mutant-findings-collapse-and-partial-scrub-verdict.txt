@@ -1,0 +1,42 @@
+# receipt R96SentinelC1-mutant-findings-collapse-and-partial-scrub-verdict
+
+=== PART A: mutant A (findings += len(bad) -> findings += 1 if bad else 0) ===
+# The selftest has NO judgement case whose row carries two codes, so the two forms are
+# indistinguishable there. The r95 battery does not check the findings COUNT either.
+# Observable difference: a row with two codes (COUNT_DRIFT + SET_DRIFT).
+
+-- the forged row (hits=15, hit_set=NOPE.txt -> both a count and a set drift) --
+| Q2 | fixed | corpus/captures/*.txt | `exactly as run` | 7b2373586fb70f0ead6446c671fcc8b546d3e687 | 2026-11-08 | 15 | corpus/captures/NOPE.txt |
+
+-- SHIPPING tool --
+SEARCH_RERUN Q2 rev=DRIFT tree=CHANGED recorded=15 at_rev=2 at_tree=3 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=8 rev_match=7/8 tree_same=3/8 findings=2
+exit=1
+
+-- MUTANT A --
+SEARCH_RERUN Q2 rev=DRIFT tree=CHANGED recorded=15 at_rev=2 at_tree=3 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=8 rev_match=7/8 tree_same=3/8 findings=1
+exit=1
+
+-- mutant A also survives: --selftest / r95 battery / r96 battery --
+SEARCH_RERUN_SELFTEST: PASS cases=32/32
+selftest exit=0
+RERUN_CONTROLS=PASS
+r95 battery exit=0
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 NO_WRITE=1/1 CASES=32
+SELFTEST_CONTROLS=PASS
+r96 battery exit=0
+
+=== PART B: mutant D (partial GIT_* scrub) -- does it give a WRONG verdict? ===
+-- D with GIT_WORK_TREE hostile -> the tool's ROOT check refuses (exit 2) --
+SEARCH_RERUN_ERROR ROOT /fast/scratch/hyaku/chousa-r96/R96SentinelC1/repo is not a git toplevel
+exit=2
+-- D with GIT_OBJECT_DIRECTORY hostile -> refuses (exit 2) --
+SEARCH_RERUN_ERROR REV 7b2373586fb70f0ead6446c671fcc8b546d3e687 is not a commit in /fast/scratch/hyaku/chousa-r96/R96SentinelC1/repo
+exit=2
+-- D with GIT_CONFIG_GLOBAL hostile -> still CLEAN (exit 0); the guard's absence is silent --
+SEARCH_RERUN: CLEAN
+exit=0
+-- CONTROL: the shipping tool scrubs GIT_CONFIG_GLOBAL too, so the same hostile config --
+SEARCH_RERUN: CLEAN
+exit=0

@@ -1,0 +1,28 @@
+# receipt R96SentinelC1-battery-writes-lane-index
+# FINDING (severity: low): the battery's own docstring says it is 'Read-only on the lane
+# (git show, git status)'. 'git status' is NOT read-only on the lane: it refreshes the
+# stat cache and REWRITES the lane's .git/index. So the round-96 battery writes a file
+# OUTSIDE --work, into the lane's .git directory, on every run -- contradicting both
+# 'Writes only under --work' and 'Read-only on the lane' in its own header.
+# (The bytes git writes are a stat-cache refresh, not content; the lane's tracked files
+#  and HEAD are unaffected. The claim's 'lane status unchanged' is unaffected too.)
+
+=== step 1: make the index stat-dirty, then record its hash ===
+index sha before : 8b68b9c5f778d3e1158d8068c040337f25e2b04c0a3b33911eb5ddac5299c1c4
+
+=== step 2: run ONLY 'git status --porcelain' (the battery's own NO_WRITE command) ===
+index sha after  : f4a2a00d3d36e63178d2f58425edee317df0753a0cbda657f73cc71f36580fb5
+=> .git/index WAS REWRITTEN by git status alone (differs)
+
+=== step 3: CONTROL -- 'git show' (the other command the docstring lists) does NOT rewrite it ===
+index sha before : f4a2a00d3d36e63178d2f58425edee317df0753a0cbda657f73cc71f36580fb5
+index sha after  : f4a2a00d3d36e63178d2f58425edee317df0753a0cbda657f73cc71f36580fb5
+=> unchanged (git show is read-only)
+
+=== step 4: the same effect through the round-96 battery itself ===
+index sha before battery: f4a2a00d3d36e63178d2f58425edee317df0753a0cbda657f73cc71f36580fb5
+index sha after  battery: f4a2a00d3d36e63178d2f58425edee317df0753a0cbda657f73cc71f36580fb5
+=> unchanged
+
+=== step 5: the lane's tracked content is untouched (git diff empty) ===
+(empty = no content change)

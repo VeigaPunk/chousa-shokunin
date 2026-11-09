@@ -1,0 +1,44 @@
+R96CriticClaims receipts — commands run from /fast/scratch/hyaku/chousa-r96/R96CriticClaims/repo (freeze 2db151c5)
+================================================================
+[POSITIVE C1] python3 -B tools/search-rerun.py --selftest
+exit 0; last line: SEARCH_RERUN_SELFTEST: PASS cases=32/32
+[POSITIVE C1 battery noreg] python3 -B corpus/evidence/round96/selftest-controls-r96.py --root . --work <scratch> --no-regression
+tail: POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=1/1 CASES=32 / SELFTEST_CONTROLS=PASS (exit 0)
+[C2 gate] python3 -B tools/gate-records.py verify --root . corpus/knowledge/search-peer-review-dedup-r96.md
+GATE_RECORDS files=1 records=31 ok=31 fail=0 (exit 0)
+[C2 meta] bash tools/research-gate.sh verify-metadata corpus/knowledge/search-peer-review-dedup-r96.md --root .
+METADATA_COMPLETE=1/1 / RESEARCH_GATE: CLEAN (exit 0)
+[C2 rerun] python3 -B tools/search-rerun.py verify corpus/knowledge/search-peer-review-dedup-r96.md --root .
+SEARCH_RERUN_SUMMARY searches=8 rev_match=8/8 tree_same=5/8 findings=0 / SEARCH_RERUN: CLEAN (exit 0)
+[C2 entry] python3 -B corpus/evidence/round96/entry-controls-r96.py --root . --work <scratch>
+POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 SEARCHES=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1 / ENTRY_CONTROLS=PASS (exit 0)
+[SKILL grep] grep -c '^| `search-rerun` (r96 re-registration' SKILL.md -> 1 (exit 0)
+[GNU grep Q1-Q8 at base] git archive bbf64970 corpus/captures | tar -x; /usr/bin/grep runs reproduce Q1=2 Q2=2 Q3=3 Q4=4 sha256:075e... Q5=1 Q6=0 Q7=3 Q8=0; Q4 digest equals record sha256:075e02644f9c115cab201076e652ae646fc0fe85331c6f79943cc1e47aff3500
+[Base tool separability] git show bbf64970:tools/search-rerun.py > base-tool.py; python3 -B base-tool.py verify entry -> rev_match=8/8 CLEAN exit 0 (matches before/c2-separable-base-tool.txt)
+================================================================
+F1 shim (verify discards evaluate verdict):
+ python3 -B shim.py --selftest -> PASS cases=32/32 (exit 0)
+ python3 -B shim.py verify forged-Q2(count 2->3) -> SEARCH_RERUN_SUMMARY searches=8 rev_match=8/8 findings=0 / CLEAN (exit 0) — see shim-forged.txt
+ python3 -B tools/search-rerun.py verify forged-Q2 -> rev_match=7/8 findings=1 / DRIFT incl Q2 COUNT_DRIFT (exit 1) — see real-forged.txt
+ battery --tool shim.py --no-regression -> POSITIVE=1/1 MUTANTS_KILLED=23/23 NO_WRITE=1/1 SELFTEST_CONTROLS=PASS (exit 0) — see E1b-shim-noreg.txt
+ regression rerun-controls-r95 --tool shim.py -> STRICT_TREE=0/1 FORGERY_REFUSED=0/10 RERUN_CONTROLS=FAIL (exit 1) — see E1b-r95.txt (caught only by slow leg)
+F2 cheat (encoded base64 mutant strings + OLD-hash absence, never calls parse/match/evaluate):
+ python3 -B cheat.py --selftest -> PASS cases=32/32 (exit 0)
+ battery --tool cheat.py --no-regression -> MUTANTS_KILLED=23/23 SELFTEST_CONTROLS=PASS (exit 0) — see E2-cheat2-battery.txt
+ cheat-novel (cheat + header-accept defect) --selftest -> PASS cases=32/32 (exit 0) — blind to novel defect
+ real-novel (real tool + same defect) --selftest -> FAIL cases=31/32 failed=p03-header
+ cheat-as-committed default battery --no-regression -> POSITIVE=1/1 MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 SELFTEST_CONTROLS=PASS (exit 0) — see E2-cheat-full2.txt
+F3 dirty (writes outside empty dir + socket connect):
+ battery --tool dirty.py --no-regression -> NO_WRITE=1/1 SELFTEST_CONTROLS=PASS (exit 0) — see E3-dirty-battery.txt; /dirty-write.txt present with "dirty"
+F4 kind:
+ mutated SKILL (r96 kind gate->tool): grep -c '^| `search-rerun` (r96 re-registration' -> 1 (exit 0) — predicate-3 grep cannot check kind
+F5 wrong-source:
+ bindings(wrong-source.md) == (30,30,30,True,8,8,8,8) same as committed; gate-records verify wrong-source.md -> records=31 ok=31 fail=0 (exit 0)
+F6 fragments:
+ S223 L24 line169, L25 line173; intervening lines 170(empty),171(header 99),172(empty) — not consecutive.
+ S224 L17 line934, L18 line936; intervening line935 left-column "      review process is a key component of the PRISMA"
+F7 warrant:
+ all 8 Do cells negated with leading "not " still share content words -> negated-passes=True for 8/8 — see warrant-negation.txt
+ misreading examples share e.g. [consider,librarian,searcher,specialist] (Row2) and [deduplication,diagram,number,references,total] (Row8 suppress)
+F8 docstring:
+ p07..p13 refusals: grep -c "want=" among p-cases = 12; docstring claims "13 setup refusals" — overcount by 1 (p01-parse-good and p14 are positives)

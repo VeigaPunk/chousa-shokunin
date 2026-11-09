@@ -2785,3 +2785,70 @@ acquisition, `tools/search-rerun.py`) and C2 depth (`corpus/knowledge/search-rer
 - Correction (r94 spot-check D1): the round-94 report's ledger tally "9 / 1 / 9" is `falsifies-wording 8`,
   `falsifies-number 1`, `neutral 10` (`awk -F'\t' '{c[$3]++}'`, headerless ledger;
   `R95ScribeCorrections-ledger-tally.txt`); the report is a filed record and is not edited.
+
+## Round 96 — 2026-11-09
+
+Lane `chousa`, round 96 (attempt 1, `ChousaR96`). Base `bbf64970`; freeze `2db151c5` (F); wave-forced re-freeze
+`e91f82fe` (F2). Two claims: C1 operability (lowest scored axis; `tools/search-rerun.py --selftest` and its gate
+registration — round-95 spot-check D1) and C2 depth (`corpus/knowledge/search-peer-review-dedup-r96.md`), C2
+resting on `S223` and `S224`, both opened this round. One v1 wave, 12 seats, no dead seat. Frozen sentences and the
+F2 amendments: `.ufo/waves/round-96/claims.md`; plan, pre-freeze fixes P0-P3 and amendments A1-A5, B1-B6:
+`plans/round-96.md`; lesson `corpus/lessons/round-96.md`.
+
+- Motivating evidence: round-95 spot-check D1 — `search-rerun verify` was registered as kind `tool`, outside the
+  §Gate `gate|probe` vocabulary (`PROTOCOL.md:401-402`, `R96RevenPrior` F0), with no self-invocation mode;
+  `corpus/README.md:1445` — "PRISMA-S item 14 (search peer review) and item 16 (deduplication) are read in the
+  capture but not held".
+- Before (`corpus/evidence/round96/before/`): the base tool exits 2 on `--selftest` (argparse); `gate-records.py`
+  exits 2 on the entry path (absent). The base tool already re-runs the new entry's record CLEAN
+  (`c2-separable-base-tool.txt`), so C2 does not depend on C1.
+- Pre-freeze controls (`corpus/evidence/round96/prefreeze/`): run 1 of the C1 battery FAILED
+  (`MUTANTS_KILLED=22/24`: `m16-set-dedup` survived; `m34` equivalent, removed); run 2 PASS; the first draft of the
+  refactor had disabled the round-95 battery's `rev-blind` oracle and every round-95 mutant (P0). C2 battery PASS
+  before the freeze.
+- After at F2 (`corpus/evidence/round96/after-f2/`): `SEARCH_RERUN_SELFTEST: PASS cases=32/32`; `SELFTEST_CONTROLS=PASS` with
+  `POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=1/1 REGRESSION_R95=2/2`;
+  one r96 `gate` row; `GATE_RECORDS files=1 records=33 ok=33 fail=0`, `METADATA_COMPLETE=1/1`, `rev_match=8/8`
+  CLEAN, `ENTRY_CONTROLS=PASS` (`LQ_BOUND=32/32 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8`). The F receipts
+  (`after/`, 31 records) are kept as the F record.
+- Wave-forced amendments: C1's sentence narrowed (the self-test calls `evaluate` but does not check `verify` uses
+  its verdict; the mutant leg shows failure at 23 named sites only; the gate row's kind is checked by reading; K4
+  judged on NO_WRITE's scope, and NO_WRITE itself sees only an empty cwd/HOME, not lane writes — A6; `m08`
+  asserts the `GIT_DIR` scrub and the lazy-fetch guard only — A7); the tool docstring's refusal count corrected
+  (12, not 13); a correction line under the SKILL.md Gates row records A1/A6/A7. C2: rows 1, 3 and 5
+  repaired (reviewer field, survey/forum attribution with L31, Never moved to Lane with L32), the fragment-group
+  description rewritten from the reading-order form (L24-L25 cross a page break, L17-L18 skip a line), the Q6 note
+  corrected (page break, not a column wrap); 32 located quotes, 33 Gate records.
+- Frontier: `corpus/SOURCES.md` 221 → 223 rows (`S223` tier B, `S224` tier A, re-scoping S222's bytes); a
+  round-96 `## Search log` entry; census exit 0 before and after (one new `W04`, S224/S222 across scopes, by
+  design). Routed, not absorbed: tameshi's in-memory self-tests (`R96ConnectorSiblings`); the four gate-kind tools
+  with no `--selftest` (`quarantine-check.py`, `build-spans.py`, `receipt-pin.py`, `digest-in-tree.py`;
+  `R96RevenPrior` Q3); the self-test's uncovered inputs (signed hits, bad dates, uppercase hex, non-UTF-8,
+  two-code rows; `R96MutantsC1` Class C) and its crash-instead-of-FAIL path (Class B).
+- Correction (r95 spot-check D2): `corpus/lessons/round-95.md:23` says "C2's entry holds nine located quotes";
+  the entry holds 13 at every revision the lesson exists at (born at F2 `86909f02`; `GATE_RECORDS … records=13`,
+  `corpus/evidence/round95/after-f2/c2-gate.txt`; `.ufo/waves/round-96/w1/R96ScribeCorrections-D2-lesson-nine-quotes.txt`).
+  The original text stays.
+- Correction (r95 spot-check D3): the round-95 report (`.ufo/reports/round-95/chousa.md:95-96`) and
+  `SCORECARD.md:4258-4259` say the r94 counters pass "on the landing tree"; no round-95 receipt carries either
+  verdict (`grep -rl 'SKILL_TALLY_R94\|CURATION_R94' corpus/evidence/round95/` → exit 1). The values are true:
+  re-measured on the round-95 landing `07e0e332` and on F `2db151c5`, `SKILL_TALLY_R94=PASS` and
+  `CURATION_R94=PASS`, exit 0 (`R96ScribeCorrections-D3b-counters-r95-landing.txt`, `…-D3c-counters-r96-freeze.txt`).
+  The original text stays.
+- Correction (r95 spot-check D4, revised): `corpus/lessons/round-95.md:39-41` reads the "10:39" locator as coming
+  from a web-search summary; the locator is true, confirmed outside the capture store by the round-95 closure and by
+  `R96ScribeCorrections` (`<volume>10</volume>`, `<elocation-id>39</elocation-id>`;
+  `R96ScribeCorrections-D4-locator-external-confirmation.txt`); the lane's own two attempts on that route answered
+  http 500. The S222 row stays; the confirmation is recorded in `corpus/lessons/round-96.md` `## Gate`.
+- Correction (r95 spot-check D5): recorded in `corpus/README.md` (Round96 section): the round-95 README row's
+  `after/` pointer should be `after-f2/`.
+- Correction (round-96 battery docstring, `R96SentinelC1` F4, F6): `corpus/evidence/round96/selftest-controls-r96.py`
+  says "Read-only on the lane" and "(removed at exit)"; its `git status --porcelain` calls refresh the lane's
+  `.git/index` stat cache (no content change), and a SIGKILL or SIGTERM mid-run leaves 48 files under `--work`.
+  The battery bytes stay as frozen (amendment A8).
+- Re-freeze F3 `31810b4e` (B7, `R96ScoutSources` §3): the F2 entry said every fragment group reads as one sentence in
+  the reading-order form; `L31 with L24-L25` is split by the running header there too, and "30/30 measured"
+  under-counted 32 quotes. Entry text only; C2 receipts re-run at F3 (`corpus/evidence/round96/after-f3/c2-all.txt`,
+  same tallies); C1's paths are byte-identical at F2 and F3 (`after-f3/c1-f2-equals-f3.txt`). Ledger:
+  `.ufo/waves/round-96/claim-falsification.tsv` (16 rows, `falsifies-wording 8`, `neutral 8`). Census end
+  `corpus/evidence/round96/census-end.txt` (exit 0, 223 rows). Mistakes mined: 7 (`corpus/lessons/round-96.md`).

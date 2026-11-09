@@ -1,0 +1,95 @@
++ echo '## Q1 wrap sites, S224 layout (grep -n)'
+## Q1 wrap sites, S224 layout (grep -n)
++ /usr/bin/grep -n -e 'Peer Review of' -e 'Electronic Search' -e 'Search Strategies' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/1a8c36c4c24444967bd9c3ce.txt
+870:                                                                      Authors should consider using the Peer Review of
+871:                                                                 Electronic Search Strategies (PRESS) Guideline statement,
+1046:      for search strategy peer review is the Peer Review of Electronic Search Strategies (PRESS) Guideline [52].
+1128:PRESS: Peer Review of Electronic Search Strategies
+1360:42. Elsevier. Scopus [Internet]. Elsevier; 2020 [cited 1 Feb 2020].        Lefebvre C. PRESS Peer Review of Electronic Search
++ echo rc=0
+rc=0
++ echo '## Q1 wrap sites, S223 layout (grep -n)'
+## Q1 wrap sites, S223 layout (grep -n)
++ /usr/bin/grep -n -e 'Peer Review of' -e 'Electronic Search' -e 'Search Strategies' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt
+142:               PRESS: Peer Review of Electronic Search
+177:the PRESS: Peer Review of Electronic Search Strategies            systematic review.
++ echo rc=0
+rc=0
++ echo '## Q6 proximity 300-char on layout-joined S223 (grep -o -P)'
+## Q6 proximity 300-char on layout-joined S223 (grep -o -P)
+++ /usr/bin/grep -o -P 'MEDLINE search.{0,300}?has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.layout-joined.txt
+++ wc -c
+80
++ echo rc=0
+rc=0
++ echo '## Q6 proximity 300-char on reading-joined S223'
+## Q6 proximity 300-char on reading-joined S223
+++ /usr/bin/grep -o -P 'MEDLINE search.{0,300}?has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.joined.txt
+++ cut -c1-200
+MEDLINE search LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR has been developed
++ echo rc=0
+rc=0
++ echo '## Q6 exact phrase, all forms'
+## Q6 exact phrase, all forms
++ for f in $L224 $L223 $S/S224.reading.txt $S/S223.reading.txt $S/S224.layout-joined.txt $S/S223.layout-joined.txt $S/S224.joined.txt $S/S223.joined.txt
+++ basename /fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/1a8c36c4c24444967bd9c3ce.txt
++ printf '%s hits=' 1a8c36c4c24444967bd9c3ce.txt
+1a8c36c4c24444967bd9c3ce.txt hits=+ /usr/bin/grep -c -F 'MEDLINE search has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/1a8c36c4c24444967bd9c3ce.txt
+0
++ for f in $L224 $L223 $S/S224.reading.txt $S/S223.reading.txt $S/S224.layout-joined.txt $S/S223.layout-joined.txt $S/S224.joined.txt $S/S223.joined.txt
+++ basename /fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt
++ printf '%s hits=' e94691f583d644da14661ec1.txt
+e94691f583d644da14661ec1.txt hits=+ /usr/bin/grep -c -F 'MEDLINE search has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt
+0
++ for f in $L224 $L223 $S/S224.reading.txt $S/S223.reading.txt $S/S224.layout-joined.txt $S/S223.layout-joined.txt $S/S224.joined.txt $S/S223.joined.txt
+++ basename /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S224.reading.txt
++ printf '%s hits=' S224.reading.txt
+S224.reading.txt hits=+ /usr/bin/grep -c -F 'MEDLINE search has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S224.reading.txt
+0
++ for f in $L224 $L223 $S/S224.reading.txt $S/S223.reading.txt $S/S224.layout-joined.txt $S/S223.layout-joined.txt $S/S224.joined.txt $S/S223.joined.txt
+++ basename /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.reading.txt
++ printf '%s hits=' S223.reading.txt
+S223.reading.txt hits=+ /usr/bin/grep -c -F 'MEDLINE search has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.reading.txt
+0
++ for f in $L224 $L223 $S/S224.reading.txt $S/S223.reading.txt $S/S224.layout-joined.txt $S/S223.layout-joined.txt $S/S224.joined.txt $S/S223.joined.txt
+++ basename /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S224.layout-joined.txt
++ printf '%s hits=' S224.layout-joined.txt
+S224.layout-joined.txt hits=+ /usr/bin/grep -c -F 'MEDLINE search has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S224.layout-joined.txt
+0
++ for f in $L224 $L223 $S/S224.reading.txt $S/S223.reading.txt $S/S224.layout-joined.txt $S/S223.layout-joined.txt $S/S224.joined.txt $S/S223.joined.txt
+++ basename /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.layout-joined.txt
++ printf '%s hits=' S223.layout-joined.txt
+S223.layout-joined.txt hits=+ /usr/bin/grep -c -F 'MEDLINE search has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.layout-joined.txt
+0
++ for f in $L224 $L223 $S/S224.reading.txt $S/S223.reading.txt $S/S224.layout-joined.txt $S/S223.layout-joined.txt $S/S224.joined.txt $S/S223.joined.txt
+++ basename /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S224.joined.txt
++ printf '%s hits=' S224.joined.txt
+S224.joined.txt hits=+ /usr/bin/grep -c -F 'MEDLINE search has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S224.joined.txt
+0
++ for f in $L224 $L223 $S/S224.reading.txt $S/S223.reading.txt $S/S224.layout-joined.txt $S/S223.layout-joined.txt $S/S224.joined.txt $S/S223.joined.txt
+++ basename /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.joined.txt
++ printf '%s hits=' S223.joined.txt
+S223.joined.txt hits=+ /usr/bin/grep -c -F 'MEDLINE search has been developed' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.joined.txt
+0
++ echo rc=1
+rc=1
++ echo '## Attribution: '\''Survey respondents and forum participants recommended'\'' near L24 (layout + reading)'
+## Attribution: 'Survey respondents and forum participants recommended' near L24 (layout + reading)
++ /usr/bin/grep -n 'Survey respondents and forum participants recommended' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.reading.txt
+/fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt:166:forum. A guideline statement was published including an            Survey respondents and forum participants recommended
+/fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.reading.txt:225:Survey respondents and forum participants recommended
++ echo rc=0
+rc=0
++ echo '## Header between sentence halves (layout 168, reading 228)'
+## Header between sentence halves (layout 168, reading 228)
++ /usr/bin/grep -n 'LIGHTNING TALKS' /fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt /fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.reading.txt
+/fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt:5:                      LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR
+/fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt:60:LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR                                                                                       97
+/fast/scratch/hyaku/chousa-r96/R96ExecWrap/repo/corpus/captures/e94691f583d644da14661ec1.txt:168:LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR                                                                                       99
+/fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.reading.txt:3:LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR
+/fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.reading.txt:74:LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR
+/fast/scratch/hyaku/chousa-r96/R96ExecWrap/S223.reading.txt:228:LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR
++ echo rc=0
+rc=0
++ echo '## Table: per-line counts from grep -c, 8 expressions, layout S224 S223 (store per-line in receipts python file)'
+## Table: per-line counts from grep -c, 8 expressions, layout S224 S223 (store per-line in receipts python file)

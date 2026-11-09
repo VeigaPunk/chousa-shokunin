@@ -1,0 +1,20 @@
+# receipt R96SentinelC1-c1-predicate-verification
+# C1 predicate 1: python3 -B tools/search-rerun.py --selftest -> exit 0, last line
+#   SEARCH_RERUN_SELFTEST: PASS cases=32/32
+exit=0
+SEARCH_RERUN_SELFTEST: PASS cases=32/32
+case lines: 32
+breakdown: parse=14 matching=8 judgement=10
+
+# C1 predicate 3: SKILL.md row
+grep -c '^| `search-rerun` (r96 re-registration' SKILL.md -> 1
+kind cell = [ gate ]
+
+# C1 'Before' check: base tool exits 2 on the same command
+usage: search-rerun.py [-h] {verify} ...
+search-rerun.py: error: the following arguments are required: cmd
+exit=2
+
+# K4 as stated: '--selftest writes a file, runs git or opens a socket' --
+# for the SHIPPING tool this is clean (see R96SentinelC1-strace-selftest.txt):
+#   no write to any fd but 1, no execve but the interpreter, no connect/socket.

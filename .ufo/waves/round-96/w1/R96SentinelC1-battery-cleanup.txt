@@ -1,0 +1,28 @@
+# receipt R96SentinelC1-battery-cleanup
+# FINDING (severity: low/medium): the battery cleans up only on a NORMAL exit. Its
+# cleanup lives in a 'finally: shutil.rmtree(work, ignore_errors=True)' that SIGKILL and
+# SIGTERM bypass, so a killed run leaves the whole work tree (base tool copy + 23 mutant
+# copies + oracle stubs) on disk. Nothing is written outside --work, and the lane is
+# untouched -- but the claim 'Writes only under --work (removed at exit)' is only true
+# for exits 0/1/2.
+
+=== A: SIGKILL mid-run ===
+/fast/scratch/hyaku/chousa-r96/R96SentinelC1/mk-cleanup.sh: line 15: 2096704 Killed                     timeout -s KILL 1.5 python3 -B corpus/evidence/round96/selftest-controls-r96.py --root . --work "$S/work-k1" --no-regression > /dev/null 2>&1
+timeout exit=137 (137 = SIGKILL)
+leftover files under --work: 48
+/fast/scratch/hyaku/chousa-r96/R96SentinelC1/work-k1/selftest-controls-r96/base-tool.py
+/fast/scratch/hyaku/chousa-r96/R96SentinelC1/work-k1/selftest-controls-r96/m10-whole-file.py
+/fast/scratch/hyaku/chousa-r96/R96SentinelC1/work-k1/selftest-controls-r96/m11-ci-fixed.py
+/fast/scratch/hyaku/chousa-r96/R96SentinelC1/work-k1/selftest-controls-r96/m13-hits-len-set.py
+
+=== B: SIGTERM mid-run ===
+timeout exit=124 (124 = timed out after TERM)
+leftover files under --work: 48
+
+=== C: CONTROL -- a NORMAL failing run (exit 1) cleans up fully ===
+battery exit=1
+leftover files under --work: 0
+
+=== D: nothing was written OUTSIDE --work by the killed run ===
+lane status after the killed runs:
+(clean = the lane was untouched)

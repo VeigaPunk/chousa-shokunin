@@ -1,0 +1,36 @@
+# R96ScribeCorrections receipt — D3 (r94 counter sentences with no round-95 receipt)
+# date 2026-11-08
+
+### site 1: fleet report /home/vgpnk/Projects/shokunin/.ufo/reports/round-95/chousa.md
+95:No axis harmed: `git diff --quiet 7b237358 07e0e332 -- tools/research-gate.sh tools/gate-records.py PROVINCE.md` exit 0;
+96:on the landing tree `SKILL_TALLY_R94=PASS` and `CURATION_R94=PASS`.
+
+### site 2: lane SCORECARD.md
+4258:No axis harmed: `tools/research-gate.sh` and `tools/gate-records.py` are byte-identical at base and landing; the
+4259:r94 counters still pass on the landing tree (`SKILL_TALLY_R94=PASS`, `CURATION_R94=PASS`); the registry diff is the
+4260:single appended `S222` row plus one `## Search log` entry; `SKILL.md` gains one checklist item and one Gates row.
+
+$ grep -rl "SKILL_TALLY_R94" corpus/evidence/round95/
+grep_exit=1
+
+$ grep -rl "CURATION_R94" corpus/evidence/round95/
+grep_exit=1
+
+### where those strings DO live (round-94 receipts, measured at F=ebbcbe39/C=d13c2ff2)
+# computed_against F=ebbcbe396ac9a6352134cae8232968c9cf068c30 C=d13c2ff24dc8d866239a7428e78ccb82b3817018
+# command: python3 -B corpus/evidence/round94/skill-tally-r94.py --root . --selftest corpus/evidence/round94/controls/selftest-r94.txt
+# computed_against F=ebbcbe396ac9a6352134cae8232968c9cf068c30 C=d13c2ff24dc8d866239a7428e78ccb82b3817018
+# command: python3 -B corpus/evidence/round94/curation-r94.py --root .
+
+### independent re-measurement on the round-95 LANDING tree 07e0e332 (scratch clone)
+$ git clone -q --shared <lane> repo-r95 && git -C repo-r95 checkout -q 07e0e3323db692da4f726437bbc388acea4ae5e0
+$ python3 -B corpus/evidence/round94/skill-tally-r94.py --root .
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 TAIL_OWNED_OK=2/2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4
+SKILL_TALLY_R94=PASS
+exit=0
+
+$ python3 -B corpus/evidence/round94/curation-r94.py --root .
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_ROWS=20 Q_SHAPE_FAIL=0 Q_WSQUOT=0 Q_PUNCTQUOT=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=16/16
+VERDICT fields_hold=1 legs_ok=16/16 DETECTOR_WITNESS=18/18
+CURATION_R94=PASS
+exit=0

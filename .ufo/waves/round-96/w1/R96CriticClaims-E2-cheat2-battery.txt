@@ -1,0 +1,28 @@
+CASE positive rc=0 expect=0 ok
+CASE do-nothing-base rc=2 expect=2 ok
+CASE mutant m10-whole-file rc=1 KILLED failed=m0
+CASE mutant m11-ci-fixed rc=1 KILLED failed=m1
+CASE mutant m13-hits-len-set rc=1 KILLED failed=m2
+CASE mutant m14-revok-mask rc=1 KILLED failed=m22,m3
+CASE mutant m15-tree-count rc=1 KILLED failed=m4
+CASE mutant m16-set-dedup rc=1 KILLED failed=m5
+CASE mutant m17-fnmatch rc=1 KILLED failed=m6
+CASE mutant m18-phantom-line rc=1 KILLED failed=m7
+CASE mutant m19-dotglob rc=1 KILLED failed=m8
+CASE mutant m20-no-env-scrub rc=1 KILLED failed=m9
+CASE mutant m21-no-count-drift rc=1 KILLED failed=m10
+CASE mutant m22-no-digest-compare rc=1 KILLED failed=m11,m15,m17,m18
+CASE mutant m23-strict-ignored rc=1 KILLED failed=m12,m13
+CASE mutant m24-tree-always-bad rc=1 KILLED failed=m12,m13
+CASE mutant m25-digest-unsorted rc=1 KILLED failed=m14
+CASE mutant m26-globstar-allowed rc=1 KILLED failed=m11,m15,m17,m18
+CASE mutant m27-dotdot-allowed rc=1 KILLED failed=m16
+CASE mutant m28-posix-allowed rc=1 KILLED failed=m11,m15,m17,m18
+CASE mutant m29-zero-with-set rc=1 KILLED failed=m11,m15,m17,m18
+CASE mutant m30-dup-id rc=1 KILLED failed=m19
+CASE mutant m31-pipe-literal rc=1 KILLED failed=m20
+CASE mutant m32-static-dir-skip rc=1 KILLED failed=m21
+CASE mutant m33-revok-count-only rc=1 KILLED failed=m22,m3
+CASE no-write rc=0 left=[] lane_status_same=True ok
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 NO_WRITE=1/1 CASES=32
+SELFTEST_CONTROLS=PASS

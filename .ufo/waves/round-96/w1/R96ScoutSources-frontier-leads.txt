@@ -1,0 +1,35 @@
+# R96ScoutSources receipt — open full-text routes and version/erratum status (web search only; no GET)
+# seat: R96ScoutSources   date(UTC): 2026-11-09T01:45:38Z
+# (network rule: my seat may GET only the two URLs my item names; every other route below is a LEAD, not fetched)
+
+## Q: is there an open full-text route to the PRESS 2015 Guideline Statement or the CADTH E&E
+##    that a plain GET could reach? (search only — leads)
+
+  LEAD  CADTH/CDA-AMC E&E PDF — the SAME url the lane already fetched (403) and which search
+        engines index and quote in full; a plain GET may succeed where the lane's
+        campaign UA was refused. Not fetched by me (outside my item's two URLs).
+          https://www.cda-amc.ca/sites/default/files/pdf/CP0015_PRESS_Update_Report_2016.pdf
+  LEAD  the same E&E mirrored by CORE (repository aggregator), search-indexed:
+          https://core.ac.uk/download/pdf/82048291.pdf
+  LEAD  the guideline statement itself, publisher open-access page (CC BY-NC-ND per search):
+          https://www.sciencedirect.com/science/article/pii/S0895435616000585
+          (lane fetched the jclinepi.com/pdf variant: 403)
+  LEAD  PubMed record for the guideline statement: PMID 27005575 (abstract; no PMC full text)
+          https://pubmed.ncbi.nlm.nih.gov/27005575/
+  NO    no PMC/Europe PMC full-text record for the 2016 J Clin Epidemiol guideline statement
+        (search-confirmed: not deposited in PMC).
+  NOTE  PRISMA-S itself IS in PMC, both co-publications:
+          PMC7839230 (Systematic Reviews 10:39) and PMC8270366 (J Med Libr Assoc 109(2):174-200).
+          The lane's Europe PMC REST route answered 500 (twice) but the r95 closure's third
+          attempt got http 200 / 226044 B, reading <volume>10</volume> + <elocation-id>39</elocation-id>
+          (R96ScribeCorrections-D4-locator-external-confirmation.txt).
+
+## Q: is there an erratum, or a newer PRESS/PRISMA-S version? (search only)
+  PRISMA-S: no erratum/correction found for either co-publication (Rethlefsen et al.,
+    Syst Rev 2021;10:39 / J Med Libr Assoc 2021;109(2):174-200); no newer version — the 16-item
+    extension of 2021 is still current as of this search; the official checklist PDF still
+    carries 'Last updated February 27, 2020'. PRISMA-LSR (2024) and PRISMA-COSMIN (2024) are
+    SEPARATE extensions, not PRISMA-S revisions.
+  PRESS: no newer edition — PRESS 2015 (statement J Clin Epidemiol 2016;75:40-46; E&E CADTH 2016)
+    remains the current version; CADTH's PRESS page (updated 2025-08-08) still points to it.
+  => neither S223's nor S224's row needs a version/erratum cell: nothing is superseded.

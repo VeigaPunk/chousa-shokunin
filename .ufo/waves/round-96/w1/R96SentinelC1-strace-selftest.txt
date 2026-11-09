@@ -1,0 +1,21 @@
+# receipt R96SentinelC1-strace-selftest
+# command: cd $EMPTY && HOME=$EMPTY TMPDIR=$EMPTY strace -f -qq -o strace.txt -e trace=openat,open,creat,connect,execve,clone,clone3,write,unlink,rename python3 -B $TOOL --selftest
+exit=0
+--- execve ---
+563634 execve("/usr/bin/python3", ["python3", "-B", "/fast/scratch/hyaku/chousa-r96/R"..., "--selftest"], 0x7fff70c790e8 /* 274 vars */) = 0
+--- connect (empty = none) ---
+(none)
+--- clone/clone3 (empty = single-threaded) ---
+(none)
+--- write() fds ---
+     66 write(1
+--- opened paths NOT under /usr/lib/python3.14, /usr/lib/lib*, /usr/lib/locale, /usr/lib/gconv, /etc, /usr/bin ---
+"/fast/scratch/hyaku/chousa-r96/R96SentinelC1/repo/tools"
+"/fast/scratch/hyaku/chousa-r96/R96SentinelC1/repo/tools/search-rerun.py"
+"/proc/self/maps"
+"/usr/pyvenv.cfg"
+--- created/unlinked/renamed (empty = none) ---
+(none)
+--- cwd dir after run ---
+trace.txt
+(empty)

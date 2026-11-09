@@ -1,0 +1,27 @@
+# R96ScoutSources receipt — re-open of S223 and S224 into seat scratch (read-only)
+# seat: R96ScoutSources   scratch: /fast/scratch/hyaku/chousa-r96/R96ScoutSources/dl
+# date(UTC): 2026-11-09T01:42:52Z
+
+## command 1 (S223)
+$ curl -sSL -o s223.pdf -w "http=%{http_code} url=%{url_effective}" https://journals.library.ualberta.ca/jchla/index.php/jchla/article/download/28195/20695/73210
+http=200 url=https://journals.library.ualberta.ca/jchla/index.php/jchla/en/article/download/28195/20695/73210
+curl_rc=0
+
+## command 2 (S224)
+$ curl -sSL -o s224.pdf -w "http=%{http_code} url=%{url_effective}" https://jmla.pitt.edu/ojs/jmla/article/download/962/1274
+http=200 url=https://jmla.pitt.edu/ojs/jmla/article/download/962/1274
+curl_rc=0
+
+## sha256 of re-fetched bytes
+0bcdbf0e4f34845701cd78c359cda51c0f58ec6ce626b66962b9e37ce6a83606  s223.pdf
+07036f03c4c08ce9eec02d17d904509a2b26431abe0bba0e3bc823d2c58d9ec2  s224.pdf
+
+## pdftotext -layout of re-fetched bytes
+ce72c9202cca6fb24c2040b176e58de8f3ebecf9de09701855b8f96ff2f02243  s223.layout.txt
+86f1aacd558377129dc79b8c1bc27a686ebfc668eb78a58204dea41043db3871  s224.layout.txt
+
+## committed capture bytes (lane)
+0bcdbf0e4f34845701cd78c359cda51c0f58ec6ce626b66962b9e37ce6a83606  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/e94691f583d644da14661ec1.raw
+ce72c9202cca6fb24c2040b176e58de8f3ebecf9de09701855b8f96ff2f02243  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/e94691f583d644da14661ec1.txt
+07036f03c4c08ce9eec02d17d904509a2b26431abe0bba0e3bc823d2c58d9ec2  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/1a8c36c4c24444967bd9c3ce.raw
+86f1aacd558377129dc79b8c1bc27a686ebfc668eb78a58204dea41043db3871  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/1a8c36c4c24444967bd9c3ce.txt

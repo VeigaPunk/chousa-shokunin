@@ -1,0 +1,13 @@
+# F3: every one of the 30 gate-record quotes vs a SINGLE raw line of its capture
+quotes=30 single_raw_line=30 full_normalized_text=30 not_single_line=0
+--- instrument: gate-records url/admit form matches normalized WHOLE text, not per line:
+                text = norm(fh.read())
+            if not quote.strip() or norm(quote) not in text:
+                codes.append("QUOTE_ABSENT")
+        else:
+            codes.append("QUOTE_ABSENT")
+--- norm():
+def norm(s):
+    s = s.replace("\u2019", "'").replace("\u2018", "'").replace("\u201c", '"').replace("\u201d", '"')
+    return " ".join(s.split())
+

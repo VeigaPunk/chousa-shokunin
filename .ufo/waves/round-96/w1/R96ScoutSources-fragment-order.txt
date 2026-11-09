@@ -1,0 +1,33 @@
+# R96ScoutSources receipt — fragment-group contiguity in the READING-ORDER text form
+# (pdftotext WITHOUT -layout) — the form the F2 entry and claims.md named limit (d)
+# say the groups are read from.
+# seat: R96ScoutSources   date(UTC): 2026-11-09T01:5xZ
+#
+## instrument: join each group's quoted fragments and test whether the joined string
+## occurs CONTIGUOUSLY in the normalized reading-order text; when not, count the words
+## that intervene between consecutive fragments.
+#
+group                          contiguous_in_reading_order   intervening words
+L4-L6                          TRUE
+L7-L8                          TRUE
+L9-L10                         TRUE
+L11-L13                        TRUE
+L14-L16                        TRUE
+L17-L18                        TRUE
+L19-L23                        TRUE
+L31+L24-L25 (F2 group)         FALSE                          gaps=[0, 5] intervening=['', 'LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR']
+L24-L25 (F group)              FALSE                          gaps=[5] intervening=['LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR']
+L26-L29                        TRUE
+L32+L30 (F2 group)             TRUE
+
+## FINDING: the group 'L31 with L24-L25' — the F2 entry's own group for the timing
+## sentence — is NOT contiguous in the reading-order form either: the running header
+## 'LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR' (5 words) sits between L24 and L25 there too.
+## The entry/claim say these groups 'are read as one sentence from the reading-order text
+## form'; for this group the reading-order form must have the header dropped.
+## The wave's own cited receipt .ufo/waves/round-96/w1/R96ExecWrap-fragment-adjacency.txt
+## already records concat_in_reading_joined=False for L24-L25, and carries NO row at all
+## for the two groups F2 added (L31 with L24-L25, L32 with L30).
+
+## the reading-order text at that seam (verbatim):
+'Survey respondents and forum participants recommended that peer review should occur after the MEDLINE search LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR has been developed but before other database searches are developed. The element'

@@ -1,0 +1,40 @@
+# R96ScoutSources receipt — two receipts cited by the round-96 artifacts are ABSENT from the tree
+# seat: R96ScoutSources   date(UTC): 2026-11-09T01:45:29Z
+
+## cited by corpus/lessons/round-96.md (line 15-16):
+   'Census exit 0 before (`corpus/evidence/round96/census-start.txt`, 221 rows) and after
+    (`corpus/evidence/round96/census-end.txt`, 223 rows)'
+## cited by corpus/lessons/round-96.md (Gate, last line):
+   '`python3 -B tools/gate-records.py verify --root . corpus/lessons/round-96.md` → landing receipt
+    `corpus/evidence/round96/after-f2/lesson-gate.txt`'
+
+## presence check
+corpus/evidence/round96/census-end.txt               MISSING
+corpus/evidence/round96/after-f2/lesson-gate.txt     MISSING
+
+## every other round 53-59 and 90-95 ships BOTH census-start and census-end; round 96 ships only start:
+  corpus/evidence/round90            start=Y end=Y
+  corpus/evidence/round91            start=Y end=Y
+  corpus/evidence/round92            start=Y end=Y
+  corpus/evidence/round93            start=Y end=Y
+  corpus/evidence/round94            start=Y end=Y
+  corpus/evidence/round95            start=Y end=Y
+  corpus/evidence/round53            start=Y end=Y
+  corpus/evidence/round54            start=Y end=Y
+  corpus/evidence/round55            start=Y end=Y
+  corpus/evidence/round56            start=Y end=Y
+  corpus/evidence/round57            start=Y end=Y
+  corpus/evidence/round58            start=Y end=Y
+  corpus/evidence/round59            start=Y end=Y
+
+## the SUBSTANCE of both claims is independently true (re-run by this seat):
+  census at the F2 tree:
+    file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+    file	W04	S224 duplicate url jmla.pitt.edu/ojs/jmla/article/download/962/1274 across scopes
+    file	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+    exit=0  (rows=223 via corpus/evidence/round25-sources-census.sh; the one new W04 is S224's)
+  gate-records on the lesson:
+    GATE_RECORDS files=1 records=3 ok=3 fail=0
+    exit=0
+
+## so the two claims hold; what is missing is the RECEIPT FILE each cites.

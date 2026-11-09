@@ -1,0 +1,47 @@
+freeze SKILL row 180 cells:
+     1	
+     2	 `search-rerun` (r96 re-registration of the r95 row above as a gate; round-95 spot-check D1) 
+     3	 gate 
+     4	 `python3 -B tools/search-rerun.py verify <record> --root LANE [--strict]` 
+     5	 `0` `SEARCH_RERUN: CLEAN` · `1` `DRIFT` (`COUNT_DRIFT`/`SET_DRIFT` against the record's persisted count and set, or `TREE_CHANGED` under `--strict`) · `2` `SEARCH_RERUN_ERROR <code>` setup or argparse usage 
+     6	 `python3 -B tools/search-rerun.py --selftest` → `SEARCH_RERUN_SELFTEST: PASS cases=32/32` (14 parse, 8 matching, 10 judgement cases through the same `evaluate` that `verify` runs; in memory, no file, git or network); exit 1 `FAIL cases=k/32 failed=<ids>`; its own battery `python3 -B corpus/evidence/round96/selftest-controls-r96.py --root . --work DIR` → `SELFTEST_CONTROLS=PASS` (23 mutants killed, base tool exit 2, 3 stand-ins rejected, no write, r95 battery and mutants still pass) 
+     7	 `corpus/fixtures/search-rerun-r95.md` → `rev_match=8/8`; `corpus/knowledge/search-peer-review-dedup-r96.md` → `rev_match=8/8` 
+     8	 none (as the r95 row; `--selftest` reads nothing) 
+     9	 chousa 
+    10	
+PROTOCOL verdict/selftest/registry:
+## Gate standard
+
+A **gate** is a committed, re-runnable verdict script a lane owns: it reads surfaces, compares them
+against expected values persisted in its own repo, and returns a verdict. A tool that cannot fail is
+a **probe**, and is registered as one.
+- **Verdict.** `0` = `clean` and `1` = `failed` fleet-wide; every other code a gate exits (`2`, `3`,
+  `64`, …) is declared in its registry entry and mapped onto `clean | failed | could-not-evaluate`,
+  and an undeclared nonzero code reads as `could-not-evaluate`. Nothing else is pinned: a gate's own
+  vocabulary — WARN vs HIT, a missing baseline, finding kinds — stays lane-owned, and this section
+  governs the outer interface only.
+- **Self-test.** Every gate exposes a self-invocation mode over isolated fixtures (temp trees, no
+  network, no live-tree write) asserting both the exit code and a stable expected finding-id, with
+  the expected values committed in the owning repo and independent of the recomputation. The flag
+  spelling is the lane's (`--selftest`, `--self-test`, `run_selftest()`)
+  and the registry records it; a helper-only or model-only self-check does not satisfy this clause.
+- **Two evidences.** Self-test green is capability, not a measurement (§Evidence standard). A gate
+  whose verdict depends on a mutable fleet artifact also ships a run over a committed input snapshot
+  with its committed expected verdict, so a later hand-edit of that artifact contradicts the frozen
+  run. A verdict names the revision it was measured against: a gate grades the tree it runs on, so a
+  run over a moving worktree is not comparable to one over the cited commit. A frozen baseline's
+  `expected.json` MUST pin the digest of every snapshot input file, and the gate verifies those
+  digests before comparing verdicts: an edited snapshot is `snapshot_tampered` (could-not-evaluate),
+  not a compared verdict, and a baseline without digests is reported `unpinned (legacy)`.
+- **Registry.** The schema is this section's; a child lane's *registry home* is its own `SKILL.md`.
+  For main-repo lanes (`protocol`, `aggregator`), it is the explicitly lane-owned registry section
+  in root `SCORECARD.md`: protocol above `## Aggregator lane`, aggregator inside its own section;
+  no root `SKILL.md` is required (§Appendix, "Registry home"). Row fields: name,
+  `gate|probe`, entry command, verdict map (code → class), self-test command and spelling,
+  pinned-value path, write scope, owner. The aggregator ledger stays the routed-defect queue, not a
+spotcheck D1:
+- **D1** SKILL.md Gates row for `search-rerun verify` (r95) gives kind `tool`, outside the §Gate standard
+  `gate|probe` vocabulary; the script returns a failing verdict against persisted expected values (the record) so
+  it is a gate, and `tools/search-rerun.py` has no self-invocation mode (only `verify`). Re-register it as a gate
+  naming its self-test (e.g. `rerun-controls-r95.py`) or add a `--selftest`, append-only.
+- **D2** `corpus/lessons/round-95.md:23` still says "C2's entry holds nine located quotes"; after Amendment 1 the

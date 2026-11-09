@@ -1,0 +1,34 @@
+PROTOCOL.md gate-standard lines:
+380:- **Verdict.** `0` = `clean` and `1` = `failed` fleet-wide; every other code a gate exits (`2`, `3`,
+385:- **Self-test.** Every gate exposes a self-invocation mode over isolated fixtures (temp trees, no
+398:- **Registry.** The schema is this section's; a child lane's *registry home* is its own `SKILL.md`.
+401:  no root `SKILL.md` is required (§Appendix, "Registry home"). Row fields: name,
+402:  `gate|probe`, entry command, verdict map (code → class), self-test command and spelling,
+=== SKILL Gates header ===
+## Gates
+
+| name | kind | entry | verdict map | self-test | pinned values | write scope | owner |
+|---|---|---|---|---|---|---|---|
+| `research-gate` | gate | `bash tools/research-gate.sh verify <record> --root ..` | `0` clean (`RESEARCH_GATE: CLEAN`) · `1` failed (`DRIFT`) · `2` could-not-evaluate (setup/usage) | `bash tools/research-gate.sh --sel
+=== spotcheck D1 ===
+- **D1** SKILL.md Gates row for `search-rerun verify` (r95) gives kind `tool`, outside the §Gate standard
+  `gate|probe` vocabulary; the script returns a failing verdict against persisted expected values (the record) so
+  it is a gate, and `tools/search-rerun.py` has no self-invocation mode (only `verify`). Re-register it as a gate
+  naming its self-test (e.g. `rerun-controls-r95.py`) or add a `--selftest`, append-only.
+- **D2** `corpus/lessons/round-95.md:23` still says "C2's entry holds nine located quotes"; after Amendment 1 the
+=== base search-rerun main ===
+def main(argv):
+    ap = argparse.ArgumentParser(prog="search-rerun.py")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    v = sub.add_parser("verify")
+    v.add_argument("record")
+    v.add_argument("--root", default=".")
+    v.add_argument("--strict", action="store_true")
+    a = ap.parse_args(argv)
+    try:
+        root = os.path.abspath(a.root)
+        record = a.record if os.path.isabs(a.record) else os.path.join(root, a.record)
+        return verify(record, root, a.strict)
+    except Setup as exc:
+        print(f"SEARCH_RERUN_ERROR {exc.code} {exc.detail}", file=sys.stderr)
+        return 2

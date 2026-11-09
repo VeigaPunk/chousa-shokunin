@@ -1,0 +1,17 @@
+# R96ScoutSources receipt — K4 scope check on --selftest (file writes / git / socket) by a Python audit hook
+# seat: R96ScoutSources   date(UTC): 2026-11-09T01:44:51Z
+
+## instrument: sys.addaudithook over the whole --selftest run, recording every non-stdlib open(),
+## every subprocess.Popen/os.exec/os.posix_spawn, and every socket.* event.
+
+$ TOOL=tools/search-rerun.py python3 -B audit3.py
+EXITCODE 0
+NON_STDLIB_OPEN_OR_EXEC_EVENTS 3
+EV <repo>/tools/search-rerun.py r   (x3 — the tool reading ITSELF as the script being run)
+
+## result: zero file writes, zero subprocess spawns, zero socket events.
+## 'git' is never invoked: the same selftest passes with an empty PATH (no git binary reachable):
+$ PATH=<empty dir> /usr/bin/python3 -B tools/search-rerun.py --selftest
+  ... SEARCH_RERUN_SELFTEST: PASS cases=32/32   (exit 0)
+
+## battery NO_WRITE leg independently reports left=[] lane_status_same=True

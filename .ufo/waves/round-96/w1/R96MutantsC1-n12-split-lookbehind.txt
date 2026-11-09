@@ -1,0 +1,27 @@
+COMMAND: python3 -B /fast/scratch/hyaku/chousa-r96/R96MutantsC1/mut-n12-split-lookbehind.py --selftest
+SELFTEST p01-parse-good ok
+SELFTEST p02-no-section ok want=SECTION got=SECTION
+SELFTEST p03-header ok want=HEADER got=HEADER
+SELFTEST p04-engine ok want=ENGINE got=ENGINE
+SELFTEST p05-globstar ok want=WHERE got=WHERE
+SELFTEST p06-dotdot ok want=WHERE got=WHERE
+SELFTEST p07-posix-class ok want=EXPRESSION got=EXPRESSION
+SELFTEST p08-backtick ok want=EXPRESSION got=EXPRESSION
+SELFTEST p09-short-rev ok want=REV got=REV
+SELFTEST p10-zero-with-set ok want=HIT_SET got=HIT_SET
+SELFTEST p11-dup-id ok want=ROW got=ROW
+SELFTEST p12-row-after-break ok want=TABLE got=TABLE
+SELFTEST p13-absolute-glob ok want=WHERE got=WHERE
+Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r96/R96MutantsC1/mut-n12-split-lookbehind.py", line 547, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ~~~~^^^^^^^^^^^^^^
+  File "/fast/scratch/hyaku/chousa-r96/R96MutantsC1/mut-n12-split-lookbehind.py", line 534, in main
+    return selftest()
+  File "/fast/scratch/hyaku/chousa-r96/R96MutantsC1/mut-n12-split-lookbehind.py", line 455, in selftest
+    alt = parse_text(ST_HEAD + st_row(engine="regex", expr="`^(x\\|b)$`"))[0]
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/fast/scratch/hyaku/chousa-r96/R96MutantsC1/mut-n12-split-lookbehind.py", line 171, in parse_text
+    raise Setup("ROW", f"row width != {len(HEADER)}: {ln!r}")
+Setup: ROW row width != 8: '| Q1 | regex | corpus/*.txt | `^(x\\|b)$` | aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa | 2026-11-09 | 1 | corpus/a.txt |'
+EXIT=1

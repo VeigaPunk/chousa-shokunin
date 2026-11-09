@@ -1,0 +1,35 @@
+# C1 predicate 1: python3 -B tools/search-rerun.py --selftest   (tree 2db151c5)
+SELFTEST p01-parse-good ok
+SELFTEST p02-no-section ok want=SECTION got=SECTION
+SELFTEST p03-header ok want=HEADER got=HEADER
+SELFTEST p04-engine ok want=ENGINE got=ENGINE
+SELFTEST p05-globstar ok want=WHERE got=WHERE
+SELFTEST p06-dotdot ok want=WHERE got=WHERE
+SELFTEST p07-posix-class ok want=EXPRESSION got=EXPRESSION
+SELFTEST p08-backtick ok want=EXPRESSION got=EXPRESSION
+SELFTEST p09-short-rev ok want=REV got=REV
+SELFTEST p10-zero-with-set ok want=HIT_SET got=HIT_SET
+SELFTEST p11-dup-id ok want=ROW got=ROW
+SELFTEST p12-row-after-break ok want=TABLE got=TABLE
+SELFTEST p13-absolute-glob ok want=WHERE got=WHERE
+SELFTEST p14-escaped-pipe ok '^(x|b)$'
+SELFTEST m01-lines ok
+SELFTEST m02-dotfile ok
+SELFTEST m03-segment ok
+SELFTEST m04-per-line ok
+SELFTEST m05-case ok
+SELFTEST m06-digest ok
+SELFTEST m07-static-dir ok
+SELFTEST m08-env-scrub ok
+SELFTEST j01-exact ok want=(0, 1, 1, []) got=(0, 1, 1, [])
+SELFTEST j02-count ok want=(1, 0, 1, ['COUNT_DRIFT']) got=(1, 0, 1, ['COUNT_DRIFT'])
+SELFTEST j03-set ok want=(1, 0, 1, ['SET_DRIFT']) got=(1, 0, 1, ['SET_DRIFT'])
+SELFTEST j04-digest ok want=(1, 0, 1, ['SET_DRIFT']) got=(1, 0, 1, ['SET_DRIFT'])
+SELFTEST j05-dup-path ok want=(1, 0, 1, ['SET_DRIFT']) got=(1, 0, 1, ['SET_DRIFT'])
+SELFTEST j06-tree-moved ok want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 1, 0, ['TREE_CHANGED'])
+SELFTEST j07-tree-strict ok want=(1, 1, 0, ['TREE_CHANGED']) got=(1, 1, 0, ['TREE_CHANGED'])
+SELFTEST j08-tree-swap ok want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 1, 0, ['TREE_CHANGED'])
+SELFTEST j09-zero ok want=(0, 1, 1, []) got=(0, 1, 1, [])
+SELFTEST j10-tally ok got=(1, 1, 2)
+SEARCH_RERUN_SELFTEST: PASS cases=32/32
+exit=0

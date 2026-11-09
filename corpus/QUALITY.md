@@ -1391,3 +1391,31 @@ the admitted entry that motivates it. Tier definitions live in
     said "9 / 1 / 9" for a ledger whose `awk` tally is 8 / 1 / 10 (round-94 spot-check D1). Check: every count of
     ledger rows, seats or cases in a round report is followed by the command and its output, and the closure can
     re-run it. — `lessons/round-95.md` Mistakes 1.
+222. **A change to a gated tool keeps every earlier round's instrument applicable, and the earlier instruments
+    are a leg of the new battery.** Round 96's first refactor of `tools/search-rerun.py` moved the line the
+    round-95 battery's `rev-blind` oracle mutates; `rerun-controls-r95.py` printed `SETUP oracle rev-blind mutation
+    did not apply` and `mutants-r95.py` `MUTANTS_KILLED=0/10`. Check: the new battery runs the previous round's
+    battery and mutant rebuild on the changed tool (`REGRESSION_R95=2/2` in `selftest-controls-r96.py`), and a
+    setup refusal there is a failure, not a skip. — `lessons/round-96.md` Mistakes 1.
+223. **A fragment group is read in reading order and its layout positions are measured, never assumed
+    consecutive.** Round 96's entry said nine fragment groups were "consecutive … read from the text form's line
+    order"; one group crossed a page break, a running header and a column (L24-L25), another skipped a line
+    (L17-L18). Check: for each group, cite the reading-order text form (`pdftotext` without `-layout`) and list the
+    layout line numbers of its fragments; a gap or a column switch is named in the entry. — `lessons/round-96.md`
+    Mistakes 2.
+224. **A Do cell names the agent its quote names.** Round 96 row 3 said "under PRESS 2015" for a sentence the
+    abstract introduces with "Survey respondents and forum participants recommended". Check: when a warrant quote
+    is a fragment, the line before it in reading order is read, and an attributing clause there ("X recommended",
+    "Several studies showed") is quoted and kept in the cell. — `lessons/round-96.md` Mistakes 3.
+225. **A `refetch.tsv` attempt carries the registry id of the document it fetched.** Round 96 logged a 403 attempt
+    on the PRESS guideline statement under `S224` before ids were assigned, and `S224` became the PRISMA-S re-open;
+    the CADTH E&E attempt sits under `S223`, the JCHLA abstract. Check: `awk -F'\t' 'NR>1{print $1"\t"$2}'
+    corpus/evidence/round57/refetch.tsv | sort -u` grouped by id lists, for every id with more than one URL, only
+    routes to the document its registry row names; an attempt on another document is named in the lesson's Gate.
+    — `lessons/round-96.md` Mistakes 4.
+226. **A side-effect check takes its baseline before the first run of its subject, and compares content, not
+    only paths.** Round 96's NO_WRITE leg snapshotted `git status --porcelain` after the battery's POSITIVE leg had
+    already run the self-test in the lane, so a self-test that wrote into the lane scored 1/1 (`R96SentinelC1` F2).
+    Check: the leg's `before` state is taken at battery start (or in a fresh clone used by no earlier leg), it
+    records a content digest of the tree (e.g. `git stash create` or a tree hash), and a planted lane-writing stand-in
+    fails it. — `lessons/round-96.md` Mistakes 6.

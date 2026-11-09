@@ -1,0 +1,26 @@
+# F5 (headline): the entry's declared sentence group L24-L25 joins a RIGHT-column fragment to a LEFT-column one
+# entry declares: 'Consecutive fragments (..., L24-L25, ...) are read as one sentence from the text form's line order'
+24:column line. Consecutive fragments (L4-L6, L7-L8, L9-L10, L11-L13, L14-L16, L17-L18, L19-L23, L24-L25,
+
+# S223 capture lines 166-177, columns split at the largest whitespace gap:
+166: LEFT=[impact on recall or precision. Evidence was summarized and]  RIGHT=[addition to the existing PRESS Evidence Based Checklist]
+167: LEFT=[integrated with expert opinion obtained from the survey and]  RIGHT=[(2010) and no evidence refuted any of the existing elements.]
+168: LEFT=[forum. A guideline statement was published including an]  RIGHT=[Survey respondents and forum participants recommended]
+169: LEFT=[assessment form, guidance on its use and recommendations]  RIGHT=[that peer review should occur after the MEDLINE search]
+170: 
+171: LEFT=[LIGHTNING TALKS / PRÉSENTATIONS ÉCLAIR]  RIGHT=[99]
+172: 
+173: LEFT=[has been developed but before other database searches are]  RIGHT=[2015 Guideline Statement (http://www.sciencedirect.com/]
+174: LEFT=[developed. The element related to translation of the search]  RIGHT=[science/article/pii/S0895435616000585) including the Assess-]
+175: LEFT=[for other databases was removed, with the recommendation]  RIGHT=[ment Form, guidance in its use and recommendations for]
+176: LEFT=[that translations be peer reviewed at the discretion of the]  RIGHT=[librarians implementing PRESS in their practice. The PRESS]
+177: LEFT=[search developer. Discussion: PRESS provides tools to guide]  RIGHT=[Explanation andamp; Elaboration (https://www.cadth.ca/]
+
+# L24 is the RIGHT half of line 169; L25 is the LEFT half of line 173 (4 lines later, different column).
+# The LEFT column is ungrammatical uninterrupted: line 169 LEFT ends '...recommendations' and line 173 LEFT
+# begins 'has been developed...', so the missing words are exactly L24's right-column fragment.
+# gate-records cannot see this: url/admit matches norm(quote) in norm(WHOLE capture) (tools/gate-records.py:243-245).
+
+# witness - the lane's own instrument accepts the group's cross-column join because each fragment occurs alone:
+GATE_RECORDS files=1 records=31 ok=31 fail=0
+# witness - a per-column check is the only thing that would flag it:

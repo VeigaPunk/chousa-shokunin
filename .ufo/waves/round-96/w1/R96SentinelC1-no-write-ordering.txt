@@ -1,0 +1,29 @@
+# receipt R96SentinelC1-no-write-ordering
+# FINDING: the NO_WRITE group's before/after window is TOO NARROW. The battery invokes the
+# tool under test in EARLIER groups too (POSITIVE runs it first), so any lane write the
+# selftest performs is already present in the 'before' snapshot. before == after ->
+# lane_status_same=True -> NO_WRITE=1/1 'ok', while the lane has a new file.
+
+=== step 1: clean lane ===
+(clean) exit=0
+
+=== step 2: mutant W3 = one-site edit: selftest() writes a file next to the tool file
+#   (i.e. into the LANE's tools/ dir, not the cwd) ===
+placed at repo/tools/mutant-W3-tmp.py
+
+=== step 3: battery --tool W3 ===
+CASE no-write rc=0 left=[] lane_status_same=True ok
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 NO_WRITE=1/1 CASES=32
+SELFTEST_CONTROLS=PASS
+
+=== step 4: the lane gained a file; NO_WRITE called it 'ok' ===
+?? tools/lane-side-effect.txt
+?? tools/mutant-W3-tmp.py
+file present: -rw-r--r-- 1 vgpnk vgpnk 1 Nov  8 22:27 tools/lane-side-effect.txt
+
+=== step 5: PROOF of ordering — the file is already in the 'before' snapshot ===
+# The battery takes 'before' AFTER the POSITIVE group has already run the tool:
+#   selftest(tool)   <- POSITIVE group, cwd=repo root, writes the lane file
+#   before = git status --porcelain   <- now ALREADY contains the lane file
+before-snapshot would read: [?? tools/lane-side-effect.txt]
+-> before == after (same path, same status) -> lane_status_same=True

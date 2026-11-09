@@ -4269,3 +4269,46 @@ single appended `S222` row plus one `## Search log` entry; `SKILL.md` gains one 
 3. carried debt: the round-94 planned items (declare-then-read driver leg, punctuation fixture, exact heading
    equality), the round-74 source-blind order oracle, the r82 clip range, QUALITY 173's successful-refused record
    form, the r80 backlog Gate ids.
+
+## Round 96 verdict — the search re-run tool tests itself, and search peer review and deduplication are held in their sources' words (2026-11-09)
+
+Base `bbf64970`; freeze F `2db151c5`; wave-forced re-freeze F2 `e91f82fe` (amendments A1-A5, B1-B6) and F3
+`31810b4e` (B7, entry text only; A6-A8 are wording-only, `plans/round-96.md`); C1 numbers are from
+`corpus/evidence/round96/after-f2/c1-*.txt` (C1's paths are byte-identical at F2 and F3:
+`after-f3/c1-f2-equals-f3.txt`), C2 numbers from `corpus/evidence/round96/after-f3/c2-all.txt`. Two claims, two
+axes, no exploratory claim; C2 sourced on `S223` and `S224`. One v1 wave, 12 seats, 0 dead.
+
+| claim | axis | before | after | delta | verdict |
+|---|---|---|---|---|---|
+| C1 `C1-SELFTEST-R96` | operability (lowest, historical 3/10) | base tool `--selftest` → exit 2 (argparse; `before/c1-base.txt`); the r95 Gates row is kind `tool`, outside `gate|probe` (`PROTOCOL.md:401-402`) | `SEARCH_RERUN_SELFTEST: PASS cases=32/32`; `SELFTEST_CONTROLS=PASS` with `POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=1/1 REGRESSION_R95=2/2`; one r96 `gate` re-registration row | numeric score unchanged (historical 3/10 frozen by its own rule); the tool is now a self-testing gate | **verified at F2 on the narrowed sentence (author-measured; non-author closure pending)** |
+| C2 `C2-ENTRY-R96` | depth | entry absent: `gate-records.py` exits 2 (`before/c2-base.txt`); README:1445 names items 14/16 as not held | `GATE_RECORDS files=1 records=33 ok=33 fail=0`, `METADATA_COMPLETE=1/1`, `rev_match=8/8 SEARCH_RERUN: CLEAN`, `ENTRY_CONTROLS=PASS` with `FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 SEARCHES=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1 LQ_BOUND=32/32 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8` | one knowledge entry, 8 decision rows, 32 located quotes, the first `## Searches` record of a round's own searches | **verified at F2 (author-measured; rows 1, 3, 5 repaired at B1-B3 after `R96ReviewerC2`)** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | `search-rerun` can now be run as a gate with its own self-test (D1 closed); the self-test is shown able to fail at 23 named sites and rejects three stand-ins |
+| depth | **improved** | PRISMA-S items 14 and 16 and its glossary, and the PRESS 2015 authors' account of elements, removal and timing, held as 32 located quotes behind 8 rows, lane reading confined to a marked column |
+| coverage | unchanged | registry 221 → 223 rows (`S223`, `S224`); `PROVINCE.md` untouched; README:1445's gap closed for what PRISMA-S says a report must state |
+| freshness | unchanged | no re-verification claim; the S222 bytes re-opened as S224 are unchanged (digest-equal) |
+| calibration | unchanged | both claim sentences narrowed before landing to what their instruments enforce (A1-A4, B6); round-95 D2-D5 recorded as corrections in `LOG.md`; no calibration claim |
+| adjacency | unchanged | tameshi's in-memory self-tests routed, not absorbed (`R96ConnectorSiblings`) |
+
+No axis harmed: `verify` is behaviourally identical to base on both records and on 7 one-cell forgeries
+(`R96ExecC1Repro` (d)-(e), `R96ReviewerC1` (1)); the round-95 battery and mutant rebuild pass on the F2 tool
+(`REGRESSION_R95=2/2`); `tools/research-gate.sh` and `tools/gate-records.py` are byte-identical at base and landing;
+the registry diff is two appended rows and one `## Search log` entry; `SKILL.md` gains one checklist item and one
+Gates row.
+
+## Planned — round 97 (intent, not a predicate)
+
+1. **operability (lowest)** — close the self-test's measured blind spots (`R96MutantsC1` Class C: signed hits, bad
+   dates, uppercase hex, non-UTF-8, two-code rows counted per code; Class B: a fixture-breaking mutant crashes
+   instead of printing FAIL), assert all three `git_env` guards (`R96SentinelC1` F1: dropping
+   `GIT_NO_REPLACE_OBJECTS` gives a false CLEAN past both batteries) and the full `GIT_*` scrub (F7), rebuild
+   NO_WRITE with a battery-start content baseline (F2), and add a battery leg that ties `verify`'s printed verdict
+   to `evaluate`'s (`R96CriticClaims` §Aa shim), so the leg does not depend on the slow round-95 regression.
+2. **depth** — the PRESS 2015 checklist's own element wording (guideline statement, J Clin Epidemiol 2016;75:40-46,
+   or the CADTH E&E): both answered 403; a reachable route (`R96ScoutSources` leads) would lift S223's tier-B
+   abstract reading.
+3. carried debt: the four gate-kind tools with no `--selftest` (`R96RevenPrior` Q3), the round-94 planned items,
+   the round-74 source-blind order oracle, the r82 clip range, QUALITY 173's successful-refused record form, the
+   r80 backlog Gate ids.

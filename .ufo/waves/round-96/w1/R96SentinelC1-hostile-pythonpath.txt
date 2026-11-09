@@ -1,0 +1,28 @@
+# receipt R96SentinelC1-hostile-pythonpath
+# FINDING (severity: low): --selftest is not hermetic against a hostile PYTHONPATH.
+# The tool imports hashlib (and argparse/fnmatch/os/re/subprocess) by bare name, so a
+# PYTHONPATH entry that shadows a stdlib module changes the selftest's behaviour.
+# The battery does not scrub PYTHONPATH either: it inherits os.environ.
+
+=== A: hostile PYTHONPATH shadowing hashlib -> selftest dies with ImportError, exit 1 ===
+#   (the selftest never reaches its 32 cases; the tool's docstring says 'Python 3.13+
+#    standard library only', which the interpreter cannot enforce)
+    import hashlib
+  File "/fast/scratch/hyaku/chousa-r96/R96SentinelC1/hostile-pp/hashlib.py", line 1, in <module>
+    raise ImportError("hostile hashlib shadow")
+ImportError: hostile hashlib shadow
+exit=1
+
+=== B: CONTROL -- same command without PYTHONPATH ===
+SELFTEST j10-tally ok got=(1, 1, 2)
+SEARCH_RERUN_SELFTEST: PASS cases=32/32
+exit=0
+
+=== C: a hostile sitecustomize.py on PYTHONPATH executes BEFORE the tool's code ===
+CASE oracle-constant-pass battery_rc=1 expect=1 tally=[POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=0/23 NO_WRITE=0/1 CASES=32] ok
+CASE oracle-hollow-selftest battery_rc=1 expect=1 tally=[POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=0/23 NO_WRITE=0/1 CASES=32] ok
+CASE oracle-always-fail battery_rc=1 expect=1 tally=[POSITIVE=0/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 NO_WRITE=0/1 CASES=32] ok
+CASE no-write rc=0 left=['injected-by-sitecustomize'] lane_status_same=True FAIL
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=0/1 CASES=32
+exit=1
+the injected file landed in the lane: -rw-r--r-- 1 vgpnk vgpnk 1 Nov  8 22:27 /fast/scratch/hyaku/chousa-r96/R96SentinelC1/repo/injected-by-sitecustomize

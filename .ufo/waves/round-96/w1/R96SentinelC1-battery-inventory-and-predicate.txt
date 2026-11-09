@@ -1,0 +1,36 @@
+# receipt R96SentinelC1-battery-inventory-and-predicate
+# What the round-96 battery actually measures, and what it does not.
+
+=== A: the shipping tool at F passes the battery (predicate 2) ===
+CASE no-write rc=0 left=[] lane_status_same=True ok
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=1/1 CASES=32
+SELFTEST_CONTROLS=PASS
+exit=0
+
+=== B: NO_WRITE's lane check is git status --porcelain, PATH ONLY ===
+source (selftest-controls-r96.py, NO_WRITE group):
+161:        _, before, _ = run(["git", "-C", root, "status", "--porcelain"])
+164:        _, after, _ = run(["git", "-C", root, "status", "--porcelain"])
+165:        ok = os.listdir(empty) == [] and before == after
+
+=== C: the battery's mutants do NOT include any git_env() guard site ===
+m20-no-env-scrub is the only env mutant; it targets the dict-comprehension line only:
+55:    "m20-no-env-scrub": ('    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}',
+56-                         "    env = dict(os.environ)"),
+57-    # round-96 sites
+no mutant touches the env.update(...) line that sets GIT_NO_REPLACE_OBJECTS / GIT_TERMINAL_PROMPT:
+(0 hits above = unasserted)
+
+=== D: the selftest's own m08 case source ===
+478:    case("m08-env-scrub", "GIT_DIR" not in env and env.get("GIT_NO_LAZY_FETCH") == "1")
+
+=== E: E1 mutant (drop GIT_NO_REPLACE_OBJECTS) passes selftest + r95 battery + r96 battery ===
+-- E1 selftest --
+SELFTEST j10-tally ok got=(1, 1, 2)
+SEARCH_RERUN_SELFTEST: PASS cases=32/32
+exit=0
+-- E1 through the r96 battery --
+CASE no-write rc=0 left=[] lane_status_same=True ok
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 NO_WRITE=1/1 CASES=32
+SELFTEST_CONTROLS=PASS
+exit=0

@@ -1,0 +1,52 @@
+# receipt R96SentinelC1-replace-refs-false-clean
+# FINDING (severity: high): the selftest's m08-env-scrub case asserts only
+#   'GIT_DIR' not in env   and   env['GIT_NO_LAZY_FETCH'] == '1'.
+# It does NOT assert that GIT_NO_REPLACE_OBJECTS is set. A one-site mutation that drops
+# GIT_NO_REPLACE_OBJECTS from git_env() passes the selftest 32/32 AND the round-95
+# battery AND the round-96 battery -- yet it makes verify return CLEAN on a record whose
+# recorded count is FALSE, because git replace-refs substitute attacker bytes for the
+# blob at the recorded revision. The forged record verifies CLEAN (exit 0) where the
+# shipping tool reports DRIFT (exit 1).
+#
+# The lane's own docstring calls GIT_NO_REPLACE_OBJECTS the guard that keeps the re-run
+# off another object store (tools/search-rerun.py git_env docstring: 'with replace refs
+# and lazy (promisor) fetches switched off'). It is asserted by NO test in round-95 or
+# round-96 (grep for GIT_NO_REPLACE_OBJECTS over corpus/evidence/round95 + round96: 0 hits).
+
+=== step 1: fixture repo: c1 has the needle, c2 (HEAD) does not ===
+C1=13256648e9f98437222007ae0d2ba7d7046d9f35  C2=0415b08bfab46a1628536d43b0d6c6d17a9d3213
+HEAD corpus/a.txt = [nothing here]
+
+=== step 2: the record CLAIMS hits=1 at C2 (false: C2 has 0 matches) ===
+| id | engine | where | expression | rev | searched | hits | hit_set |
+|---|---|---|---|---|---|---|---|
+| Q1 | fixed | corpus/*.txt | `needle` | 0415b08bfab46a1628536d43b0d6c6d17a9d3213 | 2026-11-09 | 1 | corpus/a.txt |
+
+=== step 3: plant a repo-local replace ref mapping C2's blob -> a blob WITH the needle ===
+error: replace ref 'refs/replace/f1adef63cb08891a0942b76fc4b9c50c6c494bc7' already exists
+git replace -l -> f1adef63cb08891a0942b76fc4b9c50c6c494bc7
+NOTE: refs/replace/* is NOT part of the commit tree.
+
+=== step 4: the MUTANT (GIT_NO_REPLACE_OBJECTS dropped) on this repo ===
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=0 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=1 rev_match=1/1 tree_same=0/1 findings=0
+SEARCH_RERUN: CLEAN
+exit=0
+
+=== step 5: the SHIPPING tool (guard present) on the same repo + same replace ref ===
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=1 at_rev=0 at_tree=0 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+exit=1
+
+=== step 6: CONTROL -- delete the replace ref; the mutant now reports DRIFT ===
+Deleted replace ref 'f1adef63cb08891a0942b76fc4b9c50c6c494bc7'
+git replace -l -> []  (empty = control)
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+exit=1
+
+=== step 7: CONTROL -- the shipping tool with the replace ref restored ===
+SEARCH_RERUN_SUMMARY searches=1 rev_match=0/1 tree_same=1/1 findings=2
+SEARCH_RERUN: DRIFT
+exit=1

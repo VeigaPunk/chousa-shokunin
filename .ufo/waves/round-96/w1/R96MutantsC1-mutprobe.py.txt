@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+"""New-mutant probe: apply each replacement once, run --selftest, record exit + failed cases."""
+import os, shutil, subprocess, sys
+
+S = "/fast/scratch/hyaku/chousa-r96/R96MutantsC1"
+SRC = open(os.path.join(S, "pristine.py"), encoding="utf-8").read()
+
+MUTANTS = [
+    # (name, old, new, intended defect)
+    # --- evaluate / judgement ---
+    ("n01-atrev-attree-swap",
+     '        at_rev = at_rev_of(r)\n        at_tree = at_tree_of(r)\n',
+     '        at_rev = at_tree_of(r)\n        at_tree = at_rev_of(r)\n'),
+    ("n02-findings-per-row",
+     '        findings += len(bad)\n',
+     '        findings += 1 if bad else 0\n'),
+    ("n03-revok-tree-mask",
+     '        rev_ok += 0 if ("COUNT_DRIFT" in codes or "SET_DRIFT" in codes) else 1\n',
+     '        rev_ok += 0 if ("COUNT_DRIFT" in codes or "SET_DRIFT" in codes or "TREE_CHANGED" in codes) else 1\n'),
+    ("n04-treesame-strict",
+     '        tree_same += 0 if changed else 1\n',
+     '        tree_same += 0 if (changed and strict) else 1\n'),
+    ("n05-count-uses-tree",
+     '        if len(at_rev) != r["n"]:\n',
+     '        if len(at_tree) != r["n"]:\n'),
+    ("n06-set-uses-tree",
+     '        elif sorted(r["set"]) != at_rev:\n',
+     '        elif sorted(r["set"]) != at_tree:\n'),
+    ("n07-digest-uses-tree",
+     '            if digest(at_rev) != r["digest"]:\n',
+     '            if digest(at_tree) != r["digest"]:\n'),
+    # --- parse_text / cells / regexes ---
+    ("n08-hits-regex-sign",
+     r'            if not HITS_RE.match(r["hits"]):' + "\n",
+     '            r["n"] = int(abs(int(r["hits"])))\n            if False:\n'),
+    ("n09-date-regex-loosen",
+     'HITS_RE = re.compile(r"(0|[1-9][0-9]*)\\Z")',
+     'HITS_RE = re.compile(r"(-?[0-9]+)\\Z")'),
+    ("n10-date-regex-loosen2",
+     r'        if not DATE_RE.match(r["searched"]):',
+     '        if not DATE_RE.match(r["searched"][:10] + "T"):\n            pass\n        if False:'),
+    ("n11-header-order",
+     'HEADER = ["id", "engine", "where", "expression", "rev", "searched", "hits", "hit_set"]',
+     'HEADER = ["id", "engine", "where", "expression", "rev", "searched", "hit_set", "hits"]'),
+    ("n12-split-lookbehind",
+     'SPLIT_RE = re.compile(r"(?<!\\\\)\\|")',
+     'SPLIT_RE = re.compile(r"\\|")'),
+    ("n13-parse-split-nl",
+     '    lines = text.split("\\n")\n',
+     '    lines = text.split("\\r\\n")\n'),
+    ("n14-rev-regex-case",
+     'REV_RE = re.compile(r"[0-9a-f]{40}\\Z")',
+     'REV_RE = re.compile(r"[0-9a-fA-F]{40}\\Z")'),
+    ("n15-id-regex",
+     'ID_RE = re.compile(r"Q[1-9][0-9]*\\Z")',
+     'ID_RE = re.compile(r"Q[0-9]+\\Z")'),
+    ("n16-digest-regex-case",
+     'DIGEST_RE = re.compile(r"sha256:[0-9a-f]{64}\\Z")',
+     'DIGEST_RE = re.compile(r"sha256:[0-9a-fA-F]{64}\\Z")'),
+    # --- matches / seg_match / hit / lines_of / static_dir / digest / git_env ---
+    ("n17-regex-search-to-match",
+     '        elif r["pattern"].search(line.decode("utf-8", "surrogateescape")):\n',
+     '        elif r["pattern"].match(line.decode("utf-8", "surrogateescape")):\n'),
+    ("n18-fixed-substring-to-wholeline",
+     '            if r["needle"] in line:\n',
+     '            if r["needle"] == line:\n'),
+    ("n19-lines-of-crlf",
+     '    lines = data.split(b"\\n")\n',
+     '    lines = data.split(b"\\r\\n")\n'),
+    ("n20-utf8-strict",
+     '        elif r["pattern"].search(line.decode("utf-8", "surrogateescape")):\n',
+     '        elif r["pattern"].search(line.decode("utf-8", "strict")):\n'),
+    ("n21-segmatch-dotglob-inverse",
+     '    if name.startswith(".") and not pat.startswith("."):\n',
+     '    if name.startswith(".") and pat.startswith("."):\n'),
+    ("n22-matches-length-drop",
+     '        if len(pats) == len(segs) and all(seg_match(s, p) for s, p in zip(segs, pats)):\n',
+     '        if all(seg_match(s, p) for s, p in zip(segs, pats)):\n'),
+    ("n23-staticdir-last-seg",
+     '    segs = glob.split("/")[:-1]\n',
+     '    segs = glob.split("/")\n'),
+    ("n24-digest-no-newline",
+     '    return hashlib.sha256(b"".join(k + b"\\n" for k in keys)).hexdigest()\n',
+     '    return hashlib.sha256(b"".join(k for k in keys)).hexdigest()\n'),
+    ("n25-gitenv-no-lazy",
+     '    env.update({"GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1", "GIT_TERMINAL_PROMPT": "0"})\n',
+     '    env.update({"GIT_NO_REPLACE_OBJECTS": "1", "GIT_TERMINAL_PROMPT": "0"})\n'),
+    ("n26-cells-strip-order",
+     '    s = line.strip()\n',
+     '    s = line.lstrip(" |")\n'),
+    ("n27-expr-minlen",
+     '        if len(e) < 3 or not (e.startswith("`") and e.endswith("`")) or "`" in e[1:-1]:\n',
+     '        if len(e) < 2 or not (e.startswith("`") and e.endswith("`")) or "`" in e[1:-1]:\n'),
+    ("n28-where-empty-seg",
+     '            if not g or g.startswith("/") or "\\\\" in g or ".." in parts or "" in parts or "." in parts:\n',
+     '            if not g or g.startswith("/") or "\\\\" in g or ".." in parts or "." in parts:\n'),
+    ("n29-hitset-empty-path",
+     '            if any(not p for p in r["set"]):\n',
+     '            if False:\n'),
+    ("n30-sep-row-lenient",
+     '    if sep is None or len(sep) != len(HEADER) or not all(re.fullmatch(r":?-{3,}:?", c) for c in sep):\n',
+     '    if sep is None or not all(re.fullmatch(r":?-{3,}:?", c) for c in sep):\n'),
+]
+
+def main():
+    out_lines = []
+    killed = 0
+    for name, old, new in [(m[0], m[1], m[2]) for m in MUTANTS]:
+        n = SRC.count(old)
+        if n != 1:
+            out_lines.append(f"SETUP {name} applies {n} times (SKIP)")
+            continue
+        mp = os.path.join(S, f"mut-{name}.py")
+        open(mp, "w", encoding="utf-8").write(SRC.replace(old, new))
+        p = subprocess.run([sys.executable, "-B", mp, "--selftest"], capture_output=True, text=True)
+        out = p.stdout + p.stderr
+        failed = "-"
+        for ln in out.splitlines():
+            if "failed=" in ln or "FAIL" in ln and "cases=" in ln:
+                failed = ln
+                break
+        tail = [ln for ln in out.splitlines() if "SELFTEST" in ln]
+        fails = [ln for ln in tail if "FAIL" in ln and "SEARCH_RERUN_SELFTEST" not in ln]
+        dead = p.returncode == 1 and "SEARCH_RERUN_SELFTEST: FAIL" in out
+        killed += 1 if dead else 0
+        out_lines.append(f"MUTANT {name} rc={p.returncode} {'KILLED' if dead else 'SURVIVED'} failed_cases={len(fails)} {failed}")
+        if fails:
+            out_lines.append("  failing: " + " | ".join(fails))
+        else:
+            out_lines.append("  failing: (none) lastlines=" + " // ".join(tail[-2:]))
+    out_lines.append(f"KILLED {killed}/{len([m for m in MUTANTS])} total-probed={len(MUTANTS)}")
+    text = "\n".join(out_lines) + "\n"
+    sys.stdout.write(text)
+    open(os.path.join(S, "mutprobe-out.txt"), "w").write(text)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,54 @@
+# R96ScoutSources receipt — S223 bibliographic cells verified from the re-opened bytes
+# seat: R96ScoutSources   source file: s223.pdf (re-opened, sha256 0bcdbf0e…, matches the committed capture)
+# date(UTC): 2026-11-09T01:43:07Z
+
+## authors (pdftotext -layout, page 98 right column, abstract byline)
+$ grep -A2 'Margaret Sampson' s223.layout.txt
+               Margaret Sampson, Jessie McGowan, Douglas M. Salzwedel, Elise Cogo, and
+               Carol Lefebvre
+               Manager, Library Services, Children’s Hospital of Eastern Ontario, Ottawa, ON; Health information consultant /
+
+## title (page 98, abstract heading)
+$ grep -B1 -A1 'PRESS: Peer Review of Electronic Search' s223.layout.txt
+
+               PRESS: Peer Review of Electronic Search
+               Strategies 2015 Updated Guideline Statement
+--
+their effectiveness. Elements presented here are detailed in      complete methods for the update as well as results of the
+the PRESS: Peer Review of Electronic Search Strategies            systematic review.
+
+
+## journal / volume / pages / doi (running foot + heads of the PDF)
+$ grep -n 'JCHLA' s223.layout.txt | head -8
+59:JCHLA / JABSC 37: 96100 (2016) doi: 10.5596/c16-019
+110:98                                                                                                  JCHLA / JABSC Vol. 37, 2016
+226:100                                                                                                  JCHLA / JABSC Vol. 37, 2016
+
+$ pdfinfo s223.pdf | grep -E 'Title|Pages'
+Title:           JCHLA_A_201619_O 96..100
+Pages:           5
+
+## the PRESS abstract occupies journal pages 98-99 (PDF pages 3-4 of 5)
+$ awk page-split on \f; count pages: 
+6
+page 3 (journal 98) holds the byline + Results paragraph start; page 4 (journal 99) holds the MEDLINE/translation sentences + Discussion.
+
+## the 10 quoted S223 fragments' printed page (per PDF page)
+  pdfpage [3]  journal page 98  :: quality. Six existing PRESS elements were retained and their
+  pdfpage [3]  journal page 98  :: that peer review should occur after the MEDLINE search
+  pdfpage [4]  journal page 99  :: has been developed but before other database searches are
+  pdfpage [4]  journal page 99  :: developed. The element related to translation of the search
+  pdfpage [4]  journal page 99  :: for other databases was removed, with the recommendation
+  pdfpage [4]  journal page 99  :: that translations be peer reviewed at the discretion of the
+  pdfpage [4]  journal page 99  :: search developer.
+  pdfpage [3]  journal page 98  :: that peer review checklists were effective at improving search
+  pdfpage [3]  journal page 98  :: Survey respondents and forum participants recommended
+  pdfpage [3]  journal page 98  :: Results: Several studies showed
+
+## verdict on the S223 bibliographic cells
+  authors  Sampson, McGowan, Salzwedel, Cogo, Lefebvre   : CONFIRMED from byline
+  title    PRESS: Peer Review of Electronic Search Strategies 2015 Updated Guideline Statement : CONFIRMED
+  journal  Journal of the Canadian Health Libraries Association (JCHLA / JABSC), vol 37, 2016 : CONFIRMED
+  pages    96-100 (5 PDF pages; running head 'JCHLA / JABSC 37: 96100 (2016)') : CONFIRMED
+  doi      10.5596/c16-019 (footer of every page) : CONFIRMED
+  PRESS abstract on pages 98-99 : CONFIRMED (byline + Results on 98; MEDLINE/translation/Discussion on 99)

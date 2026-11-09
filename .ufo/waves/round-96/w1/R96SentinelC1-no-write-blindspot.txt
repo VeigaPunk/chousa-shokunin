@@ -1,0 +1,32 @@
+# receipt R96SentinelC1-no-write-blindspot
+# FINDING: the NO_WRITE group compares 'git status --porcelain' BEFORE and AFTER the selftest
+# run. It cannot see (a) a lane write that already happened in an earlier group of the
+# SAME battery run (the tool is invoked earlier too), nor (b) a change to a TRACKED file's
+# CONTENT, because porcelain prints only the path. A selftest that corrupts a tracked
+# corpus capture therefore scores NO_WRITE=1/1 'ok' while the lane is corrupted.
+#
+# C1 K4 is "--selftest writes a file"; the instrument that claims to enforce it cannot.
+
+=== step 1: clean lane ===
+(clean) exit=0
+
+=== step 2: mutant T1 = one-site edit: selftest() appends to a TRACKED corpus capture ===
+placed at repo/tools/mutant-T1-tmp.py
+
+=== step 3: battery --tool T1 ===
+CASE no-write rc=0 left=[] lane_status_same=True ok
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=0/23 NO_WRITE=1/1 CASES=32
+SELFTEST_CONTROLS=FAIL
+
+=== step 4: the lane IS corrupted; the battery's own comparison cannot see it ===
+porcelain: [ M corpus/captures/1a8c36c4c24444967bd9c3ce.txt]   <- PATH ONLY, same before and after
+ corpus/captures/1a8c36c4c24444967bd9c3ce.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+CORRUPTED-BY-SELFTEST occurrences in the tracked capture: 2
+
+=== step 5: CONTROL — a cwd write IS caught (NO_WRITE has some power, just not here) ===
+CASE no-write rc=0 left=['selftest-side-effect.txt'] lane_status_same=True FAIL
+POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 MUTANTS_KILLED=23/23 NO_WRITE=0/1 CASES=32
+
+=== step 6: CONTROL — an UNTRACKED lane file is also missed (baseline poisoning) ===
+# (see R96SentinelC1-no-write-ordering.txt)

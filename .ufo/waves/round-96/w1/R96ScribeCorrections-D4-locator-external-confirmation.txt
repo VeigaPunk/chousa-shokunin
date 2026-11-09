@@ -1,0 +1,54 @@
+# R96ScribeCorrections receipt — D4 revised (S222 locator '10:39' is TRUE; external confirmation not recorded in the lesson)
+# date 2026-11-08
+
+### the lesson prose under correction (corpus/lessons/round-95.md:37-41)
+37:- **Correction to the S222 row (`R95ScoutSources` F3), recorded here; the row's cells stay as committed (CORPUS
+38:  rule 2 changes only status/recheck/used-by in place).** The row's source cell says "(co-published in Systematic
+39:  Reviews 10:39)". The captured PDF supports the co-publication with the DOI `10.1186/s13643-020-01542-z`; the
+40:  volume/article locator `10:39` came from the round's web-search summary, not from the capture. Read the cell as
+41:  "co-published in Systematic Reviews (doi 10.1186/s13643-020-01542-z)".
+
+### the closure spot-check section 7 that revised D4 (corpus/lessons/round-95-verifier-spotcheck.md:180-183)
+180:- **D4 revised.** That JATS front matter gives `<volume>10</volume>` and `<elocation-id>39</elocation-id>`: the S222
+181:  locator "Systematic Reviews 10:39" is true, only unsupported by the lane's own capture. The lesson's correction
+182:  ("came from a web-search summary, not from the capture") stands as a provenance note; D4 narrows to recording
+183:  this external confirmation (or a capture of the co-publication) rather than superseding the row.
+
+### DOES the lesson cite that external confirmation?
+2
+grep_exit=0
+28:  full-text XML for PMC7839230, answered http 500 (curl rc 22) at `2026-11-08T22:51:19Z`; no bytes were stored.
+32:GATE-RECORD S222 url=https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7839230/fullTextXML fetched=2026-11-08T22:51:19Z tier=A decision=reject capture=none curl_rc=22 http=500 words=0 quote=none
+grep_exit2=0
+
+### but the lesson DOES still mention the route rejection (http 500) at line 27-32
+27:- **Route rejected (unreachable, not a source rejection).** The first route to the same document, Europe PMC REST
+28:  full-text XML for PMC7839230, answered http 500 (curl rc 22) at `2026-11-08T22:51:19Z`; no bytes were stored.
+29:  Reason: no capture; flip: a 200 on a later attempt (≤3 per URL under the approval table) would make it a second
+30:  carrier of the same text, worth holding only if the PDF's two-column text form blocks a needed quote.
+31:
+32:GATE-RECORD S222 url=https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7839230/fullTextXML fetched=2026-11-08T22:51:19Z tier=A decision=reject capture=none curl_rc=22 http=500 words=0 quote=none
+
+### independent re-open of the Europe PMC JATS route (read-only, into scratch)
+$ for i in 1 2 3; do curl -sS --max-time 60 -o jats-try$i.xml -w "%{http_code}" https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7839230/fullTextXML; done
+attempt=1 http=500 size=150
+attempt=2 http=500 size=150
+attempt=3 http=200 size=226044
+
+$ grep -o "<journal-title>[^<]*</journal-title>\|<volume>[^<]*</volume>\|<elocation-id>[^<]*</elocation-id>" jats-try3.xml | head -3
+<journal-title>Systematic Reviews</journal-title>
+<volume>10</volume>
+<elocation-id>39</elocation-id>
+
+$ grep -c "copied and pasted exactly as run" jats-try3.xml
+2
+
+### the lane own refetch rows for that URL (both http 500)
+190:S222	https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7839230/fullTextXML	c2e77a7a794d375ae917bbb9	1	2026-11-08T22:51:19Z	22	500	-	-
+193:S222	https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7839230/fullTextXML	c2e77a7a794d375ae917bbb9	2	2026-11-09T00:35:48Z	22	500	-	-
+
+### the round-96 plan line that says the confirmation IS cited in the lesson
+47:  confirmation of "10:39" recorded by the round-95 closure is cited in the lesson, the row is unchanged.
+
+### SOURCES.md S222 row at the r96 freeze (unchanged)
+234:| S222 | Rethlefsen ML, Kirtley S, Waffenschmidt S, Ayala AP, Moher D, Page MJ, Koffel JB; PRISMA-S Group, PRISMA-S:

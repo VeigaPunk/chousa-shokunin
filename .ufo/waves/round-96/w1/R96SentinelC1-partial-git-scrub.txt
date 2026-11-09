@@ -1,0 +1,21 @@
+# receipt R96SentinelC1-partial-git-scrub
+# FINDING: m08-env-scrub only asserts GIT_DIR is absent + GIT_NO_LAZY_FETCH==1.
+# A one-site mutation of git_env that keeps GIT_OBJECT_DIRECTORY/GIT_CONFIG_*/GIT_WORK_TREE
+# (all GIT_* except GIT_DIR) survives the selftest AND the round-95 battery.
+
+=== mutant D source diff (the one edited line) ===
+1c1
+< 113:    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+---
+> 113:    env = {k: v for k, v in os.environ.items() if k != "GIT_DIR"}
+
+=== D: --selftest on the mutant ===
+SELFTEST j10-tally ok got=(1, 1, 2)
+SEARCH_RERUN_SELFTEST: PASS cases=32/32
+exit=0
+
+=== D: round-95 battery (rerun-controls-r95.py) on the mutant ===
+CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+POSITIVE=1/1 STRICT_TREE=1/1 FORGERY_REFUSED=10/10 PRIOR_ACCEPTED=10/10 SETUP_REFUSED=12/12 CLONE_TREE=2/2 GREP_AGREE=4/4 CONTAINMENT=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=4/4
+RERUN_CONTROLS=PASS
+exit=0

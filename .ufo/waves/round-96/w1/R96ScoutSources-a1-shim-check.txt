@@ -1,0 +1,26 @@
+# R96ScoutSources receipt — the F2 C1 sentence's parenthetical, tested directly
+# seat: R96ScoutSources   date(UTC): 2026-11-09T01:44:58Z
+
+## F2 C1 sentence (claims.md, '### C1 amended sentence (F2)'):
+   '10 judgement cases that call `evaluate`, the function `verify` also calls (read at source; the self-test
+    does not check that `verify` uses its verdict — the round-95 battery inside the REGRESSION leg does)'
+
+## build the shim the sentence describes: verify keeps evaluate's LINES but discards its VERDICT
+$ python3 - <<'PY'   # in <scratch>/shim/verify-blind.py
+   old = '    findings, rev_ok, tree_same, lines = evaluate(rows, at_rev_of, at_tree_of, strict)\n    n = len(rows)'
+   new = old.replace('    n = len(rows)', '    findings = 0  # SHIM: verify discards evaluate\'s verdict\n    n = len(rows)')
+PY
+
+## (a) the self-test on the shim — PASSES (so the self-test does NOT check it)
+$ python3 -B <scratch>/shim/verify-blind.py --selftest
+  ... SEARCH_RERUN_SELFTEST: PASS cases=32/32   (exit 0)
+
+## (b) the round-95 battery inside the REGRESSION leg — CATCHES it (as the sentence says)
+$ python3 -B corpus/evidence/round95/rerun-controls-r95.py --root . --work <scratch>/work-r95-shim --tool <scratch>/shim/verify-blind.py
+  CASE clone-edit rc=0/0 expect=0/1 FAIL
+  POSITIVE=1/1 STRICT_TREE=0/1 FORGERY_REFUSED=0/10 PRIOR_ACCEPTED=10/10 SETUP_REFUSED=12/12 CLONE_TREE=1/2 GREP_AGREE=4/4 CONTAINMENT=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=4/4
+  RERUN_CONTROLS=FAIL
+  exit=1
+
+## verdict: the F2 wording is CORRECT as written — the self-test does not catch it, the r95 REGRESSION leg does.
+## (this is amendment A1's point, independently reproduced; it holds.)

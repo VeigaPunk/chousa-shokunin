@@ -1,0 +1,13 @@
+# F4: decision row 1's Lane cell needs a reviewer field the only enforced search-record schema forbids
+--- tools/search-rerun.py:90 HEADER, :162 strict equality:
+HEADER = ["id", "engine", "where", "expression", "rev", "searched", "hits", "hit_set"]
+    if head != HEADER:
+--- entry's own ## Searches header (8 columns, no reviewer):
+91:| id | engine | where | expression | rev | searched | hits | hit_set |
+--- decision row 1 (line 66), Lane cell: ... says which seat or person reviewed the expression before it ran, or that nobody did
+1
+--- WITNESS: splice a 'reviewer' column into #Searches and run the gate:
+SEARCH_RERUN_ERROR HEADER columns ['id', 'engine', 'where', 'expression', 'rev', 'searched', 'hits', 'hit_set', 'reviewer'] != ['id', 'engine', 'where', 'expression', 'rev', 'searched', 'hits', 'hit_set']
+exit=2
+--- CONCLUSION: the lane's only gated search-record format cannot carry a review attribution,
+    so row 1's Lane cell describes a field no instrument accepts (search-rerun.py:90/:162).

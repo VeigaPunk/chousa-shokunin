@@ -1,0 +1,36 @@
+# R96ScribeCorrections receipt — D2 full detail (lesson says nine; entry holds 13)
+# date 2026-11-08 lane root /home/vgpnk/Projects/shokunin/chousa-shokunin
+
+### the lesson line (unchanged at landing and at the r96 freeze)
+23:  for a different re-run count; C2's entry holds nine located quotes from this capture.
+
+### the entry Located-quotes table row count at the freeze tree
+13
+q_rows_exit=0
+
+### the entry GATE-RECORD count at the freeze tree
+13
+
+### when was the lesson born, and what did the entry hold at that same commit?
+$ git cat-file -e d6429e02:corpus/lessons/round-95.md
+fatal: path 'corpus/lessons/round-95.md' exists on disk, but not in 'd6429e02'
+exit=128  (128 = the lesson did not exist at F)
+$ git show 86909f02:corpus/lessons/round-95.md | sed -n "23p"
+  for a different re-run count; C2's entry holds nine located quotes from this capture.
+$ git show 86909f02:corpus/knowledge/search-rerun-record-r95.md | grep -c "^GATE-RECORD"
+13
+  -> the count was already wrong at the commit that created the lesson
+
+### the lane own README already says 13 (same round) — the two disagree
+1443:- `lessons/round-95.md` — S222 admitted (JMLA publisher PDF; the Europe PMC route answered 500 and is a url/unreach Gate record), six mined mistakes; the entry carries 13 located quotes after the wave-forced Amendment 1.
+
+### the r95 receipt that carries 13
+17:GATE_RECORDS files=1 records=13 ok=13 fail=0
+
+### the r95 receipt that carries 9 (the F-measured one)
+13:GATE_RECORDS files=1 records=9 ok=9 fail=0
+
+### gate-records verify on the freeze tree (re-run now, at HEAD = freeze)
+GATE_RECORD corpus/knowledge/search-rerun-record-r95.md:84 S222 OK
+GATE_RECORDS files=1 records=13 ok=13 fail=0
+exit=0
