@@ -1,0 +1,20 @@
+# R100ScribeLesson receipt 1 — S237 has no GATE-RECORD at F (6d4e8487)
+$ git grep -n "GATE-RECORD S237" 6d4e8487 -- .
+exit=1 (1 = no match: S237 has NO GATE-RECORD line anywhere in the frozen tree)
+
+# GATE-RECORD line count per row the round opened, at F
+  S237 : 0 line(s)
+  S238 : 14 line(s)
+  S239 : 1 line(s)
+
+# the round-99 precedent: the same rejected-row form WAS recorded for S232 and S235
+6d4e8487ee6a16823c24a8e085c6559b92b9fec8:corpus/knowledge/quotation-error-rates-r99.md:153:GATE-RECORD S235 url=https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4627914/fullTextXML fetche
+6d4e8487ee6a16823c24a8e085c6559b92b9fec8:corpus/lessons/round-99.md:76:GATE-RECORD S235 url=https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4627914/fullTextXML fetched=2026-11-09T04:00:4
+
+# QUALITY 173's check clause (the criterion that should have caught it)
+Check: every registry row the round opened, re-anchored or re-opened is recorded in a `GATE-RECORD` line at this round's `fetched` time, or the lesson names the schema gap that prevents one (round 86 added the `S023` re-open line after the scribe seat showed it was missing).
+
+# and the frozen C2 counting command 1 sees only the entry file, so it cannot see the gap:
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-update-r100.md
+GATE_RECORD corpus/knowledge/quotation-error-update-r100.md:119 S239 OK
+GATE_RECORDS files=1 records=17 ok=17 fail=0

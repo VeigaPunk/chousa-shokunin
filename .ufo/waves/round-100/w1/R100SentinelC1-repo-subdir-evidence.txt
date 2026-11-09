@@ -1,0 +1,22 @@
+# R100SentinelC1 receipt — C1: --repo pointing at a SUBDIRECTORY of the worktree
+# scratch: /fast/scratch/hyaku/chousa-r100/R100SentinelC1 ; clone: $S/repo @ 6d4e8487ee6a16823c24a8e085c6559b92b9fec8
+# lane capture used: corpus/captures/b5b8d050eea0c638e95ba674.txt @ 929c784c (S230, a challenge page: 23 words, marker 'checking your browser')
+
+$ python3 -B tools/gate-records.py verify --root <lane> --repo <variant> <rec-with-rev-to-S230-capture>
+
+  --repo <lane>            -> rc=1  GATE_RECORD ... S230 FAIL CHALLENGE
+  --repo <lane>/.git       -> rc=1  GATE_RECORD ... S230 FAIL CHALLENGE
+  --repo <lane>/corpus      -> rc=0  GATE_RECORD ... S230 OK      <-- ADMISSION (capture set silently EMPTY)
+
+# mechanism (measured, git 2.56.0): 'git ls-tree <rev> -- corpus/captures/' is PATHSPEC-RELATIVE TO CWD,
+# while 'git cat-file blob <rev>:<path>' is ROOT-RELATIVE. From a subdirectory the pathspec matches nothing:
+
+$ git -C $FX ls-tree <rev> -- corpus/captures/        # 4 entries
+$ git -C $FX/sub ls-tree <rev> -- corpus/captures/  # 0 entries
+$ git -C $FX/sub ls-tree --full-name <rev> -- ':(top)corpus/captures/'  # 4 entries (fix)
+$ git -C $FX/sub cat-file -t <rev>:corpus/captures/<key>.txt  # blob (root-relative, still resolves)
+
+# tools/gate-records.py:249  p = subprocess.run(["git","-C",repo,"ls-tree","-z",rev,"--","corpus/captures/"], ...)
+#   -> pathspec is interpreted relative to CWD(=repo), not to the repo root.
+# tools/gate-records.py:267  name = capture_oids(repo, rev).get(p.stdout.strip())
+#   -> an EMPTY capture set means every rev record's identity lookup returns None => no CHALLENGE ever.

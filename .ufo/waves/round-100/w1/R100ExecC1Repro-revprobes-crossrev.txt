@@ -1,0 +1,60 @@
+### x-revB-blob
+# x
+
+GATE-RECORD S230 rev=1298a83e8a4b8984453b8e7520b86441754c9882 path=notes/blob.txt line=1 words=3 quote=Security check in
+GATE_RECORD ../rec-x-revB-blob.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+### x-revB-blob-standin
+# x
+
+GATE-RECORD S230 rev=1298a83e8a4b8984453b8e7520b86441754c9882 path=notes/blob.txt line=1 words=3 quote=Security check in
+GATE_RECORD ../rec-x-revB-blob-standin.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+### x-revA-cap
+# x
+
+GATE-RECORD S230 rev=1cf4d2afd622639584f76eee41a1654b78eaa42d path=corpus/captures/bbbb00000000000000000001.txt line=1 words=3 quote=Security check in
+GATE_RECORD ../rec-x-revA-cap.md:3 S230 FAIL CHALLENGE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### x-revB-cap
+# x
+
+GATE-RECORD S230 rev=1298a83e8a4b8984453b8e7520b86441754c9882 path=corpus/captures/bbbb00000000000000000001.txt line=1 words=3 quote=Release notes. Version
+GATE_RECORD ../rec-x-revB-cap.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+### x-revA-blob
+# x
+
+GATE-RECORD S230 rev=1cf4d2afd622639584f76eee41a1654b78eaa42d path=notes/blob.txt line=1 words=3 quote=Security check in
+GATE_RECORD ../rec-x-revA-blob.md:3 S230 FAIL CHALLENGE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### x-revB-blob-again
+# x
+
+GATE-RECORD S230 rev=1298a83e8a4b8984453b8e7520b86441754c9882 path=corpus/captures/bbbb00000000000000000001.txt line=1 words=3 quote=Release notes. Version
+GATE_RECORD ../rec-x-revB-blob-again.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+### v5
+# x
+
+GATE-RECORD S230 rev=186be11fd3094b0e1c000e970ead8625096d2752 path=corpus/captures/aaaa00000000000000000001.raw line=1 words=3 quote=Field note seven.
+GATE_RECORD ../rec-v5.md:3 S230 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### v5-standin-vs-frozen-headtree
+GATE_RECORD ../rec-x-revB-blob.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0

@@ -1,0 +1,22 @@
+# R100ScribeLesson receipt 3 — every row the round ADDED must carry a GATE-RECORD line (QUALITY 173's check)
+
+# rows added between base 929c784c and F 6d4e8487: S237 S238 S239
+
+ROW S237 gate_records=0   <-- NO GATE-RECORD anywhere in the frozen tree
+ROW S238 gate_records=14
+ROW S239 gate_records=1
+RECORD_COVERAGE rev=6d4e8487 rows_added=3 rows_without_record=1
+# QUALITY 173's clause (corpus/QUALITY.md:1110):
+#   'Check: every registry row the round opened, re-anchored or re-opened is recorded in a
+#    GATE-RECORD line at this round's fetched time, or the lesson names the schema gap that
+#    prevents one'
+exit=1
+
+# working-tree walk (L1's in-flight tree, INCLUDING the untracked corpus/lessons/round-100.md, which carries the S237 line)
+ROW S237 gate_records=1  in: corpus/lessons/round-100.md(1)
+ROW S238 gate_records=15  in: corpus/knowledge/quotation-error-update-r100.md(14), corpus/lessons/round-100.md(1)
+ROW S239 gate_records=2  in: corpus/knowledge/quotation-error-update-r100.md(1), corpus/lessons/round-100.md(1)
+RECORD_COVERAGE rev=WORKTREE rows_added=3 rows_without_record=0 files_scanned=269 (incl. untracked)
+exit=0
+# note: a tracked-files-only walk reports rows_without_record=1 against the working tree too,
+# because the S237 line lives in the untracked lesson draft — the record must be COMMITTED.

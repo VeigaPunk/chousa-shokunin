@@ -1,0 +1,42 @@
+# R100ScoutSources receipt 6 — C2 counting commands at the freeze commit F, verbatim outputs.
+# seat: R100ScoutSources   date: 2026-11-09   tree: F=6d4e8487ee6a16823c24a8e085c6559b92b9fec8
+
+=== 1) gate-records verify (C2 counting command 1) ===
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-update-r100.md
+GATE_RECORD corpus/knowledge/quotation-error-update-r100.md:119 S239 OK
+GATE_RECORDS files=1 records=17 ok=17 fail=0
+exit=0
+
+=== 2) research-gate verify-metadata (C2 counting command 2) ===
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-update-r100.md --root .
+META entry=quotation-error-update-r100.md source=present verified_at=dated recheck=scheduled verdict=clean
+METADATA_COMPLETE=1/1
+RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)
+exit=0
+
+=== 3) search-rerun verify (C2 counting command 3) ===
+$ python3 -B tools/search-rerun.py verify corpus/knowledge/quotation-error-update-r100.md --root .
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q3 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=3 rev_match=3/3 tree_same=0/3 findings=0
+SEARCH_RERUN: CLEAN
+exit=0
+
+=== 4) entry-controls-r100 (C2 counting command 4) ===
+$ python3 -B corpus/evidence/round100/entry-controls-r100.py --root .
+CASE ACCEPT a2 PASS
+QUOTES=16/16 FIELD=16/16 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=24/24 NEVER=8/8 FRESH=1/1 TOPIC=1/1 NUMBERS_SOURCED=24/24 BASE_TOPIC_HITS=0 BASE_ENTRY=absent BASE_UPDATE_LINK=0 FORGERY_REFUSED=13/13 ACCEPTED=2/2
+ENTRY_CONTROLS_R100=PASS
+exit=0
+
+=== 5) harm: the round-99 entry (C2 counting command 5) ===
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-rates-r99.md
+GATE_RECORDS files=1 records=25 ok=25 fail=0
+exit=0
+$ python3 -B corpus/evidence/round99/entry-controls-r99.py --root .
+QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2
+ENTRY_CONTROLS_R99=PASS
+exit=0
+
+=> ALL SIX C2 COUNTING COMMANDS MATCH THE FROZEN PREDICATE, exit 0. C2's instrument is green.

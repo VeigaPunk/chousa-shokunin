@@ -1,0 +1,17 @@
+== r100 battery, missing capture ==
+CHALLENGE_CONTROLS_SETUP missing lane capture b90988847e704a08aabc8321.txt
+exit=2
+
+== r99 battery, same tree ==
+Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r100/R100ScribeLesson/setup/corpus/evidence/round99/challenge-controls-r99.py", line 287, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/fast/scratch/hyaku/chousa-r100/R100ScribeLesson/setup/corpus/evidence/round99/challenge-controls-r99.py", line 262, in main
+    t, ok, lines = score(lane, tool, os.path.join(work, "cand"), base_tool)
+                   ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/fast/scratch/hyaku/chousa-r100/R100ScribeLesson/setup/corpus/evidence/round99/challenge-controls-r99.py", line 139, in score
+    cap = {s: open(os.path.join(lane, "corpus", "captures", k + ".txt"), "rb").read() for s, (_, k) in CAP.items()}
+              ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r100/R100ScribeLesson/setup/corpus/captures/b90988847e704a08aabc8321.txt'
+exit=1

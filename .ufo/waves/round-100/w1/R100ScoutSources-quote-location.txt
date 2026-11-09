@@ -1,0 +1,30 @@
+# R100ScoutSources receipt 8 — where each of the entry's 16 quotes is located in its capture field,
+# byte-exact vs after tools/gate-records.py's normalization.  seat: R100ScoutSources  date: 2026-11-09
+
+qid  src   byte-substring  after-norm  note
+U0   S238  True           True        
+U1   S238  True           True        
+U2   S238  True           True        
+U3   S238  True           True        
+U4   S238  True           True        
+U5   S238  True           True        
+U6   S238  True           True        
+U7   S238  True           True        
+U8   S238  True           True        
+U9   S238  False          True        capture has '\u2009' U+2009 where entry has ' ' U+0020 (offset 131)
+U10  S238  True           True        
+U11  S238  False          True        byte window differs beyond the compared span
+U12  S238  True           True        
+U13  S238  True           True        
+J1   S236  True           True        
+J2   S236  True           True        
+
+=> U0 is in S238's `title` field; U1-U13 are in S238's `abstractText`; J1 and J2 are in S236's
+   `abstractText`. All 16 are located after the tool's normalization.
+=> U9 and U11 are NOT byte substrings of their field: the capture prints U+2009 THIN SPACE around '=' and
+   before the number ('p\u2009=\u20090.85'); the entry prints ASCII 'p = 0.85'. U11 additionally differs
+   because the capture's abstractText ends the sentence with '<h4>Conc' (a section tag) immediately after
+   the quoted period. The gate tool's `norm` (curly quotes -> straight, whitespace runs -> one space) does
+   NOT fold U+2009 to a space, so the entry's quotes match only after a whitespace-run collapse, which
+   `norm` performs via ' '.join(s.split()) — Python's str.split() splits on U+2009 as well.
+   => the quotes are located; but 'located' is true only AFTER normalization, not byte-exactly.

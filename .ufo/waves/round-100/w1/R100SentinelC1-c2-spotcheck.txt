@@ -1,0 +1,29 @@
+# R100SentinelC1 receipt — C2 independent spot-check at F (6d4e8487ee6a16823c24a8e085c6559b92b9fec8)
+# clone: /fast/scratch/hyaku/chousa-r100/R100SentinelC1/repo ; lane capture: corpus/captures/b5eec205612ee5f138cf065d.txt (S238), corpus/captures/405a0054e1f6dbd1854a3618.txt (S236)
+
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-update-r100.md
+  GATE_RECORDS files=1 records=17 ok=17 fail=0      rc=0
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-update-r100.md --root .
+  METADATA_COMPLETE=1/1 ; RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)   rc=0
+$ python3 -B tools/search-rerun.py verify corpus/knowledge/quotation-error-update-r100.md --root .
+  SEARCH_RERUN_SUMMARY searches=3 rev_match=3/3 tree_same=0/3 findings=0 ; SEARCH_RERUN: CLEAN   rc=0
+$ python3 -B corpus/evidence/round100/entry-controls-r100.py --root .
+  QUOTES=16/16 FIELD=16/16 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=24/24 NEVER=8/8 FRESH=1/1 TOPIC=1/1 NUMBERS_SOURCED=24/24 BASE_TOPIC_HITS=0 BASE_ENTRY=absent BASE_UPDATE_LINK=0 FORGERY_REFUSED=13/13 ACCEPTED=2/2
+  ENTRY_CONTROLS_R100=PASS   rc=0
+
+## harm leg
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-rates-r99.md
+  GATE_RECORDS files=1 records=25 ok=25 fail=0      rc=0
+$ python3 -B corpus/evidence/round99/entry-controls-r99.py --root .
+  QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2
+  ENTRY_CONTROLS_R99=PASS   rc=0
+
+## independent quote-location check (not the shipped control) — every quote row located in the field the entry names
+  S238 capture parses as JSON; result = resultList.result[0].
+  U0  'Systematic review and meta-analysis of quotation inaccuracy in medicine.'  -> in result['title']      = True
+  U1..U13                                                                 -> in result['abstractText'] = True (each)
+  J1,J2 (S236 capture)                                                  -> in abstractText          = True (each)
+  S238 registry row tier cell = 'B' (11 columns)  -> 'tier B' as claimed
+  14 U-quotes + 2 J-quotes = 16 -> '14 located quotes (U0-U13) plus J1/J2' as claimed
+  decision table rows = 8; every Do-cell numeral is a substring of that row's own warrant quote
+     (row4 'Using a journal's standing' Do-cell prints '0.253,' with a trailing comma -> token check needs care)

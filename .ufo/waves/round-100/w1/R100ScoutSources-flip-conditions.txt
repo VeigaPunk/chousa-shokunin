@@ -1,0 +1,40 @@
+# R100ScoutSources receipt 10 — the lane's own flip conditions for S237 and S239 are now MET.
+# seat: R100ScoutSources   date: 2026-11-09   tree: F=6d4e8487ee6a16823c24a8e085c6559b92b9fec8
+
+## The lane wrote its own flip condition into corpus/SOURCES.md, verbatim at F:
+
+## S237 (2015 full text, PMC4627914)
+##   "REJECTED (unreachable, not fabrication): the service answered a server error to every lane GET;
+##    nothing is taught from it; flip: a 200 carrying the article XML"
+## S239 (2025 full text, PMC12285159)
+##   "REJECTED (unreachable, not fabrication): the service answered a server error to every lane GET;
+##    the abstract was read through S238; flip: a 200 carrying the article XML"
+
+## MY RE-OPEN SATISFIED BOTH FLIP CONDITIONS, with the lane's own recipe and UA:
+
+## S239 flip: "a 200 carrying the article XML"
+##   GET https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12285159/fullTextXML
+##   attempt 1 -> http=200, 95 755 bytes, sha256 c66bf6c503e64db10f93195bb270e42dabc079a456c34ceaddecbb8c0de9a31e
+##   the body IS the article XML: <article ...><journal-title>Research Integrity and Peer Review</journal-title>
+##   with the full Results, Table 1, and the 46-study sentence quoted in R100ScoutSources-fulltext-content.txt.
+##   challenge markers in body: 0
+##   => S239's flip condition is MET. The lane's rejection reason ("the service answered a server error to
+##      every lane GET") is true of the lane's three GETs and FALSE of the route.
+
+## S237 flip: "a 200 carrying the article XML"
+##   GET https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4627914/fullTextXML
+##   attempts 1 and 2 -> http=200, 126 445 bytes, sha256 c033b0493a09832723507c96fb0e2a13b4d2f3a168e9fe1e5d2147c4c543b0ab
+##   the body IS the PeerJ JATS article ("Quotation accuracy in medical journal articles-a systematic review
+##   and meta-analysis", Jergas, Baethge, Wager 2015). challenge markers: 0.
+##   The same sha256 was already recorded by the round-99 seat in
+##   .ufo/waves/round-99/w1/R99ScoutSources-s235-reopen.txt (http=200, 126 445 bytes) — committed at F.
+##   => S237's flip condition is MET, and had already been met at F by a lane-committed wave receipt.
+
+## CONSEQUENCE FOR C2's NAMED LIMIT (a) AND THE ENTRY'S SCOPE
+## claims.md C2 named limit (a): "S238 is the abstract only; the full text (S239, PMC12285159) answered http 500."
+## The entry's own words at F: "the full-text route, PMC12285159, answered http 500 to both of this round's GETs"
+## and "so nothing here rests on the article body: not the list of 46 studies, not how 'major' is defined there,
+## not the heterogeneity statistic."
+## All three of those exclusions are now answerable, and the answers CONTRADICT the entry (see
+## R100ScoutSources-source-vs-rows.txt): the article says the 46-study set CONTAINS the 28-study 2015 set,
+## it defines major and minor, and it states the 17.0% same-study-set comparison the entry says is absent.

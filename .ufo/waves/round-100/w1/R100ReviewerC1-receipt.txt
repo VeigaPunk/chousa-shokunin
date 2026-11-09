@@ -1,0 +1,23 @@
+commands:
+- python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work $S/w-cand -> exit 0, PASS line observed
+- python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work $S/w-base --tool $S/base-tool.py --no-oracles -> exit 1, REV=3/11 PROD=4/6 observed, CASE lines identical to before/c1-base.txt (diff empty)
+- base tool sha256 e92c4526d5fca2f12d9fd05838ce2af52fe761f8a507a5465b28fd196fb4b3c1 matches before receipt header
+- per-oracle score() import run: 12/12 ok=False; failing legs:
+  o1: r7 r8
+  o2: r5 r6 PROD-raw
+  o3: r5 r6 PROD-raw
+  o4: q3
+  o5: q1
+  o6: r5 r6 r8 r11 PROD-raw
+  o7: r1-r11
+  o8: PROD rev-S230 rev-S229 rev-dot-S230 rev-raw-S230
+  o9: m10
+  o10: b200
+  o11: b201
+  o12: r11
+- S234 lines: line 8 marker, line 14 marker, line 15 first non-marker quotable; r9 correct
+- S230 txt 23w challenge vs raw 620w non-challenge -> sibling rule load-bearing
+- C2 captures: S238 327w, S236 307w, is_challenge False -> separability holds
+- HARM corpus: 27 files, 10 rev records, none changed by candidate (HARM_SAME=27/27)
+- raw-without-sibling: wired fixture fx3 (raw-only challenge) -> FAIL CHALLENGE; code correct, battery has no leg for named limit (d); o2/o3 indistinguishable (identical 3-leg fail sets)
+- capture_oids: non-recursive ls-tree (subdir entries excluded, correct per sentence), symlink mode 120000 passes parts[1]==blob (type IS blob), tab/newline in path cannot match CAPANY fullmatch (partition at first tab, remainder fails fullmatch, excluded), .txt-wins order-independent, ls-tree failure fail-open but unreachable (blob!=None proves rev valid)

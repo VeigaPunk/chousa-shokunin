@@ -1,0 +1,16 @@
+Cache-key divergence proof (inline probe, see R100MutantsC1-two-rev.md)
+
+$ python3 -B repo/tools/gate-records.py verify --root cproot --repo /fast/.../c2proj two.md
+GATE_RECORD two.md:1 S900 FAIL CHALLENGE,LINE,WORDS
+GATE_RECORD two.md:2 S900 FAIL LINE,WORDS
+GATE_RECORDS files=1 records=2 ok=0 fail=2
+
+$ python3 -B muts/tool/n-cache-repoonly.py verify --root cproot --repo /fast/.../c2proj two.md
+GATE_RECORD two.md:1 S900 FAIL CHALLENGE,LINE,WORDS
+GATE_RECORD two.md:2 S900 FAIL CHALLENGE,LINE,WORDS
+GATE_RECORDS files=1 records=2 ok=0 fail=2
+
+Fixture: c2proj rev1 9ca3810e has corpus/captures/aaaaaaaaaaaaaaaaaaaaaaaa.txt (challenge bytes);
+rev2 4749fb0a removes it, note.txt holds same bytes (not a capture of rev2).
+F tool judges record 2 as non-capture (LINE,WORDS only); repo-cached mutant judges it as capture (CHALLENGE).
+Lesson: single-process two-rev files need per-rev cache keys; battery's one-process-per-record run never sees it.

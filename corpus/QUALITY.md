@@ -1450,3 +1450,16 @@ the admitted entry that motivates it. Tier definitions live in
     `CHALLENGE_CONTROLS_R99=PASS`. Limits: still lexical (round-99 claim C1 named limits (a)-(f)); a new challenge
     wording seen in a capture is added to `CHALLENGE_MARKERS` with its capture key, never only to a grep.
     — `lessons/round-99.md` Mistakes 1.
+231. **A guard on a cited file is keyed to what the resolver returns, not to how the path is spelled.**
+    Round 99's CHALLENGE check judged a rev-form GATE-RECORD only when its path was spelled exactly
+    `corpus/captures/<key>.txt`, while `git cat-file` resolves `./corpus/captures/<key>.txt`, `./corpus//captures/…`,
+    `./notes/../corpus/captures/…`, `<key>.raw` and a byte copy at another path to the same challenge blob — the
+    round-99 tool printed OK on each (`corpus/evidence/round100/before/c1-base.txt`, `REV=3/11`, `BASE_REV_ADMITTED=8/11`;
+    `.ufo/waves/round-99/w1/R99SentinelC1.md` F-1). From round 100 `tools/gate-records.py` resolves `rev:path` to an
+    object id and judges the blob when that id is a `corpus/captures/` entry of the record's rev (a `.raw` by its
+    sibling `.txt`). Check: `python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work <scratch>`
+    prints `CHALLENGE_CONTROLS_R100=PASS` with `REV=11/11 ORACLES_REJECTED=12/12` (oracle o1 is the spelling-keyed
+    guard and must make the battery FAIL). Limits: identity is byte identity — a capture altered by one byte at another
+    path is not judged (round-100 claim C1 named limit (b)); any new guard that reads a path a resolver will interpret
+    states which resolver and tests at least one non-canonical spelling.
+    — `lessons/round-99.md` Mistakes 3 (its fix, shown able to fail, landed in round 100: `lessons/round-100.md` Mistakes 2).

@@ -1,0 +1,13 @@
+Survivor analyses (pre-final):
+tool:
+- n-cache-repoonly: UNCOVERED for 2-rev single process; PROVEN divergent: two.md line2 FAIL LINE,WORDS (full) vs FAIL CHALLENGE,LINE,WORDS (mutant). Battery uses one process per record file (run per rec), so never triggers. C1 sentence says capture set is read 'of that revs tree' - cache misuse violates letter; battery does not check it. Coverage gap, not a falsification of a printed number.
+- n-rc-ignored / n-verify-drop: rc==0 else None: for rev:path that git_blob accepted (commit+blob verified), rev-parse same spec resolves; rc!=0 only if object got deleted mid-run. EQUIVALENT on sane trees.
+- n-ddash-drop: pathspec corpus/captures/ without -- : git disambiguates revision/file; no file named corpus/captures/ exists as repo file; also rev is a 40-hex string so no ambiguity with a path. EQUIVALENT.
+- n-blobtest-drop: ls-tree of corpus/captures/ with pattern corpus/captures/ lists direct children; trees' paths would be like corpus/captures/subdir which fails CAPANY fullmatch (24hex required). Direct children include subtrees named exactly? No - CAPANY requires 24hex+(.txt|.raw); a tree named corpus/captures/<24hex> is possible but then parts[1]==tree and no blob exists there; dropping test could include it with its tree OID - never equals a blob OID, never used. EQUIVALENT for CHALLENGE purposes.
+- n-blobdecode-plain: strict decode raises -> crashes rev_capture_text? actually exception propagates (UnicodeDecodeError) -> tool crash exit nonzero for non-utf8 raw; battery fixture raws are ASCII. UNCOVERED edge; C1 sentence says raw judged by sibling txt when present; byte identity not decode-dependent. Not a falsification of any number.
+- n-txtwins-first/inv: CONTRIVED: no leg registers two capture paths with same OID. F tool's own 'txt wins' is untested: which entry of same OID is chosen determines sibling lookup for .raw blobs. If same OID has .txt and .raw under different keys, only the map's winner's sibling exists. Battery never has OID collision (fixtures use distinct bytes). UNCOVERED; does not falsify counts but the sentence's 'for a .raw entry, its sibling .txt' claim is  partially uncovered.
+- url/refactor survivors none.
+battery:
+- b1 REV rc-only: SURVIVES F PASS AND BASE FAIL (correct discrimination even loosened) => verdict-code check for CHALLENGE is weak: a tool returning FAIL LINE (no CHALLENGE) still passes REV legs. Weakness, not a false printed predicate.
+- b3 t[g][1]>0 guard dropped: SURVIVES F PASS (equivalent under fixed fixture sizes), BASE FAIL. no-op on this battery.
+- b12 same==len(harm) guard dropped: SURVIVES F PASS and BASE FAIL via other legs. no-op here.

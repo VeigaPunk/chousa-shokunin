@@ -1,0 +1,8 @@
+$ cd <frozen clone F 6d4e8487> && python3 - <<EOF   # count .txt/.raw pair byte equality
+frozen tree: txt=101 raw=104 pairs=101
+pairs whose .txt and .raw bytes are IDENTICAL: 9
+pairs whose .txt and .raw bytes DIFFER: 92
+
+Consequence: for the 92 differing pairs, a rev record citing the .raw is LINE-checked against the .raw bytes and
+CHALLENGE-checked against the .txt bytes (rev_capture_text: name.endswith('.raw') -> sibling .txt).
+Command that reads the code: sed -n '261,275p' tools/gate-records.py

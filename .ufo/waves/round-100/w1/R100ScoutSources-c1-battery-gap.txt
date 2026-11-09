@@ -1,0 +1,43 @@
+# R100ScoutSources receipt 5 — C1 battery strength: a mutant that BREAKS the frozen sentence still prints
+# the frozen predicate line.  seat: R100ScoutSources   date: 2026-11-09
+# attacked tree: F=6d4e8487ee6a16823c24a8e085c6559b92b9fec8 (tool + battery bytes unchanged)
+
+## The frozen sentence (claims.md, C1) says the capture set is read at the RECORD'S REV:
+   '...has the object id of a corpus/captures/<24 hex>.txt or .raw entry OF THAT REV'S TREE'
+
+## MUTANT: one-line change to tools/gate-records.py — capture_oids() reads HEAD instead of the record's rev.
+  old: subprocess.run([... "ls-tree", "-z", rev,  "--", "corpus/captures/"], ...)
+  new: subprocess.run([... "ls-tree", "-z", "HEAD", "--", "corpus/captures/"], ...)
+  (written to seat scratch $S/mut/gate-head.py; no lane file modified)
+
+=== the frozen battery, run against the MUTANT (full run, oracles included) ===
+$ python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work $S/w-mut2 --tool $S/mut/gate-head.py
+NEG=7/7 MARK=11/11 BOUND=3/3 NORM=2/2 POS=4/4 REV=11/11 REVPOS=3/3 PROD=6/6 HARM_SAME=27/27 BASE_REV_ADMITTED=8/11 ORACLES_REJECTED=12/12
+CHALLENGE_CONTROLS_R100=PASS
+exit=0
+
+=== same mutant with --no-oracles ===
+NEG=7/7 MARK=11/11 BOUND=3/3 NORM=2/2 POS=4/4 REV=11/11 REVPOS=3/3 PROD=6/6 HARM_SAME=27/27 BASE_REV_ADMITTED=8/11 ORACLES_REJECTED=0/0
+CHALLENGE_CONTROLS_R100=PASS
+exit=0
+
+## FINDING: the mutant reads the capture set at HEAD, i.e. NOT at the record's rev, and the frozen battery
+## still prints the frozen predicate line and exits 0. The battery does not enforce the frozen sentence's
+## 'of that rev's tree'. WHY: the battery's fixture repo (corpus/evidence/round100/challenge-controls-r100.py,
+## fixture_repo(), lines 169-187) makes exactly ONE commit ('commit FILES ... once'), so inside the fixture
+## HEAD == the record's rev; and the lane's PROD rev legs all read the same lane revision (BASE).
+## => C1's sentence says more than its counting command enforces.
+
+## DECISIVE CONTROL: the F TOOL is correct on that point; the MUTANT is not.
+## Two-commit fixture D:
+##   rev A: corpus/captures/K.txt = the challenge page
+##   rev B (=HEAD): the same path now holds an ordinary, non-challenge body
+##   record: rev=A path=corpus/captures/K.txt line=1 quote=<the challenge line>
+$ python3 -B $S/repo/tools/gate-records.py verify --root $S/repo --repo $D $D/rec.md
+GATE_RECORD <rec.md>:1 S900 FAIL CHALLENGE,REGISTRY     <- F tool: reads rev A's tree -> judged
+exit=1
+$ python3 -B $S/mut/gate-head.py verify --root $S/repo --repo $D $D/rec.md
+GATE_RECORD <rec.md>:1 S900 FAIL REGISTRY               <- HEAD mutant: reads rev B's tree -> NOT judged
+exit=1
+=> the two tools DISAGREE on exactly the frozen sentence's phrase, and only the battery's single-commit
+   fixture hides the difference. The tool is right; the counting command cannot see it.

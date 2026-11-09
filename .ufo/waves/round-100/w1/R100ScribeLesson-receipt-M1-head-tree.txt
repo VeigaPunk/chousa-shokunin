@@ -1,0 +1,20 @@
+# R100ScribeLesson receipt 2 — the frozen battery cannot see a HEAD-tree capture set (semantic divergence)
+
+## (a) the mutant: capture_oids reads HEAD's tree instead of the record's rev's tree
+249:        p = subprocess.run(["git", "-C", repo, "ls-tree", "-z", "HEAD", "--", "corpus/captures/"], capture_output=True)
+
+## (b) the frozen battery passes the mutant unchanged
+$ python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work <scratch> --tool M1.py --no-oracles
+NEG=7/7 MARK=11/11 BOUND=3/3 NORM=2/2 POS=4/4 REV=11/11 REVPOS=3/3 PROD=6/6 HARM_SAME=27/27 BASE_REV_ADMITTED=8/11 ORACLES_REJECTED=0/0
+CHALLENGE_CONTROLS_R100=PASS
+exit=0
+
+## (c) but the two tools DISAGREE on a two-commit fixture (capture present at rev, deleted at HEAD)
+GATE_RECORD /fast/scratch/hyaku/chousa-r100/R100ScribeLesson/probe3.md:1 S900 FAIL CHALLENGE,REGISTRY,WORDS
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+--- M1 mutant (capture set at HEAD) ---
+GATE_RECORD /fast/scratch/hyaku/chousa-r100/R100ScribeLesson/probe3.md:1 S900 FAIL REGISTRY,WORDS
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1

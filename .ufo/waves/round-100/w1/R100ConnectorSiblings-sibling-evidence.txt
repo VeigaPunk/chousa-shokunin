@@ -1,0 +1,38 @@
+=== (b) null scan: does any sibling lane hold the 2025 quotation-inaccuracy update?
+$ for r in *-shokunin; do git -C $r grep -l -F 40696441 HEAD | wc -l; git -C $r grep -l -i -F "quotation inaccuracy" HEAD | wc -l; done
+audio-shokunin pmid=0 qinacc=0
+chousa-shokunin pmid=18 qinacc=12
+game-dev-2d-shokunin pmid=0 qinacc=0
+game-dev-3d-shokunin pmid=0 qinacc=0
+kagi-shokunin pmid=0 qinacc=0
+kaidoku-shokunin pmid=0 qinacc=0
+kake-shokunin pmid=0 qinacc=0
+kama-shokunin pmid=0 qinacc=0
+kasegi-shokunin pmid=0 qinacc=0
+kengaku-shokunin pmid=0 qinacc=0
+kotoba-shokunin pmid=0 qinacc=0
+kotodama-shokunin pmid=0 qinacc=0
+kumitate-shokunin pmid=0 qinacc=0
+lore-shokunin pmid=0 qinacc=0
+mado-shokunin pmid=0 qinacc=0
+mori-shokunin pmid=0 qinacc=0
+revenger-shokunin pmid=0 qinacc=0
+souji-shokunin pmid=0 qinacc=0
+tabi-shokunin pmid=0 qinacc=0
+tameshi-shokunin pmid=0 qinacc=0
+tsukuroi-shokunin pmid=0 qinacc=0
+
+=== the only sibling hit on "quotation-error" (tameshi) — the 2017 Mogull paper, rejected, NOT the 2025 update
+$ git -C tameshi-shokunin grep -n -i quotation-error HEAD
+HEAD:corpus/SOURCES.md:204:| S328 | Accuracy of cited "facts" in medical research articles: a review of study methodology and recalculation of quotation error rate (Mogull; PLoS One 2017; Europe PMC record) — https://www.ebi.ac.uk/europepmc/webservices/rest/
+
+=== kagi on-release clock rule (corpus/QUALITY.md, rev 61792976d8ffa11f37894c01d2ba7ec6e6b2a1ab)
+$ git -C kagi-shokunin show 61792976:corpus/QUALITY.md | grep -o "^| QM7[03] | [^|]*"
+| QM70 | A knowledge entry with a line that declares `recheck: on-release of <tool>` cites a registry row that is `on-release` with a bound release clock (feed or rendered-quote) in the same commit; a prose on-release with no clock reads as watched while nothing watches it. When the clock fires, the line's measurement is re-run on the observed release (or the line is scoped down) in the landing that records the fire. This overrides QM69's cadence sentence for an identity row such an entry cites (S072 records the 2.
+| QM73 | A landing that adds a registry row runs the release-clock gate on the landing tree (`bash plans/round-36-c3.sh`), and a row that declares `on-release` without a bound clock in the same commit is a defect even when the row's `teaches` cell does not say "current release": the cadence is a claim about how the item is watched. QM63 states the duty; this row records that a lane which skips it leaves a red ledger row for the next round. 
+
+=== tabi: an on-release recheck that names its watcher command (rev e8720bcfcdf97a4bd53fa91a0dab1e4616ae01d4)
+recheck: on-release — `node scripts/check-release-pins.mjs --rev <REV> --stable <current Stable>`; a population > 0 at a newer Stable means this note is due again
+
+=== kama: an on-release/clock recheck that names its watcher command (rev 0718b6abbda6afa6b0ce586f46739fbb92c7cf9c)
+recheck: run `python3 tools/pin-watch.py check --pins registry/engine-pins.tsv`; 30d

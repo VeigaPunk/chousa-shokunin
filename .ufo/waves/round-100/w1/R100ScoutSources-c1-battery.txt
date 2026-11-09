@@ -1,0 +1,28 @@
+# R100ScoutSources receipt 3 — C1 battery at the freeze commit F, and the base-tool before leg.
+# seat: R100ScoutSources   date: 2026-11-09   attacked tree: F=6d4e8487ee6a16823c24a8e085c6559b92b9fec8
+# (clone: git clone -q --shared <lane> $S/repo ; git -C $S/repo checkout -q 6d4e8487...)
+
+=== C1 candidate battery, at F ===
+$ python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work $S/w1
+NEG=7/7 MARK=11/11 BOUND=3/3 NORM=2/2 POS=4/4 REV=11/11 REVPOS=3/3 PROD=6/6 HARM_SAME=27/27 BASE_REV_ADMITTED=8/11 ORACLES_REJECTED=12/12
+CHALLENGE_CONTROLS_R100=PASS
+exit=0
+=> matches the frozen predicate line exactly (HARM_SAME n=27 >= 26; exit 0).
+
+=== C1 before leg: base tool 929c784c through the same battery, --no-oracles ===
+$ git show 929c784c63a1fd17961d21742101b2b109b7b8ff:tools/gate-records.py > $S/base-gate-records.py
+$ sha256sum $S/base-gate-records.py
+e92c4526d5fca2f12d9fd05838ce2af52fe761f8a507a5465b28fd196fb4b3c1   (== the sha256 in before/c1-base.txt)
+$ python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work $S/w-base --tool $S/base-gate-records.py --no-oracles
+NEG=7/7 MARK=11/11 BOUND=3/3 NORM=2/2 POS=4/4 REV=3/11 REVPOS=3/3 PROD=4/6 HARM_SAME=27/27 BASE_REV_ADMITTED=8/11 ORACLES_REJECTED=0/0
+CHALLENGE_CONTROLS_R100=FAIL
+exit=1
+=> matches before/c1-base.txt (REV=3/11, PROD=4/6, FAIL, exit 1).
+
+=== the challenge rule itself is unchanged (base vs candidate, content compared) ===
+CHALLENGE_MARKERS identical: True   (11 markers: cookies must be enabled / checking your browser /
+  recaptcha / client challenge / a required part of this site couldn't load / just a moment /
+  verify you are human / enable javascript and cookies to continue / attention required /
+  ddos protection / are you a robot)
+CHALLENGE_MAX_WORDS base=200 candidate=200
+is_challenge() code identical: True

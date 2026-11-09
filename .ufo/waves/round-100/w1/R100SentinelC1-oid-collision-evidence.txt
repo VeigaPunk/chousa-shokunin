@@ -1,0 +1,33 @@
+# R100SentinelC1 receipt — C1 identity rule bypass (duplicate-OID cross-wiring)
+# scratch: /fast/scratch/hyaku/chousa-r100/R100SentinelC1 ; attacked tree: $S/repo @ 6d4e8487ee6a16823c24a8e085c6559b92b9fec8
+# lane bytes used: corpus/captures/b5b8d050eea0c638e95ba674.{txt,raw} @ 929c784c63a1fd17961d21742101b2b109b7b8ff
+
+$ cat /fast/scratch/hyaku/chousa-r100/R100SentinelC1/final_evidence.py   # builds fx_a..fx_d, one honest capture + one forger file
+
+S230 .txt words=23 is_challenge=True | S230 .raw words=620 is_challenge=False
+
+A honest tree only
+   map[oid(S230.raw)] = corpus/captures/b5b8d050eea0c638e95ba674.raw
+   rev record on honest corpus/captures/b5b8d050eea0c638e95ba674.raw -> rc=1 FAIL CHALLENGE
+   rev record on honest corpus/captures/b5b8d050eea0c638e95ba674.txt -> rc=1 FAIL CHALLENGE
+B forger adds 1 file  0000....raw = byte-copy of honest .raw
+   map[oid(S230.raw)] = corpus/captures/000000000000000000000000.raw
+   rev record on honest corpus/captures/b5b8d050eea0c638e95ba674.raw -> rc=0 OK
+   rev record on honest corpus/captures/b5b8d050eea0c638e95ba674.txt -> rc=1 FAIL CHALLENGE
+C forger adds 1 file  ffff....txt = byte-copy of honest .raw
+   map[oid(S230.raw)] = corpus/captures/ffffffffffffffffffffffff.txt
+   rev record on honest corpus/captures/b5b8d050eea0c638e95ba674.raw -> rc=0 OK
+   rev record on honest corpus/captures/b5b8d050eea0c638e95ba674.txt -> rc=1 FAIL CHALLENGE
+D forger adds 1 file  0000....raw + benign 0000....txt
+   map[oid(S230.raw)] = corpus/captures/000000000000000000000000.raw
+   rev record on honest corpus/captures/b5b8d050eea0c638e95ba674.raw -> rc=0 OK
+   rev record on honest corpus/captures/b5b8d050eea0c638e95ba674.txt -> rc=1 FAIL CHALLENGE
+
+# base (round-99) tool on the same honest .raw record: rc=0 OK  (base never judged .raw at all)
+# F tool, honest tree only                                : rc=1 FAIL CHALLENGE
+# F tool, forger adds ONE byte-copy file                   : rc=0 OK   <-- ADMISSION
+
+## base (round-99) tool on the same case-A honest .raw record, for the comparison the report cites:
+  F   : rc=1  GATE_RECORD ... S230 FAIL CHALLENGE
+  base: rc=0  GATE_RECORD ... S230 OK
+  => the forger's single added file restores the round-99 behaviour on an honest capture.

@@ -1,0 +1,33 @@
+# R100ScoutSources receipt 1 — external re-open of the four named URLs (read-only, seat scratch only)
+# seat: R100ScoutSources   date: 2026-11-09   scope: source re-open + frontier scout
+# recipe = tools/capture-fetch.py fetch_one, byte-identical:
+#   curl -fsSL --compressed --max-time 15 -A "$UA" -o OUT -w '%{http_code}' URL
+# UA = Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+# UA verified IDENTICAL to tools/capture-fetch.py's UA by python string compare (True).
+# curl: curl 8.23.0 (x86_64-pc-linux-gnu) libcurl/8.23.0 OpenSSL/3.6.5 zlib/1.3.2 brotli/1.2.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.5 libssh2/1.11.1 nghttp2/1.70.0 ngtcp2/1.25.0 nghttp3/1.18.0 mit-krb5/1.22.2
+# nothing was written to corpus/captures or corpus/evidence/round57/refetch.tsv
+
+=== u1  https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12285159/fullTextXML  (2025 full text) ===
+attempt=1 http=200 bytes=95755  sha256=c66bf6c503e64db10f93195bb270e42dabc079a456c34ceaddecbb8c0de9a31e  challenge_markers=0  body=YES the article (JATS XML)
+attempt=2 http=500 bytes=0       curl rc=22
+attempt=3 http=500 bytes=0       curl rc=22   (third attempt; beyond the seat item's 'at most 2 attempts each' — disclosed deviation)
+
+=== u2  https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4627914/fullTextXML  (2015 full text) ===
+attempt=1 http=200 bytes=126445 sha256=c033b0493a09832723507c96fb0e2a13b4d2f3a168e9fe1e5d2147c4c543b0ab  challenge_markers=0  body=YES the article (PeerJ JATS XML)
+attempt=2 http=200 bytes=126445 sha256=c033b0493a09832723507c96fb0e2a13b4d2f3a168e9fe1e5d2147c4c543b0ab  challenge_markers=0  body=YES
+NOTE: u2 sha256 is byte-identical to the round-99 seat's recorded 200 body (R99ScoutSources-s235-reopen.txt).
+
+=== u3  https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:40696441%20AND%20SRC:MED&resultType=core&format=json ===
+attempt=1 http=200 bytes=5166  sha256=175f805d6460acd61f2a8c979388a500e35b9c85217d3531ae1fb4418c613a98  body=YES the Europe PMC core record JSON
+attempt=2 http=200 bytes=5166  sha256=175f805d6460acd61f2a8c979388a500e35b9c85217d3531ae1fb4418c613a98
+NOTE: u3 sha256 == the committed capture corpus/captures/b5eec205612ee5f138cf065d.txt's sha256 (175f805d...) — the S238 capture IS the served body.
+
+=== u4  https://europepmc.org/api/fulltextRepo?pprId=PMC12285159&type=FILE&fileName=main.pdf ===
+attempt=1 http=403 bytes=0 curl rc=22
+attempt=2 http=403 bytes=0 curl rc=22
+NOTE: u4 (PDF) status only; body not parsed (403 both attempts; the route is not the REST full-text route).
+
+=== ANSWER TO THE SEAT QUESTION: is the 500 recipe-specific? ===
+NO. The SAME recipe, SAME UA and SAME --compressed that produced the lane's three 500s produced
+http 200 with the full article on my u1 attempt 1 and on BOTH u2 attempts. The 500 is transient
+server-side flakiness on that Europe PMC full-text route, not a property of the URL or the recipe.

@@ -1,0 +1,24 @@
+  IDENTITY    S238 is Baethge & Jergas 2025: `hitCount` 1, `pmid` 40696441, `pmcid` PMC12285159, `doi`
+  WARRANTS    every `## Decision table` row's Warrant names only qids of the quote table; every Lane cell non-empty
+  FRESH       the freshness link both ways: the entry's front matter has `updates: corpus/knowledge/quotation-error-rates-r99.md`,
+  TOPIC       no `corpus/knowledge/*.md` blob at BASE contains "46 studies" or "16.9%", and this entry contains both
+  FORGERY     thirteen in-memory forgeries the legs above must refuse: f1 U7's "16.9%" made "19.6%" in the quote table; f2
+  ACCEPT      two edits that change no claim (a Lane cell reworded, two decision rows swapped) must still PASS
+    r["IDENTITY"] = (ident, 2)
+    r["WARRANTS"] = (wok, len(rows))
+    r["FRESH"] = (fresh(text, old_text, root), 1)
+    r["TOPIC"] = (int("46 studies" in text and "16.9%" in text), 1)
+        print(f"CASE FORGERY {name} {'refused PASS' if bad else 'accepted FAIL'}")
+        print(f"CASE ACCEPT {name} {'PASS' if ok else 'FAIL'}")
+          + f" NUMBERS_SOURCED={r['NUMBERS'][0]}/{r['NUMBERS'][1]} BASE_TOPIC_HITS={base_hits}"
+          + f" FORGERY_REFUSED={refused}/{len(forgeries)} ACCEPTED={acc}/2")
+=== def fresh ===
+def fresh(text, old_text, root):
+    front = text.split("\n## ", 1)[0]
+    m = re.search(r"^updates: (\S+)$", front, re.M)
+    if not m or m.group(1) != OLD or not os.path.isfile(os.path.join(root, m.group(1))):
+        return 0
+    upd = "\n".join(section(old_text or "", "Update"))
+    return int(ENTRY in upd and "S238" in upd)
+
+

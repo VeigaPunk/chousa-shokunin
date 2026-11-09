@@ -1,0 +1,37 @@
+$ git clone -q --shared <frozen clone> $S/mut && git -C $S/mut checkout -q 6d4e8487ee6a16823c24a8e085c6559b92b9fec8
+$ python3 - <<EOF  # replace one sentence in corpus/knowledge/quotation-error-rates-r99.md
+  old = "this entry's `recheck: on-release` fired."
+  new = "this entry's `recheck: on-release` has NOT fired; no new release exists."
+EOF
+$ cd $S/mut && python3 -B corpus/evidence/round100/entry-controls-r100.py --root .
+EXPECTED by C2 kill rule: FRESH=0/1, ENTRY_CONTROLS_R100=FAIL
+OBSERVED:
+CASE QUOTES 16/16 PASS
+CASE FIELD 16/16 PASS
+CASE IDENTITY 2/2 PASS
+CASE WARRANTS 8/8 PASS
+CASE NUMBERS 24/24 PASS
+CASE NEVER 8/8 PASS
+CASE FRESH 1/1 PASS
+CASE TOPIC 1/1 PASS
+CASE BASE entry=absent topic_hits=0 update_link=0 PASS
+CASE FORGERY f1 refused PASS
+CASE FORGERY f2 refused PASS
+CASE FORGERY f3 refused PASS
+CASE FORGERY f4 refused PASS
+CASE FORGERY f5 refused PASS
+CASE FORGERY f6 refused PASS
+CASE FORGERY f7 refused PASS
+CASE FORGERY f8 refused PASS
+CASE FORGERY f9 refused PASS
+CASE FORGERY f10 refused PASS
+CASE FORGERY f11 refused PASS
+CASE FORGERY f12 refused PASS
+CASE FORGERY f13 refused PASS
+CASE ACCEPT a1 PASS
+CASE ACCEPT a2 PASS
+QUOTES=16/16 FIELD=16/16 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=24/24 NEVER=8/8 FRESH=1/1 TOPIC=1/1 NUMBERS_SOURCED=24/24 BASE_TOPIC_HITS=0 BASE_ENTRY=absent BASE_UPDATE_LINK=0 FORGERY_REFUSED=13/13 ACCEPTED=2/2
+ENTRY_CONTROLS_R100=PASS
+exit=0
+--- the mutated line:
+119:Round 100 (2026-11-09): this entry's `recheck: on-release` has NOT fired; no new release exists. The authors' 2025 update (Baethge & Jergas,

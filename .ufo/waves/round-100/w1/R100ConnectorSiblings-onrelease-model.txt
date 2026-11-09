@@ -1,0 +1,22 @@
+=== chousa recheck vocabulary and the freshness model
+$ /usr/bin/grep -c "| on-release |" corpus/SOURCES.md ; /usr/bin/grep -c "^| S" corpus/SOURCES.md
+on-release rows=118 registry rows=238
+
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-rates-r99.md --root . --as-of 2026-11-09
+META entry=quotation-error-rates-r99.md source=present verified_at=dated recheck=scheduled due=on-release freshness=event verdict=clean
+METADATA_COMPLETE=1/1
+
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-update-r100.md --root . --as-of 2027-11-09
+META entry=quotation-error-update-r100.md source=present verified_at=dated recheck=scheduled due=on-release freshness=event verdict=clean
+METADATA_COMPLETE=1/1
+
+$ sed -n "3819,3821p" tools/research-gate.sh
+      elif [[ $recheck_first == on-release ]]; then
+        due_date=on-release; freshness=event
+      fi
+
+$ /usr/bin/grep -n "recheck:" corpus/knowledge/quotation-error-rates-r99.md corpus/knowledge/quotation-error-update-r100.md
+corpus/knowledge/quotation-error-rates-r99.md:5:recheck: on-release
+corpus/knowledge/quotation-error-rates-r99.md:119:Round 100 (2026-11-09): this entry's `recheck: on-release` fired. The authors' 2025 update (Baethge & Jergas,
+corpus/knowledge/quotation-error-update-r100.md:5:recheck: on-release
+corpus/knowledge/quotation-error-update-r100.md:12:2017 (S233: 14.5%). That entry's `recheck: on-release` names its own trigger: a newer synthesis by the same authors.

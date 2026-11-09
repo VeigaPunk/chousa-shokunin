@@ -1,0 +1,41 @@
+# R100ScoutSources receipt 4 — C1 independent probes of the four named limits, on the F tool.
+# seat: R100ScoutSources   date: 2026-11-09   tool: $S/repo/tools/gate-records.py at F=6d4e8487
+# every fixture: D=$(mktemp -d -p $S fx.XXXXXX) && git -C $D init -q ;
+#   asserted $(git -C $D rev-parse --show-toplevel) = $D before every commit; committed with
+#   -c user.name=fixture -c user.email=fixture@invalid ; removed afterwards
+
+=== (b) IDENTITY IS BYTE IDENTITY: one byte different -> not judged ===
+fixture: corpus/captures/aaaa…24hex….txt = challenge page; notes/onebyte.txt = the SAME page with one
+  byte changed ('before accessing' -> 'before  accessing', quote line untouched)
+$ python3 -B $S/repo/tools/gate-records.py verify --root $S/repo --repo $D $D/rec.md
+GATE_RECORD <rec.md>:1 S901 FAIL REGISTRY          <- no CHALLENGE: byte identity refused it
+exit=1   (REGISTRY only: S901 is a made-up sid, so the record still fails, but on REGISTRY, not CHALLENGE)
+=> named limit (b) holds: a one-byte-different blob is not judged CHALLENGE.
+
+=== (c) THE CAPTURE SET COMES FROM THE REV'S TREE, NOT THE WORKING TREE ===
+fixture: rev tree has notes/page.txt = challenge page (a NON-capture path); the WORKING TREE additionally
+  holds an UNCOMMITTED corpus/captures/aaaa…txt with the same bytes
+GATE_RECORD <rec.md>:1 S900 FAIL REGISTRY          <- no CHALLENGE
+exit=1   => named limit (c) holds: the uncommitted working-tree capture was not consulted.
+
+=== (d) A .raw ENTRY WITH NO SIBLING .txt AT THAT REV IS JUDGED BY ITS OWN BYTES ===
+fixture: corpus/captures/cccc…24hex….raw = the challenge page; no .txt sibling exists at that rev
+GATE_RECORD <rec.md>:4 S903 FAIL CHALLENGE,REGISTRY  <- judged by its own bytes
+exit=1   => named limit (d) holds.
+
+=== the identity rule catches a byte-identical copy at ANOTHER path ===
+fixture: corpus/captures/aaaa…txt = challenge page; notes/bytecopy.txt = byte-identical copy
+GATE_RECORD <rec.md>:1 S900 FAIL CHALLENGE,REGISTRY   (the capture path itself)
+GATE_RECORD <rec.md>:2 S901 FAIL CHALLENGE,REGISTRY   (the copy at another path)
+GATE_RECORD <rec.md>:3 S903 FAIL CHALLENGE,REGISTRY   (the .raw with no .txt sibling)
+exit=1   => the claim's headline promise (identity, not path spelling) holds.
+
+=== a path spelling git itself cannot resolve is refused as REV, not judged ===
+observed: 'corpus//captures/x.txt' (double slash, no leading ./) -> git rev-parse rc=1, cat-file rc=128;
+  './corpus//captures/x.txt' -> resolves to the same oid. So the './'-prefixed spellings the battery uses
+  (r2, r3, r4) are the ones git normalises; the bare double-slash form is a REV error, correctly not CHALLENGE.
+
+=== GIT_DIR does not redirect the capture set ===
+GIT_DIR=<foreign repo>/.git python3 -B ... verify --root $S/repo --repo $D $D/rec.md
+  -> the record's own rev:path stopped resolving (FAIL LINE,REGISTRY,REV): the tool's git calls follow -C repo
+     and the record's rev, not an inherited GIT_DIR.

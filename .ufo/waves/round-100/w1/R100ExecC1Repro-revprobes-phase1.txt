@@ -1,0 +1,96 @@
+### 01-exact
+# x
+
+GATE-RECORD S230 rev=3089f25f0c151273752cdc15cae743bb4e703270 path=corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-01-exact.md:3 S230 FAIL CHALLENGE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 02-dot
+# x
+
+GATE-RECORD S230 rev=3089f25f0c151273752cdc15cae743bb4e703270 path=./corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-02-dot.md:3 S230 FAIL CHALLENGE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 03-abbrev-rev
+# x
+
+GATE-RECORD S230 rev=3089f25 path=corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-03-abbrev-rev.md:3 S230 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 04-tag-rev
+# x
+
+GATE-RECORD S230 rev=s230tag path=corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-04-tag-rev.md:3 S230 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 05-rev-brace
+# x
+
+GATE-RECORD S230 rev=3089f25f0c151273752cdc15cae743bb4e703270^{commit} path=corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-05-rev-brace.md:3 S230 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 06-rev-tilde
+# x
+
+GATE-RECORD S230 rev=3089f25f0c151273752cdc15cae743bb4e703270~0 path=corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-06-rev-tilde.md:3 S230 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 07-head-rev
+# x
+
+GATE-RECORD S230 rev=HEAD path=corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-07-head-rev.md:3 S230 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 08-rev-dotdot
+# x
+
+GATE-RECORD S230 rev=3089f25f0c151273752cdc15cae743bb4e703270 path=./corpus/../corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-08-rev-dotdot.md:3 S230 FAIL CHALLENGE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 11-oldrev-copy
+# x
+
+GATE-RECORD S230 rev=00b4b6f318c8774dcf97f652a42fea24e1dd2a6b path=sub/moved.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-11-oldrev-copy.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+### 12-raw-at-rev2
+# x
+
+GATE-RECORD S230 rev=00b4b6f318c8774dcf97f652a42fea24e1dd2a6b path=corpus/captures/b5b8d050eea0c638e95ba674.raw line=1 words=3 quote=<!doctype html><html lang="en-US"
+GATE_RECORD ../rec-12-raw-at-rev2.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+### 13-crlf-samepath
+# x
+
+GATE-RECORD S230 rev=ee8aa9038b9e5a823a47bfe4f04eb0cf13815581 path=corpus/captures/b5b8d050eea0c638e95ba674.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-13-crlf-samepath.md:3 S230 FAIL CHALLENGE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit=1
+
+### 14-trailnl-copy
+# x
+
+GATE-RECORD S230 rev=834b5a291917e7a8f2ad6f887687d486ec17ea3f path=sub/tn.txt line=1 words=3 quote=Checking your browser
+GATE_RECORD ../rec-14-trailnl-copy.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+

@@ -1,0 +1,36 @@
+# R100SentinelC1 receipt — C1 bypass attempts: every case asked, with the verdict
+# fixtures under /fast/scratch/hyaku/chousa-r100/R100SentinelC1/fx* ; tool = $S/repo/tools/gate-records.py @ 6d4e8487
+
+## path-spelling bypasses (identity by OBJECT ID, so spelling cannot escape) — all correctly REFUSED
+  ./corpus/captures/<K>.txt                  -> FAIL CHALLENGE
+  ./corpus//captures/<K>.txt                 -> FAIL CHALLENGE
+  ./corpus/./captures/<K>.txt                -> FAIL CHALLENGE
+  ./notes/../corpus/captures/<K>.txt         -> FAIL CHALLENGE
+  ./corpus/captures/../captures/<K>.txt      -> FAIL CHALLENGE
+  byte-identical copy at corpus/evidence/copy-<K>.txt  -> FAIL CHALLENGE
+  byte-identical copy at notes/c-copy.txt                   -> FAIL CHALLENGE
+  (147 path spellings fuzzed for cat-file vs rev-parse divergence: 0 divergences)
+
+## rev-path forms git refuses (never a blob -> REV,LINE, refused)
+  path with a leading '/'   /corpus/captures/<K>.txt   -> not a blob
+  path with an embedded ':' corpus/captures/<K>.txt:x -> not a blob
+  path 'corpus/captures' (a TREE)                    -> not a blob
+  capture path that is a TREE (dir named <hex>.txt/) -> not a blob
+  capture path that is a GITLINK (submodule entry)   -> not a blob
+  capture path that is a SYMLINK                     -> cat-file -t = blob, but content is the link target
+  capture path holding a git-lfs pointer               -> blob, but content is a pointer, not a page
+
+## byte-variant copies of a challenge page (named limit (b): byte identity, so NOT judged)
+  BOM-prefixed copy at notes/bom-copy.txt   -> OK (admitted)
+  CRLF copy at notes/crlf-copy.txt          -> OK (admitted)
+  NBSP inside the marker at notes/nbsp-copy.txt -> OK (admitted)
+  ZWSP inside the marker at notes/zwsp-copy.txt -> OK (admitted)
+  => these are byte-different from the capture, so the identity rule cannot see them.
+     This is exactly named limit (b), stated as 'a rev blob that differs from every capture of that rev
+     by one byte is not judged, whatever its text'. NOT a finding against the claim.
+     (NBSP/CRLF normalize back to the marker; ZWSP does not - is_challenge splits on U+200B.)
+
+## the ONE uncovered admission — duplicate-OID cross-wiring (see the dedicated receipt)
+  Forger adds ONE file corpus/captures/<lowkey>.raw = byte-copy of an honest challenge .raw.
+  The OID->path map then binds that OID to the FORGER's path, so the honest capture's own sibling
+  .txt is never consulted, and the record on the honest challenge .raw is ADMITTED (rc=0 OK).

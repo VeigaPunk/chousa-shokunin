@@ -4434,3 +4434,50 @@ and one `## Search log` entry; `SKILL.md` gains one correction line after the ro
    routed defect 2); D1; the four gate-kind tools with no `--selftest`; the round-94 planned items; the round-74
    source-blind order oracle; the r82 clip range; QUALITY 173's successful-refused record form; the r80 backlog Gate
    ids; the tracked absolute symlink `R84ExecForge/forge/linkcap.txt`.
+
+## Round 100 verdict — the gate judges a rev record by the object git returns, and the held quotation-error rate is flagged where it is held (2026-11-09)
+
+Base `929c784c`; pre-freeze build P `96835234`; pre-freeze controls R `6f837487`; freeze F `6d4e8487` (carrier
+`7d2d3abe`); wave-forced re-freezes F2 `0a3da3da` (A1-A4, B1-B9: C1 wording; C2 entry, round-99 `## Update` and
+wording) and F3 `4ba51a26` (A5-A6: C1 wording, after `R100SentinelC1`). The C1 tool and battery and the C2 controls are
+byte-identical F..F3. C1 numbers from `corpus/evidence/round100/after-f2/c1-all.txt`, C2 from
+`corpus/evidence/round100/after-f2/c2-all.txt`. Two claims, two axes, no exploratory claim; C2 sourced on `S238`
+(opened this round). One v1 wave, 12 seats.
+
+| claim | axis | before | after | delta | verdict |
+|---|---|---|---|---|---|
+| C1 `C1-GATE-REVCAP-R100` | operability (lowest, historical 3/10) | base tool under the round-100 battery: `REV=3/11 PROD=4/6`, `CHALLENGE_CONTROLS_R100=FAIL`, exit 1 (`before/c1-base.txt`) | `NEG=7/7 MARK=11/11 BOUND=3/3 NORM=2/2 POS=4/4 REV=11/11 REVPOS=3/3 PROD=6/6 HARM_SAME=27/27 BASE_REV_ADMITTED=8/11 ORACLES_REJECTED=12/12`, `CHALLENGE_CONTROLS_R100=PASS`, exit 0 | the gate refuses 8 rev records the round-99 tool admitted (`./`-relative spellings, `.raw`, byte copies) and 2 more on the production path; every round-99 marker, bound and `norm` now shown live (27/28 round-99 tool mutants killed, `R100RevenPrior`); numeric score unchanged (historical 3/10 frozen by its own rule) | **verified on the A1-A6 sentence (author-measured; non-author closure pending). The frozen kill rule's literal text is met by `R100SentinelC1` F-1 (duplicate object id rebinds the sibling) and F-2 (`--repo` at a subdirectory); both narrowed as limits (i), (j) and routed** |
+| C2 `C2-ENTRY-UPDATE-R100` | freshness | entry absent (gate exit 2; `before/c2-base.txt`); pre-link control `FRESH=0/1`, FAIL (`before/c2-prelink.txt`) | `GATE_RECORDS files=1 records=17 ok=17 fail=0`, `METADATA_COMPLETE=1/1`, `rev_match=3/3 SEARCH_RERUN: CLEAN`, `ENTRY_CONTROLS_R100=PASS` with `NUMBERS_SOURCED=24/24 NEVER=8/8 FRESH=1/1 FORGERY_REFUSED=13/13 ACCEPTED=2/2`; round-99 entry unchanged under its own gate (`records=25 ok=25`, `ENTRY_CONTROLS_R99=PASS`) | the round-99 entry's `recheck: on-release` is answered: the 2025 update held through its abstract, and the 2015 reading flagged in place by `## Update` — the first `on-release` recheck answered in the lane (1/26, `R100RevenPrior`) | **verified at F2 on the amended entry and sentence (author-measured; rows 1, 2, 4, named limits and the Update repaired at F2, B1-B9, after `R100ReviewerC2`, `R100ExecC2Repro`, `R100ScoutSources`)** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | the gate's rev-form challenge check follows the object git resolves instead of the path's spelling: 8 of 11 fixture records and 2 production records the round-99 tool admitted are refused (C1), within named limits (b), (f)-(j) |
+| depth | unchanged | no depth claim |
+| coverage | unchanged | registry 235 → 238 rows (`S238` admitted; `S237`, `S239` rejected); `PROVINCE.md` untouched; the new entry is on ground round 99 opened |
+| freshness | **improved** | a held rate re-verified against its newer source and the stale reading flagged where it is held (C2); before this round no `on-release` recheck in the lane had been answered |
+| calibration | unchanged | both sentences narrowed to their instruments before filing (A1-A6, B1-B9); QUALITY 231 added; no calibration claim |
+| adjacency | unchanged | kagi QM70/QM73 (`on-release` watchers) routed by `R100ConnectorSiblings`, not absorbed |
+
+No axis harmed: `gate-records verify` prints byte-identical output and exit codes to the round-99 tool on every
+committed knowledge/lesson file carrying GATE-RECORD lines (`HARM_SAME=27/27`); the round-99 entry's own gate output
+and controls are unchanged; the registry diff is three appended rows, one `used-by` change (S236) and one
+`## Search log` entry; `SKILL.md` gains one correction line after the round-99 one.
+
+## Planned — round 101 (intent, not a predicate)
+
+1. **operability (lowest)** — close C1's routed limits: bind `oid -> [paths]` and read the sibling of the capture path
+   the record names, or refuse when any sharing entry's sibling is a challenge page (`R100SentinelC1` F-1, limit (i));
+   anchor `ls-tree` to the repository root (`--full-name`, `:(top)corpus/captures/`) and fail loudly on an empty capture
+   set (F-2, limit (j)); a two-commit fixture with cross-rev legs and a two-rev single-file record (`R100CriticClaims`
+   F-1, `R100MutantsC1` `n-cache-repoonly`, limit (f)); the battery's own PASS checks the REV verdict code, both HARM
+   channels and missing oracle sites (`R100MutantsC1` b1, b4-b7, b9).
+2. **freshness/depth** — the 2025 update's and the 2015 review's full texts answered 200 to a seat's re-open with the
+   lane's recipe (`R100ScoutSources` F-1): open them through a lane GET under a new approval row and hold the 46 = 18 +
+   28 composition, the re-calculated 17.0% (n = 28), the body's major/minor definitions and the per-rate study counts
+   (36 for major, 23 for the impact-factor correlation); FRESH should require one checkable warrant numeral in the
+   `## Update` (`R100CriticClaims` F-6) and an `on-release` should name its watcher (`R100ConnectorSiblings` R1).
+3. carried debt: Never-cell sense and number-sense legs (`R100CriticClaims` F-4/F-5); the fleet tier rule for
+   index-record abstracts; `R98MutantsC1` G01-G03/D05 and R32; D1; the four gate-kind tools with no `--selftest`; the
+   round-94 planned items; the round-74 source-blind order oracle; the r82 clip range; QUALITY 173's successful-refused
+   record form; the r80 backlog Gate ids; the tracked absolute symlink `R84ExecForge/forge/linkcap.txt`; a coverage
+   check that an opened row carries a GATE-RECORD (`R100ScribeLesson` F-1).

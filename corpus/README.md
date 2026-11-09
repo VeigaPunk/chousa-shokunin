@@ -1488,3 +1488,16 @@ successful-refused record form remain carried.
 - `lessons/round-99.md` — S233 admitted (A, Mogull 2017 publisher full text), S236 admitted (B, Jergas & Baethge 2015's abstract through Europe PMC's record); S232 (PeerJ, 403), S234 (RIPR 2025 update, an http-200 "Client Challenge" page), S235 (Europe PMC full text, 500) rejected.
 - Frontier advanced: README Round98's "`tools/gate-records.py` admits a quote from an http-200 challenge page" is closed for the 11 marker wordings (QUALITY 230); claim-vs-source verification gains its empirical side (how often citations fail).
 - Left open: the 2025 update's publisher page is a challenge page here, its Europe PMC record (pmid 40696441) is reachable but not opened by the lane; Jergas & Baethge 2015's body (403/500); the lane has not measured its own citation-support rate; challenge pages in other wordings pass the gate (C1 named limit (a)).
+
+## Round100 coverage and frontier (2026-11-09)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/quotation-error-update-r100.md` | the 2025 update of the quotation-error meta-analysis read through its own abstract: 16.9% of quotations incorrect and 8.0% major over 46 studies analyzing 32,000 quotations/references, no significant improvement over recent years by meta-regression, the impact-factor association as printed, the method it states; how its rate sits beside the 2015 reading the lane held (different study sets, no computed difference) | S238 (B), S236 (B); S237, S239 rejected (500) |
+| `knowledge/quotation-error-rates-r99.md` `## Update` | the round-99 entry's `recheck: on-release` answered: its first row is the 2015 reading, the current pooled rate is in the round-100 entry | S238 |
+| `../tools/gate-records.py` CHALLENGE (rev form) | Round-100 gate rule: a rev record is judged when the blob git resolves for `rev:path` has the object id of a `corpus/captures/<key>.txt` or `.raw` entry (`.raw` by its sibling `.txt`), whatever the path's spelling; battery `corpus/evidence/round100/challenge-controls-r100.py` | `.ufo/waves/round-100/claims.md`; QUALITY 231 |
+
+- `lessons/round-100.md` — S238 admitted (B, the 2025 update's abstract through Europe PMC's record); S237 (PMC4627914 full text) and S239 (PMC12285159 full text) rejected, http 500 ×3 each.
+- Frontier advanced: README Round99's "the 2025 update's … Europe PMC record (pmid 40696441) is reachable but not opened by the lane" is closed (S238); the round-99 C1 limit (d) "the rev guard is keyed to the exact path spelling" is closed for every git-resolvable spelling and for byte copies (QUALITY 231).
+- Left open: both review bodies (500 to the lane's recipe); the lane's own citation-support rate; a rev blob that differs from a capture by one byte; which revision's tree the battery shows the gate reading (one-commit fixture, round-100 C1 limit (f)); the `## Update` flag's content is checked by review only (C2 limit (e)).
+

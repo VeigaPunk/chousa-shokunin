@@ -1,0 +1,31 @@
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/controls-r10-20261016T055530Z-controls.log:41:## command: git ls-tree --name-only HEAD corpus/fixtures/archives-r9/
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round39/claims.md:198:- **R3 — knowledge count correction.** The r39 report's `29 → 31` is wrong; the historical `corpus/knowledge/*.md` count was `50 → 52` at the r39 before/tip commits `8c7c867b66e103712ae33e1d076786f50dd3239e` and `6ac1007e6a5d699d0742801026554fac1d900b5d`. Re-derive with `for r in 8c7c867b66e103712ae33e1d076786f50dd3239e 6ac1007e6a5d699d0742801026554fac1d900b5d; do printf '%s ' \"$r\"; git ls-tree -r --name-only \"$r\" -- corpus/knowledge | awk '/\\.md$/ {n++} END {print n+0}'; done`.
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round40/c2-count.py:30:        ["git", "-C", str(ROOT), "ls-tree", "-r", "--name-only", revision,
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round49/c1-count.py:368:        names = subprocess.run(["git", "-C", str(LANE), "ls-tree", "-r", "-z", "--name-only", BASE_REV],
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round50/wave-complete-check.py:72:        tracked = set(git(["-C", lane, "ls-tree", "-r", "--name-only", commit, "--", rel]).split("\n"))
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round52/build-spans.py:81:        part = next((posixpath.normpath(r.get("Target", "").lstrip("/")) for r in rels.iter(_RELS)
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round53/build-spans.py:82:        part = next((posixpath.normpath(r.get("Target", "").lstrip("/")) for r in rels.iter(_RELS)
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round54/build-spans.py:82:        part = next((posixpath.normpath(r.get("Target", "").lstrip("/")) for r in rels.iter(_RELS)
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round56/battery/oracle-m8-unpinned.py:120:            target = posixpath.normpath(urllib.parse.unquote(rel.get("Target", "")).lstrip("/"))
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round57/c2-count.py:87:    names = git(root, "ls-tree", "-r", "--name-only", SET_REV, "corpus/evidence").decode().split("\n")
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round62/digest-prefix-check.py:28:ls = subprocess.run(G + ["ls-tree", "-r", "-z", rev], capture_output=True, check=True).stdout.split(b"\0")
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round66/captures/git-scm-page-2026-10-31.html:1204:      <a href="/docs/git-ls-tree">
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round66/captures/git-scm-page-2026-10-31.html:1207:        ls-tree
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round67/captures/git-scm-hash-object-page-2026-10-31.html:1198:      <a href="/docs/git-ls-tree">
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round67/captures/git-scm-hash-object-page-2026-10-31.html:1201:        ls-tree
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round76/forgers/forge-size-map.py:2:"""Forger: size map — reads only `git ls-tree -l` byte sizes, never a blob.
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round76/forgers/forge-size-map.py:24:    for line in git(lane, "ls-tree", "-l", rev, "--", *PATHS).splitlines():
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round76/loader-matrix-v3.py:18:  a tree-hash memo and an `ls-tree -l` size map each scored 12/12.)
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round76/matrix-battery-v3.py:20:  FORGER    size-map            reads `ls-tree -l` sizes only (metadata size class)
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round78/selfcheck.py:56:    cmd = (["git", "-C", str(lane), "ls-tree", "-r", "--name-only", rev] if rev
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round79/selfcheck-v2.py:72:    cmd = ["git", "-C", str(lane), "ls-tree", "-r", "--name-only", rev] if rev \
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round80/gate-grounding-check.py:89:    p = git("ls-tree", "-r", "--name-only", rev, "--", "corpus/lessons")
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round80/gate-grounding-check.py:156:    lp = git("ls-tree", "-r", "--name-only", rev, "--", "corpus/lessons")
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round99/before/c2-base.txt:8:$ for p in $(git ls-tree --name-only 47ed34fa corpus/knowledge/); do git show 47ed34fa:$p | grep -il "quotation error"; done | wc -l
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round99/entry-controls-r99.py:5:`405a0054e1f6dbd1854a3618` (S236) and `4b70901ad80c513f0c2f750c` (S233)) plus `git ls-tree`/`git show` at BASE for the
+929c784c63a1fd17961d21742101b2b109b7b8ff:corpus/evidence/round99/entry-controls-r99.py:130:    ls = subprocess.run(["git", "-C", root, "ls-tree", "--name-only", BASE, "corpus/knowledge/"], capture_output=True,
+929c784c63a1fd17961d21742101b2b109b7b8ff:tools/capture-text.py:120:            target = posixpath.normpath(urllib.parse.unquote(rel.get("Target", "")).lstrip("/"))
+929c784c63a1fd17961d21742101b2b109b7b8ff:tools/digest-in-tree.py:79:    raw = run_git(["ls-tree", "-r", "-z", rev], lane)
+929c784c63a1fd17961d21742101b2b109b7b8ff:tools/search-rerun.py:89:`git ls-tree`/`git cat-file` run with every caller `GIT_*` variable removed, replace refs off and lazy fetch off —
+929c784c63a1fd17961d21742101b2b109b7b8ff:tools/search-rerun.py:276:        rc, out = git(root, "ls-tree", "-r", "-z", "--full-tree", rev)
+929c784c63a1fd17961d21742101b2b109b7b8ff:tools/search-rerun.py:278:            raise Setup("REV", f"git ls-tree failed for {rev}")

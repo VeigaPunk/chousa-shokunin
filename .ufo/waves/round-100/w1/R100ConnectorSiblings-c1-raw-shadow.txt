@@ -1,0 +1,12 @@
+Fixture: mktemp -d -p <scratch> fx.XXXXXX ; git -C "$D" init -q ; assert git -C "$D" rev-parse --show-toplevel == "$D"
+Commits made with -c user.name=fixture -c user.email=fixture@invalid
+Driver: shadow_probe.py (scratch), tool = $S/repo/tools/gate-records.py at F, invoked as
+  python3 -B tools/gate-records.py verify --root <frozen clone> --repo $D <record file>
+CASE A: corpus/captures/<k>.raw = "Just a moment while we verify your browser." (challenge), sibling <k>.txt = benign page
+        record cites the .raw path, line=1, words=3 quote="Just a moment"
+CASE B: .raw benign, .txt = the challenge page, record cites the .raw path
+CASE C: notes/challenge-copy.txt carries the same challenge bytes as a capture committed in CASE B (identity, not path)
+CASE A raw=challenge txt=benign -> (0, 'GATE_RECORD /fast/scratch/hyaku/chousa-r100/R100ConnectorSiblings/gate-aaaaaaaaaaaaaaaaaaaaaaaa_raw.md:1 S230 OK\nGATE_RECORDS files=1 records=1 ok=1 fail=0')
+CASE B raw=benign txt=challenge -> (1, 'GATE_RECORD /fast/scratch/hyaku/chousa-r100/R100ConnectorSiblings/gate-aaaaaaaaaaaaaaaaaaaaaaaa_raw.md:1 S230 FAIL CHALLENGE\nGATE_RECORDS files=1 records=1 ok=0 fail=1')
+CASE C non-capture challenge copy -> (1, 'GATE_RECORD /fast/scratch/hyaku/chousa-r100/R100ConnectorSiblings/gate-challenge-copy_txt.md:1 S230 FAIL CHALLENGE\nGATE_RECORDS files=1 records=1 ok=0 fail=1')
+RESULT A exit=0; B exit=1; C exit=1

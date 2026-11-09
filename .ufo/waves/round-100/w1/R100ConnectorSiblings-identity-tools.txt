@@ -1,0 +1,95 @@
+=== (a) cited-file resolution by content identity, not path spelling — sibling tools
+
+--- tameshi tools/quoted-line-exists.py (rev baa63c452713c21762c21f092eea0a2e40930468), docstring:
+$ git -C tameshi-shokunin show baa63c45:tools/quoted-line-exists.py | sed -n "22,48p"
+  with `.ufo/` or `tools/` (full paths, `git cat-file -e`-style resolution
+  against the ls-tree at REV: a listing hit is a blob, a directory prefix
+  hit is a tree); or bare basenames (no slash, plausible file suffix) that
+  resolve UNIQUELY among `.ufo/evidence/`+`tools/` paths in the tree at REV
+  (0 or 2+ matches = skipped-ambiguous, counted); directory cites contribute
+  every blob under them at REV (a record that names its receipts directory
+  has cited all of them).
+* verdict quotes — backtick spans, length >= 12, whose first whitespace-
+  token (lead = token up to the first '=' with trailing ':;,;' stripped)
+  matches ^[A-Za-z][A-Za-z0-9_\-]*$ and is not a command name (git/python/
+  bash/grep/wc/ls/sed/awk/node/cat/sha256sum/diff/comm/sort/head/tail/curl/
+  jq/echo/find/xargs/setsid/env/time), AND that are counter-shaped: they
+  contain '=' anywhere, OR they contain ': ' with an ALL-UPPERCASE lead
+  token (the lane's verdict-line shapes: `TOKEN: value` and `field=...`).
+  Prose field descriptions (lowercase `field: value` spans, e.g. JSON key
+  shorthand) and quoted stderr fragments are not counter lines and are not
+  checked. Spans containing any of …<>|$ (ellipsis/abbreviation/placeholder
+  shapes) are not byte-checkable — counted as skipped-shape.
+* backing — quote bytes must appear as a substring of some cited receipt's
+  committed bytes at REV (first backing receipt reported, paths sorted),
+  where each cited receipt is scanned with its MISS-RECORD LINES REMOVED
+  (round 69 — the self-referential-backing exclusion, `corpus/lessons/
+  round-67.md` mistake 4's named successor): a line beginning
+  `QUOTE MISSING receipt=` is this checker's own record of a missing quote
+  (it prints the missing span bytes), so a receipt that quotes a verdict
+  line there records a miss — it does not back the figure. Without the
+  exclusion the backing relation is monotone in cited bytes: landing a
+
+--- tsukuroi tools/check-knowledge-refs-r68.py (rev a5fc44a7e3cea43a1fc8edbd8e50ab4f1a0c4f8f): registry + notes read at the revision
+$ git -C tsukuroi-shokunin show a5fc44a7:tools/check-knowledge-refs-r68.py | sed -n "186,231p"
+def source_line(text):
+    """`(line_number, value)` of the LAST column-0 `source:` line outside fences."""
+    fence, hits = None, []
+    for number, raw in enumerate(text.split("\n"), 1):
+        line = raw[:-1] if raw.endswith("\r") else raw
+        marker = FENCE.match(line)
+        if marker:
+            run = marker.group(1)
+            if fence is None:
+                fence = run
+            elif run[0] == fence[0] and len(run) >= len(fence) \
+                    and not line.strip()[len(run):].strip():
+                fence = None  # a closing fence carries no info string
+            continue
+        if fence is not None:
+            continue
+        if line.startswith("source:"):
+            hits.append((number, line[len("source:"):].strip()))
+    return hits[-1] if hits else None
+
+
+def evaluate(files, ids):
+    findings, notes = [], []
+    for path, text in files:
+        hit = source_line(text)
+        if hit is None:
+            notes.append(Note(path, None, [], []))
+            continue
+        number, value = hit
+        refs = sorted(set(ID.findall(value)))
+
+--- kagi corpus/knowledge/claim-instrument-carrier-binding.md (rev 967afd4912aebfe2edce4414162bbd1f26b37c04) §1
+$ git -C kagi-shokunin show 967afd49:corpus/knowledge/claim-instrument-carrier-binding.md | sed -n "17,28p;57,62p"
+### 1. The binding rule: one path, three anchors, digest equality
+
+A registry row binds a carrier by **path equality plus digest equality**,
+never by filename. Three surfaces must resolve to **one** path *P*, and the
+sha256 of the bytes at *P* must equal the pin the row carries:
+
+1. the **registry** anchor cell — the capture path the row cites;
+2. the **fetch ledger** — `corpus/source-fetches.tsv`, column 16 naming
+   that same path, with column 10 equal to the pin and column 11 equal to
+   the byte count;
+3. the **instrument** that reads the carrier — `corpus/volatile-shape.py`'s
+   `DEFAULT_CAPTURE`.
+### 2. The filename is a handle, not an identity — and the class is a population
+
+Round 64's capture directory names its files `S145…S163`. Those names are
+the *fetch handles* of that round's own seat, not registry ids; the
+round-64 capture notes say so in their own words: "**Capture handle ≠
+
+--- mado tools/mado-receipt-citecheck.py (rev: see below) header: path citations resolved at --rev, MISSING named
+rev 5f9ce459803dc17aceb16a6f8507006b85737c35 Tue Nov 3 21:46:53 2026 -0300
+are excluded except after whitespace), with trailing punctuation .,;:)]}"'` trimmed.
+Anything else is not a citation and is never reported.
+
+Resolve: one `git -C <repo> ls-tree -r --name-only <rev>` child per run; every
+extracted path is checked against the resulting name set. MISSING paths are named,
+never silently skipped. Files over the 4 MiB read cap are skipped and counted.
+
+Scope is caller-named paths only; the tool never walks history and is never run over

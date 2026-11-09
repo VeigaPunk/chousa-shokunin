@@ -2949,3 +2949,35 @@ reviewer 2, critic 1, sentinel 1, scout 1, revenger 1, connector 1, scribe 1); l
   capture is missing (`after-f2/c1-separability.txt` control); Never-cell and number-sense legs for entry controls;
   the fleet tier rule for index-record abstracts.
 - Census: start exit 0, end exit 0 (rows 230 → 235). QUALITY 230 added; mistakes mined: 4 (`corpus/lessons/round-99.md`).
+
+## Round 100 — 2026-11-09
+
+Lane `chousa`, round 100 (attempt 1, L1 `ChousaR100`). Base `929c784c`; P `96835234` (pre-freeze build); R `6f837487`
+(pre-freeze controls); F `6d4e8487`; carrier `7d2d3abe`; F2 `0a3da3da` (A1-A4, B1-B9); F3 `4ba51a26` (A5-A6). No predicate,
+counter code, kill-rule text or target changed. Claims `.ufo/waves/round-100/claims.md` (judged at the A1-A6 / B1-B9
+sentences). One v1 wave, 12 seats (executor 2, mutation-tester 2, reviewer 2, critic 1, sentinel 1, scout 1, revenger
+1, connector 1, scribe 1); 0 dead; ledger `.ufo/waves/round-100/claim-falsification.tsv`.
+
+- Motivating evidence C1: round-99 spot-check routed defect 2 and SCORECARD planned item 1 — the rev-form CHALLENGE
+  guard was keyed to the path's spelling (`R99SentinelC1` F-1). After: identity by object id (`rev_capture_text`,
+  `capture_oids`); battery `REV=11/11 PROD=6/6 … ORACLES_REJECTED=12/12`, PASS; base tool `REV=3/11 PROD=4/6`, FAIL
+  (`corpus/evidence/round100/after-f2/c1-all.txt`, `before/c1-base.txt`). The battery's SETUP path replaces the
+  round-99 crash (`before/c1-setup.txt`).
+- Motivating evidence C2 (re-verification result, freshness): the round-99 entry's `recheck: on-release` — the
+  authors' 2025 update — opened through Europe PMC's core record (S238, http 200); full texts S237/S239 answered 500 to
+  three lane GETs each. After: `corpus/knowledge/quotation-error-update-r100.md` (`records=17 ok=17`,
+  `ENTRY_CONTROLS_R100=PASS`) and the round-99 entry's `## Update`; pre-link control FRESH=0/1 FAIL
+  (`after-f2/c2-all.txt`, `before/c2-prelink.txt`).
+- Corrections (claims.md `## Amendments`): A1 the one-commit fixture cannot show which rev's tree is read (`R100CriticClaims`
+  F-1, `R100ExecC1Repro`, `R100MutantsC1`, `R100ScoutSources` F-3); A2 `.raw` sibling vs kill-rule reading
+  (`R100ConnectorSiblings` F1); A3 battery PASS weaker than the predicate (`R100MutantsC1`); A4 q3 covers the non-capture
+  quadrant; A5 duplicate object id rebinds the sibling and A6 `--repo` at a subdirectory empties the capture set
+  (`R100SentinelC1` F-1/F-2; the frozen kill rule's literal text is met — reported, not hidden); B1-B2 row 2/4 and GET
+  count (`R100ReviewerC2`); B3 thin spaces (`R100ExecC2Repro`); B4-B5 FRESH presence-only and vacuous Never numerals
+  (`R100ConnectorSiblings` F2, `R100CriticClaims` F-4/F-6); B6-B9 the update's article body as a seat read it (46 = 18 new
+  + 28; 17.0% re-calculated; major/minor defined; 36 and 23 study bases) (`R100ScoutSources` F-2), recorded as not held.
+- Registry anchors for S237/S239 first cited shell-clock times; rewritten from `refetch.tsv`
+  (`after-f2/anchor-times.txt`: 2/6 → 6/6).
+- Routed to round 101: the A5/A6 tool fixes, the two-commit fixture, the battery's own PASS, a lane GET of both full
+  texts, FRESH with a warrant numeral, `on-release` watchers.
+- Census: start exit 0, end exit 0 (rows 235 → 238). QUALITY 231 added; mistakes mined: 5 (`corpus/lessons/round-100.md`).

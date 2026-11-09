@@ -1,0 +1,27 @@
+# R100SentinelC1 receipt — C1 performance & robustness (base 929c784c vs F 6d4e8487)
+# clone: /fast/scratch/hyaku/chousa-r100/R100SentinelC1/repo
+
+## (2) timing: 'verify' over EVERY lane GATE-RECORD file (27 files, 207 records)
+$ FILES=$(/usr/bin/grep -rl --include='*.md' -E '^\s*GATE-RECORD\s' corpus/knowledge corpus/lessons | sort)
+  base tool: real 0.20 s / 0.20 s / 0.21 s   (3 runs; exit 1 both tools: 1 lane record already FAILs, identically)
+  F tool   : real 0.22 s / 0.22 s / 0.22 s
+  stdout byte-identical base vs F (diff empty) => no lane verdict moved. F adds ~10% wall time.
+
+## per-rev-record subprocess cost (60 rev records, one file, strace -f -e trace=execve)
+  base: 180 cat-file,   1 rev-parse,  0 ls-tree
+  F   : 180 cat-file,  61 rev-parse,  1 ls-tree
+  => F adds exactly ONE rev-parse per rev record (rev_capture_text) and ONE ls-tree per (repo,rev).
+     capture_oids() caches by (repo,rev): 191 entries at 6d4e8487, first call 0.001 s, second 0.0000 s.
+     => the claim's 'capture_oids runs git ls-tree once per (repo, rev)' holds.
+
+## (2) --repo robustness
+  --repo <non-git dir>     -> rc=2  GATE_RECORDS_ERROR not a git repo: '.../notgit'   (round-85 repair intact)
+  --repo <repo with no corpus/captures> -> rc=0, record OK (capture set empty; no CHALLENGE possible)
+  --repo <repo>/corpus (a SUBDIRECTORY) -> rc=0, record OK  <-- FINDING (see R100SentinelC1-repo-subdir-evidence.txt)
+  --repo <repo>/.git -> rc=1 FAIL CHALLENGE (pathspec still resolves: .git's prefix is the worktree root)
+
+## (3) strace -f -e trace=file,network,process over the whole battery
+  sockets/connects: 0
+  writes: 2662 under --work (the 13 fixture git repos + labs), 1880 to /dev/null, 0 outside --work, 0 under /home/vgpnk.
+  The battery creates and commits 13 fixture repos (1 candidate + 12 oracle) under --work,
+  and mutates only those. It reads the lane but never writes to it.
