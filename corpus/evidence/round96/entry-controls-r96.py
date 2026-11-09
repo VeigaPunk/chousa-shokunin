@@ -39,7 +39,7 @@ import sys
 
 BASE = "bbf64970b6c73ca64bcc5f6de2f33b0550459813"
 ENTRY = "corpus/knowledge/search-peer-review-dedup-r96.md"
-N_RECORDS = 31  # 30 admitted quotes + 1 unreachable-route reject (S223, CADTH E&E, http 403)
+N_RECORDS = 33  # 32 admitted quotes + 1 unreachable-route reject (S223, CADTH E&E, http 403); Amendment B1/B2 (plans/round-96.md): 31 -> 33, L31 and L32 added after R96ReviewerC2 rows 3 and 5, R96ExecWrap F3
 N_SEARCHES = 8
 STOP = {"about", "after", "their", "there", "these", "those", "which", "where", "while", "would", "should", "other",
         "search", "searches", "every", "never"}

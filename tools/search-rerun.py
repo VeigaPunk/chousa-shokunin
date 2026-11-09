@@ -45,12 +45,13 @@ Usage:
     python3 tools/search-rerun.py verify RECORD [--root LANE] [--strict]
     python3 tools/search-rerun.py --selftest
 
-`--selftest` (round 96) runs in-memory cases against expectations fixed in the tool — 14 parse cases (13 setup
-refusals and the `\\|` alternation), 8 matching cases (line rule, dotfile rule, segment rule, per-line match, case,
-digest form, static directory, caller `GIT_*` scrub) and 10 judgement cases scored by the same `evaluate` function
-`verify` runs — and prints `SELFTEST <case> ok|FAIL`, then `SEARCH_RERUN_SELFTEST: PASS|FAIL cases=<k>/<n>`; exit 0
-PASS, 1 FAIL. It reads no file, runs no git and opens no socket; the git and disk readers are exercised by the
-round-95 battery, not by the selftest.
+`--selftest` (round 96) runs in-memory cases against expectations fixed in the tool — 14 parse cases (12 setup
+refusals, one well-formed record and the `\\|` alternation), 8 matching cases (line rule, dotfile rule, segment
+rule, per-line match, case, digest form, static directory, caller `GIT_*` scrub) and 10 judgement cases that call
+`evaluate`, the function `verify` also calls — and prints `SELFTEST <case> ok|FAIL`, then
+`SEARCH_RERUN_SELFTEST: PASS|FAIL cases=<k>/<n>`; exit 0 PASS, 1 FAIL. It is written to read no file, run no git
+and open no socket (observed by round-96 seats, not enforced by a battery leg). It does not exercise the git and
+disk readers, nor whether `verify` uses `evaluate`'s verdict; the round-95 battery does both through the CLI.
 
 Output, one line per search, then a summary and a verdict:
     SEARCH_RERUN <id> rev=<MATCH|DRIFT> tree=<SAME|CHANGED> recorded=<n> at_rev=<n> at_tree=<n> [codes]

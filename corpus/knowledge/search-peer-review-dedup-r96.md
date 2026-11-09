@@ -20,9 +20,15 @@ a search into other databases (Q8, 0 hits). `重複` (Q7) occurs in three Japane
 reporting standard (S098, S107, S112). The column marked *lane* is this lane's reading; it is not what PRISMA-S
 or PRESS says.
 
-Text forms: both captures are `pdftotext -layout` of two-column pages, so every quote below is located within one
-column line. Consecutive fragments (L4-L6, L7-L8, L9-L10, L11-L13, L14-L16, L17-L18, L19-L23, L24-L25,
-L26-L29) are read as one sentence from the text form's line order, not located as one string.
+Text forms: both captures are `pdftotext -layout` of two-column pages, so every quote below is a substring of
+one line of its capture (30/30 measured by `R96ConnectorSiblings`; `tools/gate-records.py` itself matches the
+normalized whole text and does not check this). Fragment groups (L4-L6, L7-L8, L9-L10, L11-L13, L14-L16, L17-L18,
+L19-L23, L31 with L24-L25, L26-L29, L32 with L30) are read as one sentence from the reading-order text form
+(`pdftotext` without `-layout`; `.ufo/waves/round-96/w1/R96ExecC2Repro-d-pdftotext-nolayout.txt`,
+`R96ExecWrap-fragment-adjacency.txt`), not located as one string. In the layout form most groups sit on
+consecutive lines of one column; L17-L18 skip one line, and L24-L25 do not: L24 ends the right column of page 98
+and L25 opens the left column of page 99, with the running header between them (`R96ExecWrap` F2,
+`R96ConnectorSiblings` F3).
 
 ## Located quotes
 
@@ -58,16 +64,18 @@ L26-L29) are read as one sentence from the text form's line order, not located a
 | L28 | S223 | "that translations be peer reviewed at the discretion of the" |
 | L29 | S223 | "search developer." |
 | L30 | S223 | "that peer review checklists were effective at improving search" |
+| L31 | S223 | "Survey respondents and forum participants recommended" |
+| L32 | S223 | "Results: Several studies showed" |
 
 ## Decision table
 
 | Situation | Do | Never | Warrant | Lane |
 |---|---|---|---|---|
-| Reporting whether a search strategy was peer reviewed | describe any search peer review process, and document the review of this search specifically | let a protocol's general review stand in for the review of the search strategy | L1, L7, L8 (S224, item 14) | a chousa search record says which seat or person reviewed the expression before it ran, or that nobody did |
+| Reporting whether a search strategy was peer reviewed | describe any search peer review process, and document the review of this search specifically | let a protocol's general review stand in for the review of the search strategy | L1, L7, L8 (S224, item 14) | the record's 8-column `## Searches` table has no reviewer field (`tools/search-rerun.py` refuses any other header), so a chousa record names the reviewer, or says nobody reviewed, in its `## As run` prose; this entry's own searches were not peer reviewed before they ran |
 | Choosing who reviews a strategy | strongly consider having the search strategy peer reviewed by an experienced searcher, information specialist or librarian | present peer review as a PRISMA-S requirement: the item asks to describe it, and the explanation says "should strongly consider" | L4, L5, L6 (S224, ITEM 14) | in this lane the reviewer is a seat that did not write the expression (a reviewer or critic item of the round's wave) |
-| Timing a peer review | review the search strategy prior to executing the search; under PRESS 2015, after the MEDLINE search has been developed and before the other database searches are developed | review only after the results are in, or review each database's translation by default | L2 (S224, Box 1), L24, L25 (S223) | for a local record: review before the run whose `rev` the record files; a second store searched with a translated expression is the analogue of "other databases" (the lane's analogy) |
+| Timing a peer review | review the search strategy prior to executing the search (PRISMA-S); the PRESS 2015 update's survey respondents and forum participants recommended review after the MEDLINE search has been developed and before the other database searches are developed (as reported in its authors' abstract) | review only after the results are in | L2 (S224, Box 1), L31, L24, L25 (S223) | for a local record: review before the run whose `rev` the record files; a second store searched with a translated expression is the analogue of "other databases" (the lane's analogy) |
 | Deciding what a reviewer checks | check the six PRESS elements: translation of the research question; Boolean and proximity operators; subject headings; text word search; limits and filters, syntax and line numbers; spelling | add translation of the search into other databases as a required element: PRESS 2015 removed it and left it to the search developer | L19, L20, L21, L22, L23 (S223); L26, L27, L28, L29 (S223) | the grouping "limits and filters, syntax and line numbers" is the abstract's punctuation; the guideline's own checklist wording was not opened (403), so the split into six named elements is read from this abstract only |
-| Saying what a review is for | use peer review to identify errors, missing keywords or subject headings, and other issues within a search strategy | claim a reviewed strategy is complete or has high recall | L3 (S224, Box 1); L30 (S223) | the abstract reports that checklists improved search quality in several studies; the lane holds no measurement of that and claims none |
+| Saying what a review is for | use peer review to identify errors, missing keywords or subject headings, and other issues within a search strategy | (none stated by the sources; the lane's guard is in the Lane column) | L3 (S224, Box 1) | the lane's own guard: a peer review is not a recall measurement, so a reviewed strategy is not reported as complete. The PRESS abstract's results sentence (L32, L30, and the first word of L19: "Several studies showed that peer review checklists were effective at improving search quality") is its authors' report; the lane holds no measurement of it and claims none |
 | Reporting deduplication | describe the processes and any software used to deduplicate records from multiple database searches and other information sources; cite the software or technique, and describe any manual removal | remove duplicates without saying how | L9, L10 (S224, item 16); L11, L12, L13 (S224, ITEM 16) | `tools/search-rerun.py` counts files per expression and never merges hit sets across searches, so a chousa record that reports a union must state how the union was formed (a sorted set of paths is the lane's method) |
 | Explaining why the method is reported | report the method so readers can evaluate the process and understand to what extent these techniques may have removed false positive duplicates | treat deduplication as lossless | L14, L15, L16 (S224, ITEM 16) | for paths, identity is byte equality, so a false positive cannot occur; for records from external databases it can, and the lane holds no deduplication method for them |
 | Reporting the count after deduplication | report the total number of references after deduplication in the PRISMA flow diagram | report only per-source counts and leave the deduplicated total implicit | L17, L18 (S224, ITEM 16) | per-source counts are the round-95 entry's row 4 (PRISMA-S item 15); this row adds the after-deduplication total |
@@ -109,9 +117,12 @@ re-runs each one at `bbf64970` and over the current tree.
 - The searches are over the lane's own capture store, not a bibliographic database; Q7's hits show only that the
   word occurs, not what it says.
 - The re-run over the landing tree (this round's S223 capture added) reports `TREE_CHANGED` for Q1, Q3 and Q8 and
-  not for Q6, although S223 holds the timing sentence: it wraps between two column lines ("…after the MEDLINE
-  search" / "has been developed…"), and matching is per line. A 0-hit row is an absence of that line form in the
-  store, not an absence of the statement.
+  not for Q6, although S223 holds the timing sentence: it is split across a page break (the right column of page 98
+  ends "…after the MEDLINE search", the left column of page 99 opens "has been developed…", the running header
+  between them; `R96ExecWrap` F2), and matching is per line. A 0-hit row is an absence of that line form in the
+  store, not an absence of the statement. Joining lines would not recover it either: the header intervenes.
+- Per-line matching also misses occurrences inside a file that already hits (e.g. the PRESS title split over two
+  lines of S224); hit sets count files, so the recorded sets are unchanged by this (`R96ExecWrap` F1).
 - The *lane* column's statements about `tools/search-rerun.py` describe the tool at this round's revision.
 
 ## Gate records
@@ -146,4 +157,6 @@ GATE-RECORD S223 url=https://journals.library.ualberta.ca/jchla/index.php/jchla/
 GATE-RECORD S223 url=https://journals.library.ualberta.ca/jchla/index.php/jchla/article/download/28195/20695/73210 fetched=2026-11-09T00:35:55Z tier=B decision=admit capture=corpus/captures/e94691f583d644da14661ec1.txt capture_sha256=ce72c9202cca6fb24c2040b176e58de8f3ebecf9de09701855b8f96ff2f02243 words=10 quote="that translations be peer reviewed at the discretion of the"
 GATE-RECORD S223 url=https://journals.library.ualberta.ca/jchla/index.php/jchla/article/download/28195/20695/73210 fetched=2026-11-09T00:35:55Z tier=B decision=admit capture=corpus/captures/e94691f583d644da14661ec1.txt capture_sha256=ce72c9202cca6fb24c2040b176e58de8f3ebecf9de09701855b8f96ff2f02243 words=2 quote="search developer."
 GATE-RECORD S223 url=https://journals.library.ualberta.ca/jchla/index.php/jchla/article/download/28195/20695/73210 fetched=2026-11-09T00:35:55Z tier=B decision=admit capture=corpus/captures/e94691f583d644da14661ec1.txt capture_sha256=ce72c9202cca6fb24c2040b176e58de8f3ebecf9de09701855b8f96ff2f02243 words=9 quote="that peer review checklists were effective at improving search"
+GATE-RECORD S223 url=https://journals.library.ualberta.ca/jchla/index.php/jchla/article/download/28195/20695/73210 fetched=2026-11-09T00:35:55Z tier=B decision=admit capture=corpus/captures/e94691f583d644da14661ec1.txt capture_sha256=ce72c9202cca6fb24c2040b176e58de8f3ebecf9de09701855b8f96ff2f02243 words=6 quote="Survey respondents and forum participants recommended"
+GATE-RECORD S223 url=https://journals.library.ualberta.ca/jchla/index.php/jchla/article/download/28195/20695/73210 fetched=2026-11-09T00:35:55Z tier=B decision=admit capture=corpus/captures/e94691f583d644da14661ec1.txt capture_sha256=ce72c9202cca6fb24c2040b176e58de8f3ebecf9de09701855b8f96ff2f02243 words=4 quote="Results: Several studies showed"
 GATE-RECORD S223 url=https://www.cda-amc.ca/sites/default/files/pdf/CP0015_PRESS_Update_Report_2016.pdf fetched=2026-11-09T00:35:47Z tier=B decision=reject capture=none curl_rc=22 http=403 words=0 quote=none

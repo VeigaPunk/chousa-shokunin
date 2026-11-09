@@ -80,3 +80,50 @@ exists and shares a content word, not that the paraphrase is faithful — that i
 is held through an abstract (tier B); the guideline statement and its Explanation and Elaboration answered 403.
 (c) The searches run over the lane's own capture store, per line; a sentence wrapped across two layout lines is
 not found (the entry's Q6). (d) Consecutive column-line fragments are read as one sentence from line order.
+
+## Amendments after the freeze — re-frozen at F2 (wave-forced; the text above stays as the F record)
+
+Every amendment is forced by a named wave artifact under `.ufo/waves/round-96/w1/`; reasons and artifacts are in
+`plans/round-96.md` § Amendments (A1-A5, B1-B6). The claims are judged at F2 on the sentences and predicates below.
+
+### C1 amended sentence (F2)
+
+`tools/search-rerun.py` has a `--selftest` mode that runs 32 in-memory cases — 14 parse cases (12 setup refusals,
+a well-formed record, the `\|` alternation), 8 matching cases and 10 judgement cases that call `evaluate`, the
+function `verify` also calls (read at source; the self-test does not check that `verify` uses its verdict — the
+round-95 battery inside the REGRESSION leg does) — and exits 0 with `SEARCH_RERUN_SELFTEST: PASS cases=32/32`.
+Each of the 23 one-site mutants named in `selftest-controls-r96.py` makes it exit 1 (this shows the self-test
+fails at those 23 sites, not that it detects defects elsewhere); the base tool exits 2 on the same command; three
+stand-ins fail the battery; the self-test leaves an empty cwd/HOME directory empty and `git status --porcelain`
+unchanged; and the round-95 battery and mutant rebuild still pass on the changed tool. SKILL.md carries one r96
+re-registration row for the tool (counted by predicate 3), whose kind cell reads `gate` (checked by reading).
+
+**Predicate (F2):** unchanged — the three commands and tallies of the F predicate, measured at F2.
+**K4 (F2):** judged on NO_WRITE's scope (the empty cwd/HOME and the lane status); file, git and socket activity
+outside it is a seat observation, not a battery leg.
+
+### C2 amended sentence (F2)
+
+The lane holds `corpus/knowledge/search-peer-review-dedup-r96.md`, whose 8 decision rows each cite located quotes
+of PRISMA-S items 14 and 16 and its Box 1 glossary (`S224`, the S222 PDF bytes re-opened this round under a second
+scope) and of the PRESS 2015 updated guideline authors' abstract (`S223`, new bytes this round), and whose Do cells
+each share a content word with those quotes (a lexical floor; each row's faithfulness is the wave reviewer's
+judgment, repaired at B1-B3): its 33 `GATE-RECORD` lines (32 located quotes, 1 unreachable-route reject) all verify,
+the Located-quotes quote strings equal the 32 quoted records as a multiset (the source column is not compared),
+every Lane cell is filled, and the entry's own 8 searches — run with GNU grep at `bbf64970` — re-run at that
+revision with the recorded count and set.
+
+**Predicate (F2):**
+
+1. `python3 -B tools/gate-records.py verify --root . corpus/knowledge/search-peer-review-dedup-r96.md` → exit 0,
+   `GATE_RECORDS files=1 records=33 ok=33 fail=0`.
+2. as F (verify-metadata CLEAN).
+3. as F (`search-rerun.py verify` → `rev_match=8/8`, CLEAN).
+4. `python3 -B corpus/evidence/round96/entry-controls-r96.py --root . --work <scratch>` → exit 0, prints
+   `POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 SEARCHES=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1`
+   with `LQ_BOUND=32/32 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8`, and `ENTRY_CONTROLS=PASS`.
+
+**Named limit (d) (F2):** fragment groups are read as one sentence from the reading-order text form; in the layout
+form L17-L18 skip a line and L24-L25 cross a page break, the running header and a column (named in the entry).
+Each quote remains a substring of one capture line (K3 does not fire; `gate-records.py` does not check this — a
+seat measured it).

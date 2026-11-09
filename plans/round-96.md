@@ -50,3 +50,48 @@ do-nothing control and a forgery battery executed before the freeze, through the
 ## Wave
 
 One v1 wave, 12 seats, attack share ≥25 %. L1 holds the canonical planner seat.
+
+## Amendments after the freeze (wave-forced; every one cites the seat artifact that forces it)
+
+The claims are judged at F2 on the amended sentences and predicates below; the F text in
+`.ufo/waves/round-96/claims.md` stays as the F record.
+
+- **A1 (C1, `R96CriticClaims` §Aa).** "scored by the same `evaluate` function `verify` runs" is not enforced by
+  `--selftest`: a shim whose `verify` discards `evaluate`'s verdict still prints `PASS cases=32/32` and passes every
+  non-regression leg; only the REGRESSION leg (`rerun-controls-r95.py`, `FORGERY_REFUSED=0/10`) catches it. Narrowed:
+  the judgement cases *call* `evaluate`, the function `verify` also calls (read at source lines, not checked by the
+  self-test); a `verify` that stops using its verdict is caught by the battery's REGRESSION leg, not by
+  `--selftest`.
+- **A2 (C1, `R96CriticClaims` §Ab).** A source-blind self-test that text-matches the 23 mutated sites scores
+  `MUTANTS_KILLED=23/23` and is blind to a novel defect the real self-test catches (`p03-header`). Narrowed: the
+  mutant leg shows the self-test fails at the 23 named sites, not that it detects defects elsewhere.
+- **A3 (C1, `R96CriticClaims` §Ac).** Predicate 3's grep counts the row, not its kind cell. Narrowed: the kind
+  cell reading `gate` is checked by reading (`R96ExecC1Repro`, `R96ConnectorSiblings` F1), not by the grep.
+- **A4 (C1, `R96CriticClaims` §Ad).** K4 ("writes a file, runs git or opens a socket") is wider than NO_WRITE,
+  which sees only an empty cwd/HOME and `git status --porcelain`. Narrowed: K4 is judged on NO_WRITE's scope; the
+  syscall-level observation is a seat measurement (`R96ExecC1Repro`, `R96SentinelC1`), not a battery leg.
+- **A5 (tool docstring, `R96CriticClaims` §H1).** "14 parse cases (13 setup refusals and the `\|` alternation)"
+  overcounts: 12 refusals, 1 positive parse, 1 alternation. Docstring corrected; no case changed.
+- **B1 (C2 row 3, `R96ReviewerC2` row 3, `R96ExecWrap` F3).** The Do cell said "under PRESS 2015" for a sentence
+  the abstract attributes to "Survey respondents and forum participants recommended". Row rewritten with that
+  agent; quote `L31` added. The Never's "review each database's translation by default" (not warranted by the
+  row's quotes) dropped.
+- **B2 (C2 row 5, `R96ReviewerC2` row 5, `R96CriticClaims` §Ee).** The Never ("claim a reviewed strategy is complete
+  or has high recall") does not follow from L3, and the Lane's "several studies" is not in L30. Never now says the
+  sources state none; the guard moves to the Lane column, and `L32` ("Results: Several studies showed") is added.
+- **B3 (C2 row 1, `R96ConnectorSiblings` F5).** The Lane said a chousa record names the reviewer; the 8-column
+  `## Searches` schema has no such field. Rewritten: the reviewer is named in `## As run` prose, and this entry's
+  own searches were not peer reviewed.
+- **B4 (C2 text forms, `R96ExecWrap` F2/F4, `R96ConnectorSiblings` F3, `R96CriticClaims` §Ec).** "Consecutive
+  fragments … read from the text form's line order" was false for L24-L25 (page break, running header, column
+  switch) and L17-L18 (one skipped line). Groups are now described from the reading-order text form, with the two
+  layout exceptions named; the claim's named limit (d) narrows the same way. Each quote stays a substring of one
+  capture line (30/30 measured by `R96ConnectorSiblings`; K3 does not fire).
+- **B5 (C2 named limit, `R96ExecWrap` F2).** The Q6 miss is a page break with a running header, not a wrap
+  between two column lines; the entry's note is corrected.
+- **B6 (C2 sentence, `R96CriticClaims` §Db, §Ed, §Dd).** "warranted" narrows to "cite located quotes and share a
+  content word with them (a lexical floor; the faithfulness of each row is the reviewer item, repaired at B1-B3)";
+  "equals the quoted records one-to-one" narrows to "as a multiset of quote strings (the source column is not
+  compared)"; S224 is a re-scoping of the S222 bytes, S223 the only new bytes.
+- **Counts.** After B1-B2 the entry holds 32 located quotes and 33 GATE-RECORD lines; `entry-controls-r96.py`
+  `N_RECORDS` 31 → 33 (the constant only; no leg changed).
