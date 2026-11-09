@@ -1,0 +1,15 @@
+# C2 pre-link control at P 9683523467a1be9a9c46972f9b92bed26f44750d: the new entry present, the round-99 entry WITHOUT its ## Update section (the cheapest do-nothing that skips the freshness flag)
+$ python3 - (strip the '## Update' section of corpus/knowledge/quotation-error-rates-r99.md in a scratch clone)
+$ python3 -B corpus/evidence/round100/entry-controls-r100.py --root .
+CASE QUOTES 16/16 PASS
+CASE FIELD 16/16 PASS
+CASE IDENTITY 2/2 PASS
+CASE WARRANTS 8/8 PASS
+CASE NUMBERS 24/24 PASS
+CASE NEVER 8/8 PASS
+CASE FRESH 0/1 FAIL
+CASE TOPIC 1/1 PASS
+CASE BASE entry=absent topic_hits=0 update_link=0 PASS
+QUOTES=16/16 FIELD=16/16 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=24/24 NEVER=8/8 FRESH=0/1 TOPIC=1/1 NUMBERS_SOURCED=24/24 BASE_TOPIC_HITS=0 BASE_ENTRY=absent BASE_UPDATE_LINK=0 FORGERY_REFUSED=12/13 ACCEPTED=0/2
+ENTRY_CONTROLS_R100=FAIL
+exit=1

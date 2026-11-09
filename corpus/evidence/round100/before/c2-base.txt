@@ -1,0 +1,11 @@
+# C2 do-nothing control at base 929c784c63a1fd17961d21742101b2b109b7b8ff (entry absent)
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-update-r100.md
+GATE_RECORDS_ERROR missing corpus/knowledge/quotation-error-update-r100.md
+exit=2
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-update-r100.md --root .
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+exit=2
+$ python3 -B <P's corpus/evidence/round100/entry-controls-r100.py> --root .
+ENTRY_CONTROLS_SETUP [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r100/l1/rcpt/repo/corpus/knowledge/quotation-error-update-r100.md'
+exit=2

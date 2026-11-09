@@ -1,0 +1,34 @@
+# C2 at P 9683523467a1be9a9c46972f9b92bed26f44750d (all counting commands)
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-update-r100.md
+GATE_RECORD corpus/knowledge/quotation-error-update-r100.md:118 S236 OK
+GATE_RECORD corpus/knowledge/quotation-error-update-r100.md:119 S239 OK
+GATE_RECORDS files=1 records=17 ok=17 fail=0
+exit=0
+$ bash tools/research-gate.sh verify-metadata corpus/knowledge/quotation-error-update-r100.md --root .
+META entry=quotation-error-update-r100.md source=present verified_at=dated recheck=scheduled verdict=clean
+METADATA_COMPLETE=1/1
+RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)
+exit=0
+$ python3 -B tools/search-rerun.py verify corpus/knowledge/quotation-error-update-r100.md --root .
+SEARCH_RERUN Q3 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN_SUMMARY searches=3 rev_match=3/3 tree_same=0/3 findings=0
+SEARCH_RERUN: CLEAN
+exit=0
+$ python3 -B corpus/evidence/round100/entry-controls-r100.py --root .
+CASE ACCEPT a2 PASS
+QUOTES=16/16 FIELD=16/16 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=24/24 NEVER=8/8 FRESH=1/1 TOPIC=1/1 NUMBERS_SOURCED=24/24 BASE_TOPIC_HITS=0 BASE_ENTRY=absent BASE_UPDATE_LINK=0 FORGERY_REFUSED=13/13 ACCEPTED=2/2
+ENTRY_CONTROLS_R100=PASS
+exit=0
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/quotation-error-rates-r99.md
+GATE_RECORD corpus/knowledge/quotation-error-rates-r99.md:152 S232 OK
+GATE_RECORD corpus/knowledge/quotation-error-rates-r99.md:153 S235 OK
+GATE_RECORDS files=1 records=25 ok=25 fail=0
+exit=0
+$ python3 -B corpus/evidence/round99/entry-controls-r99.py --root .
+CASE ACCEPT a2 PASS
+QUOTES=23/23 FIELD=9/9 IDENTITY=2/2 WARRANTS=8/8 NUMBERS=6/6 TOPIC=1/1 NUMBERS_SOURCED=6/6 BASE_TOPIC_HITS=0 BASE_ENTRY=absent FORGERY_REFUSED=10/10 ACCEPTED=2/2
+ENTRY_CONTROLS_R99=PASS
+exit=0
+$ python3 -B <git show 929c784c:tools/gate-records.py> verify --root . corpus/knowledge/quotation-error-update-r100.md  # separability: C2 with the base tool
+GATE_RECORDS files=1 records=17 ok=17 fail=0
+exit=0

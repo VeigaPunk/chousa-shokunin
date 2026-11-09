@@ -1,0 +1,9 @@
+# C1 setup control at P 9683523467a1be9a9c46972f9b92bed26f44750d: a capture the legs read is missing from the root (round-99 routed defect: the r99 battery crashed here)
+$ rm corpus/captures/b90988847e704a08aabc8321.txt  # in a scratch clone only
+$ python3 -B corpus/evidence/round100/challenge-controls-r100.py --root . --work $S/w-setup
+CHALLENGE_CONTROLS_SETUP missing lane capture b90988847e704a08aabc8321.txt
+exit=2
+$ python3 -B corpus/evidence/round99/challenge-controls-r99.py --root . --work $S/w-setup99  # round-99 battery, same tree
+              ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r100/l1/rcpt/repo/corpus/captures/b90988847e704a08aabc8321.txt'
+exit=1
