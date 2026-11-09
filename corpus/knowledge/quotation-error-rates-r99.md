@@ -118,11 +118,14 @@ and searched from `<scratch>` with GNU grep 3.12 (`/usr/bin/grep`):
 
 Round 100 (2026-11-09): this entry's `recheck: on-release` fired. The authors' 2025 update (Baethge & Jergas,
 Research Integrity and Peer Review, pmid 40696441) was opened through its Europe PMC record as S238 and is held in
-`corpus/knowledge/quotation-error-update-r100.md`: 46 studies, 16.9% of quotations incorrect, major errors 8.0%, and no
-significant improvement over time by meta-regression. Read the first decision row above as the 2015 synthesis's
-reading, not the current pooled rate; the two rates pool different study sets and their gap is not a trend. Nothing
-above is changed by the update; the 2025 abstract does not define major and minor, so the rows that use them still
-stand on S233 (G4, G5, G11).
+`corpus/knowledge/quotation-error-update-r100.md`: a search that identified 46 studies, 16.9% of quotations
+incorrect, major errors 8.0%, and no significant improvement over time by meta-regression. Read the first decision row
+above as the 2015 synthesis's reading, not the current pooled rate; the abstracts print 28 and 46 studies and state no
+comparison between the two rates, and the update's own trend estimate is its meta-regression slope. Nothing above is
+changed by the update. The 2025 abstract does not define major and minor, so the rows that use them still stand on
+S233 (G4, G5, G11); the update's article body, which the lane does not hold, defines both and reports the 46 studies
+as 18 new plus this entry's 28 (`.ufo/waves/round-100/w1/R100ScoutSources.md` F-2; a seat's re-open, routed to a lane
+GET in round 101).
 
 ## Gate records
 

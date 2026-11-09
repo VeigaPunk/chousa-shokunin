@@ -17,7 +17,7 @@ entry's reading:
 
 1. **Baethge & Jergas 2025 (S238, tier B).** A systematic review, meta-analysis and meta-regression of quotation
    errors in medicine with no date or language restriction, read through its own published abstract in Europe PMC's
-   index record (the full-text route, PMC12285159, answered http 500 to both of this round's GETs, S239). Thirteen
+   index record (the full-text route, PMC12285159, answered http 500 to all three of this round's GETs, S239). Thirteen
    quotes from the abstract (U1-U13) and the record's title (U0).
 2. **Jergas & Baethge 2015 (S236, tier B)**, held since round 99, quoted again here (J1, J2) only to compare it with
    the update.
@@ -28,7 +28,9 @@ The column marked *lane* is this lane's reading; it is not what the sources say.
 
 S238's capture is the JSON record exactly as served (one line). U1-U13 are substrings of its `abstractText` field; U0
 is its `title` field. J1 and J2 are substrings of S236's `abstractText` (round 99's quotes of the same ids). Quotes are
-matched after `tools/gate-records.py`'s normalization (curly quotes to straight, whitespace collapsed).
+matched after `tools/gate-records.py`'s normalization (curly quotes to straight, whitespace collapsed). U9 and U11
+are located only after that normalization: the record prints a thin space (U+2009) where they have a space
+(amended at F2, B3, `R100ExecC2Repro` F-1).
 
 | qid | source | quote |
 |---|---|---|
@@ -53,10 +55,10 @@ matched after `tools/gate-records.py`'s normalization (curly quotes to straight,
 
 | Situation | Do | Never | Warrant | Lane |
 |---|---|---|---|---|
-| Stating how often a citation in medicine fails its source | cite the update's pooled rate as printed: 16.9% (95% CI: 14.1%-20.0%) of quotations incorrect, major errors 8.0% [95% CI: 6.4%-10.0%], over 46 studies analyzing 32,000 quotations/references | (none stated by the sources) | U4, U7 | the round-99 entry's first row cites the 2015 rates; it now carries a pointer to this entry (`## Update`), and this row is the current reading |
-| Reading the 2015 rate next to the 2025 rate | keep each rate with its own study set: the earlier review included 28 studies in the main analysis (total 25.4%, major 11,9% as printed); the update identified 46 studies (total 16.9%, major 8.0%); the gap between them is not a measured trend | (none stated by the sources) | J1, J2, U4, U7 | the lane does not subtract one pooled rate from another; the trend is the next row's slope |
+| Stating how often a citation in medicine fails its source | cite the update's pooled rate as printed: 16.9% (95% CI: 14.1%-20.0%) of quotations incorrect and major errors 8.0% [95% CI: 6.4%-10.0%]; the search identified 46 studies analyzing 32,000 quotations/references | (none stated by the sources) | U4, U7 | the round-99 entry's first row cites the 2015 rates; it now carries a pointer to this entry (`## Update`), and this row is the current reading; the abstract does not say over how many of the 46 studies each rate is pooled (amended at F2, B7: "over 46 studies" bound both rates to one count; the article body pools major errors over 36, per `R100ScoutSources`' read-only re-open of PMC12285159 (http 200 to the lane's own recipe; not a lane capture, `.ufo/waves/round-100/w1/R100ScoutSources.md` F-2)) |
+| Reading the 2015 rate next to the 2025 rate | keep each rate with the study count its own abstract prints: the earlier review included 28 studies in the main analysis (total 25.4%, major 11,9% as printed); the update identified 46 studies (total 16.9%, major 8.0%) | (none stated by the sources) | J1, J2, U4, U7 | the lane does not read the gap between the two pooled rates as a trend and does not subtract one from the other; the abstracts state no comparison between them, and the update's own trend estimate is the next row's slope (amended at F2, B1: this clause stood in the Do cell, `R100ReviewerC2`). The article body, which the lane does not hold, says the 46 are 18 new studies plus the 2015 review's 28 and re-calculates those 28 at a total of 17.0% (B6, `R100ScoutSources`' read-only re-open of PMC12285159 (http 200 to the lane's own recipe; not a lane capture, `.ufo/waves/round-100/w1/R100ScoutSources.md` F-2)) |
 | Asking whether quotation accuracy has improved | answer from the meta-regression: no significant improvement over recent years (slope: -0.002 [95% CI: -0.03 to 0.02], p = 0.85) | (none stated by the sources) | U9, U12 | a lower pooled rate in a later synthesis is not, alone, evidence of improvement |
-| Using a journal's standing as a proxy for citation accuracy | record the association only as printed: journal impact factor was associated with total error rate (Spearman's ρ = -0.253, p = 0.043, binomial test, N = 25); risk of bias and the number of references were not | (none stated by the sources) | U10, U11 | the lane's tier rules grade a source's route and kind, not its journal's impact factor; this row does not change them |
+| Using a journal's standing as a proxy for citation accuracy | record the association only as printed: journal impact factor was associated with total error rate (Spearman's ρ = -0.253, p = 0.043, binomial test, N = 25); risk of bias and the number of references were not statistically significantly associated with it | (none stated by the sources) | U10, U11 | the lane's tier rules grade a source's route and kind, not its journal's impact factor; this row does not change them |
 | Defining what is counted | count a reference that does not support the authors' claim; about half of incorrect quotations were classed major | (none stated by the sources) | U1, U7 | major and minor are defined in the round-99 entry (S233, G4/G5); the update's abstract does not define them |
 | Weighing the pooled estimate | treat it as an estimate over heterogeneous studies: heterogeneity was high; Egger's test for small study effects remained negative throughout | (none stated by the sources) | U8 | the abstract states the test's result, not its statistic |
 | Judging how the synthesis was made | note the method the abstract states: search without date or language restrictions, two independent raters for search, extraction and risk of bias, random-effects meta-analysis and meta-regression, protocol pre-registered on OSF | (none stated by the sources) | U3, U5, U6 | the lane did not open the OSF protocol |
@@ -86,14 +88,18 @@ and searched from `<scratch>` with GNU grep 3.12 (`/usr/bin/grep`):
 ## Named limits
 
 - S238 is the abstract, not the article; its numbers are read as the abstract states them. The full text (S239,
-  PMC12285159) answered http 500 to this round's two GETs, so nothing here rests on the article body: not the list of
-  46 studies, not how "major" is defined there, not the heterogeneity statistic.
+  PMC12285159) answered http 500 to this round's three lane GETs, so nothing here rests on the article body: not the
+  list of 46 studies, not how "major" is defined there, not the heterogeneity statistic. A wave seat's read-only
+  re-open answered 200 with the same recipe (`R100ScoutSources` F-1): S239's flip condition is met by a seat, not by a
+  lane GET; the lane's GET is routed to round 101 (amended at F2, B6).
 - Both syntheses are about medicine. Nothing here says how often a citation fails in another field, in web sources, or
   in this lane's own corpus; the lane has not measured its own rate.
-- The 2015 and 2025 pooled rates come from different study sets (28 and 46 studies); the abstracts do not say how many
-  studies they share. This entry does not compute a difference between them.
-- The impact-factor association is a correlation over 25 data points as the abstract prints it; its direction is
-  recorded only as the printed sign.
+- The two abstracts print 28 and 46 studies and do not say how many studies the two sets share. This entry does not
+  compute a difference between the pooled rates. (Amended at F2, B6: "different study sets" said more than the
+  abstracts; the article body reports the 46 include the 2015 review's 28, per `R100ScoutSources` F-2a.)
+- The impact-factor association is recorded as the abstract prints it ("binomial test, N = 25"); the abstract does
+  not say how many studies the correlation itself rests on (the article body says 23, per `R100ScoutSources` F-2d).
+  Its direction is recorded only as the printed sign. (Amended at F2, B9: "a correlation over 25 data points".)
 - The decision rows' *Do* cells paraphrase their warrant quotes; every numeral a *Do* cell states is printed, with the
   same sign and form, in one of that row's own warrant quotes (the controls check this), but a paraphrase can still
   narrow or widen a quote's meaning. Spelled-out quantities ("about half") are not checked.

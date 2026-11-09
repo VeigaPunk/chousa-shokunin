@@ -81,3 +81,63 @@ at base checks url/admit and unreach records identically: no rev record, no chal
 ## Amendments
 
 (none at freeze)
+
+### F2 amendments (wave-forced; no predicate, counter code, kill rule or target changed)
+
+Each narrows a sentence to what its instrument enforces, citing the wave artifact; the C1 tool and battery bytes and the
+C2 controls bytes are identical F..F2. C2's entry and the round-99 `## Update` prose were repaired (B1-B3); every C2
+tally is unchanged at F2.
+
+- **A1 (C1, "that rev's tree").** `R100CriticClaims` F-1, `R100ExecC1Repro` finding 1 and `R100MutantsC1` survivor
+  `n-cache-repoonly`: the battery's fixture repo has one commit and its PROD legs read one lane revision, so a stand-in
+  that builds the capture set at HEAD, or caches it per repo, prints the frozen PASS line. Seat probes show the F tool
+  reads the record's rev (`R100CriticClaims` v1/v2, `R100ExecC1Repro` x-revA/x-revB), but no frozen leg enforces it.
+  The sentence is judged without "of that rev's tree": **the blob git resolves for `rev:path` has the object id of a
+  `corpus/captures/<24 hex>.txt` or `.raw` entry (in the battery, the one fixture commit's tree or the lane's BASE
+  tree)**. Named limit (f): which revision's tree supplies the capture set is shown by seat probes only; a two-commit
+  fixture with cross-rev legs and a two-rev single-file record is routed to round 101.
+- **A2 (C1, `.raw` sibling).** `R100ConnectorSiblings` F1: a record citing `<key>.raw` whose own bytes are a challenge
+  page while its sibling `.txt` is not prints OK — the quote is located in one file and the CHALLENGE verdict read from
+  another. The sentence defines the judged text as the sibling `.txt`, so the tool does what it says; named limit (g)
+  states the shape so the kill rule's "capture text" reads as the sentence defines it, never the `.raw` bytes.
+- **A3 (C1, battery strength).** `R100MutantsC1` battery loosenings b1, b4-b7, b9 pass the F tool: the battery's own
+  PASS does not check a REV verdict's code beyond rc (b1), HARM on one channel (b4/b5), a missing oracle site (b6), or
+  the BASE count (b7, which the frozen predicate regex does check). Named limit (h): the battery's PASS is weaker than
+  the frozen predicate line; the predicate line is the claim.
+- **A4 (C1, "not judged" quadrant) — no narrowing.** `R100CriticClaims` F-2 and `R100ExecC1Repro` finding 2 say no leg
+  admits a challenge-shaped non-capture blob. REVPOS q3's blob (`corpus/evidence/captures-note.txt`, 16 words,
+  "reCAPTCHA") is challenge-shaped by the round-99 rule (`corpus/evidence/round100/after-f2/q3-note-is-challenge.txt`:
+  `is_challenge=True`) and must be admitted; both seats' universal stand-ins fail on q3. Recorded, sentence unchanged.
+- **B1 (C2, row 2 Do).** `R100ReviewerC2` row 2: "the gap between them is not a measured trend" is stated by no
+  warrant; moved to the Lane cell as the lane's reading. The round-99 `## Update`'s "their gap is not a trend" reworded
+  the same way. Row 4's "were not" restored to the warrant's "were not statistically significantly associated"
+  (`R100ReviewerC2` row 4).
+- **B2 (C2, GET count).** `R100ReviewerC2`: the entry said S239 answered 500 to "both"/"two" GETs; `refetch.tsv` has
+  three each for S237 and S239. Fixed in the entry.
+- **B3 (C2, "located").** `R100ExecC2Repro` F-1: U9 and U11 are not byte substrings of `abstractText` (the record
+  prints U+2009 thin spaces); they are located after `tools/gate-records.py`'s normalization. The sentence's "14
+  located quotes" means located after that normalization; the entry says so.
+- **B4 (C2, "fired and was answered").** `R100ConnectorSiblings` F2 and `R100CriticClaims` F-6: FRESH checks that the
+  round-99 `## Update` names the new entry and S238 and that `updates:` points back — not that the section's prose is
+  true; an Update stating the opposite passes. The sentence is judged without "fired and was answered": **the round-99
+  entry carries a `## Update` section that names the new entry and S238**. Named limit (e): the flag's content is
+  checked by review only.
+- **B5 (C2, Do/Never numerals).** `R100CriticClaims` F-4/F-5: all 8 Never cells are "(none stated by the sources)" and
+  carry no numeral, so "every Do/Never numeral" is vacuous for Never cells; a Do cell that inverts its warrant's sense
+  with the same numerals passes (named limit (b) already). The sentence is judged as **every Do numeral is a token of
+  that row's own warrant quotes; every Never cell is "(none stated by the sources)"**.
+- **B6 (C2, study sets and the full text).** `R100ScoutSources` F-1/F-2a/F-2b: with the lane's own recipe a seat's
+  read-only re-open of PMC12285159 answered 200 (S239's flip condition met by a seat, not by a lane GET — the lane's
+  three attempts were spent); its body says the 46 studies are 18 new plus the 2015 review's 28 and re-calculates those
+  28 at 17.0%. The entry's "different study sets" and the round-99 `## Update`'s same phrase said more than the
+  abstracts; both now say the abstracts print 28 and 46 and state no comparison, and record the seat's report as not
+  held. C2 named limit (a) is read with "to the lane's three GETs"; a lane GET of the full text is routed to round 101.
+- **B7 (C2, row 1).** `R100ScoutSources` F-2d: "major errors 8.0% … over 46 studies" bound both rates to one count;
+  the abstract does not say it (the body pools major errors over 36). The Do cell now separates the rates from the
+  search's count; numerals unchanged.
+- **B8 (C2, round-99 `## Update`, major/minor).** `R100ScoutSources` F-2c: "the 2025 abstract does not define major and
+  minor" is true of the abstract only; the Update now says the article body (not held) defines both.
+- **B9 (C2, named limit on the impact-factor correlation).** `R100ScoutSources` F-2d: "a correlation over 25 data
+  points" said more than the abstract's "binomial test, N = 25"; reworded.
+
+C2 tallies after B1-B9 (entry and Update prose only): identical to F (`corpus/evidence/round100/after-f2/c2-all.txt`).
