@@ -1,0 +1,58 @@
+{
+ "round": 98,
+ "lane": "chousa",
+ "l1": "ChousaR98",
+ "base": "98b8177c1e8b39cdf1167928e4f5d609f6fa81b6",
+ "shape": "two claims, two axes (operability, depth), no exploratory claim; C2 sourced on S231, opened this round",
+ "claims": {
+  "C1": {
+   "id": "C1-SELFTEST-R97MUTANTS-R98",
+   "axis": "operability",
+   "type": "gate self-test hardening against the round-97 non-author mutants, plus a guard canary and an equivalent-mutant leg (tools/search-rerun.py --selftest)",
+   "counting_command": [
+    "python3 -B tools/search-rerun.py --selftest",
+    "python3 -B corpus/evidence/round98/selftest-controls-r98.py --root . --work <scratch>"
+   ],
+   "predicate": {
+    "selftest_last_line": "SEARCH_RERUN_SELFTEST: PASS cases=67/67",
+    "selftest_exit": 0,
+    "controls_stdout": [
+     "POSITIVE=1/1 KILL_REQUIRED=35/35 DO_NOTHING_REFUSED=1/1 PRIOR_R97_KILLED=34/34 R96_MUTANTS_KILLED=23/23 EQUIVALENT_SURVIVED=3/3 ORACLES_REJECTED=5/5 NO_WRITE=1/1 REGRESSION_R95=2/2 EXTERNAL_R97_KILLED=35/37 BASE_KILLED=12/37 CASES=67",
+     "SELFTEST_CONTROLS_R98=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round98/before/c1-base.txt (base tool under the battery: KILL_REQUIRED=12/35, SELFTEST_CONTROLS_R98=FAIL)",
+   "sources": []
+  },
+  "C2": {
+   "id": "C2-ENTRY-R98",
+   "axis": "depth",
+   "type": "knowledge entry (corpus/knowledge/press-2015-statement-questions-r98.md)",
+   "counting_command": [
+    "python3 -B tools/gate-records.py verify --root . corpus/knowledge/press-2015-statement-questions-r98.md",
+    "bash tools/research-gate.sh verify-metadata corpus/knowledge/press-2015-statement-questions-r98.md --root .",
+    "python3 -B tools/search-rerun.py verify corpus/knowledge/press-2015-statement-questions-r98.md --root .",
+    "python3 -B corpus/evidence/round98/entry-controls-r98.py --root ."
+   ],
+   "predicate": {
+    "gate_stdout": ["GATE_RECORDS files=1 records=38 ok=38 fail=0"],
+    "gate_exit": 0,
+    "metadata_stdout": ["METADATA_COMPLETE=1/1", "RESEARCH_GATE: CLEAN"],
+    "metadata_exit": 0,
+    "rerun_stdout": ["rev_match=5/5", "SEARCH_RERUN: CLEAN"],
+    "rerun_exit": 0,
+    "controls_stdout": [
+     "POSITIVE=1/1 DO_NOTHING_REFUSED=1/1 NEW_ONLY=1/1 FORGERY_REFUSED=7/7 QUESTION_LINES_HELD=36/36 BASE_HELD=16/36 ELEMENTS=7+6/7+6 WARRANTS_OK=10/10 LANE_FILLED=10/10",
+     "ENTRY_CONTROLS_R98=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round98/before/c2-base.txt (entry absent, gate exit 2; BASE_HELD=16/36)",
+   "sources": ["S231", "S225"]
+  }
+ },
+ "freeze": {
+  "F": "<the lane commit that first carries this file>"
+ }
+}

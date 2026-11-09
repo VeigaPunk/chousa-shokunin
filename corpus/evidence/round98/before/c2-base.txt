@@ -1,0 +1,9 @@
+# computed_against BASE=98b8177c1e8b39cdf1167928e4f5d609f6fa81b6
+$ git cat-file -e 98b8177c1e8b39cdf1167928e4f5d609f6fa81b6:corpus/knowledge/press-2015-statement-questions-r98.md
+fatal: path 'corpus/knowledge/press-2015-statement-questions-r98.md' exists on disk, but not in '98b8177c1e8b39cdf1167928e4f5d609f6fa81b6'
+exit=128
+$ python3 -B tools/gate-records.py verify --root . corpus/knowledge/press-2015-statement-questions-r98.md   # run on a scratch export of BASE
+GATE_RECORDS_ERROR missing corpus/knowledge/press-2015-statement-questions-r98.md
+exit=2
+$ BASE_HELD at BASE, recomputed with entry-controls-r98.py's own question_lines() and held() on the round-97 entry as committed at BASE (not an independent instrument):
+BASE_HELD=16/36 lines=[34, 36, 38, 39, 42, 44, 50, 57, 60, 62, 68, 71, 72, 73, 76, 79]
