@@ -1,0 +1,24 @@
+# (b) sibling: tameshi Europe PMC REST core records as tier A; abstractText quote convention
+## command: git -C tameshi-shokunin rev-parse --short HEAD
+ab60e134
+## command: git -C tameshi-shokunin grep -nI -e '^| S327 ' -e '^| S328 ' -- corpus/SOURCES.md | cut -c1-260
+corpus/SOURCES.md:203:| S327 | Quotation accuracy in medical journal articles — a systematic review and meta-analysis (Jergas, Baethge; PeerJ 2015, e1364; Europe PMC record) — https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.7717/peerj.
+corpus/SOURCES.md:204:| S328 | Accuracy of cited "facts" in medical research articles: a review of study methodology and recalculation of quotation error rate (Mogull; PLoS One 2017; Europe PMC record) — https://www.ebi.ac.uk/europepmc/webservices/rest/searc
+## command: git -C tameshi-shokunin show HEAD:.ufo/waves/round-100/w1/specs/R100SC1.md | sed -n '1,7p'
+# R100SC1 — scout — Re-open S327/S328 independently and find one more candidate
+
+Independently re-fetch the two rows' sources (curl into $S, record HTTP date, bytes, sha256):
+S327 Europe PMC REST `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.7717/peerj.1364&resultType=core&format=json`
+and S328 `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1371/journal.pone.0184727&resultType=core&format=json`;
+compare with the committed snapshots `.ufo/evidence/round-100/sources/s327.json`, `s328.json`; verify the
+quotes "Studies indicate, however, that quotations not serving their purpose-quotation errors-may be
+# ==== (b) sibling: kotodama round-51 — Europe PMC REST abstract graded tier 'B (abstract)'
+## command: git -C kotodama-shokunin rev-parse --short HEAD
+5fa04a9b
+## command: git -C kotodama-shokunin show HEAD:.ufo/waves/round-51/falsify/ReviewCSec13.md | grep -n 'S118'
+8:- Checked against: `corpus/knowledge/verification/calibration-registry.md` lines 30–42; the cited rows of `corpus/SOURCES.md` (S075, S076, S077, S078, S085, S113, S118, S119, S120, S121, S122); `corpus/QUALITY.md` line 29 (criterion 6); `PROVINCE.md` lines 16–20.
+44:- (a) "attitudes, access and stigma vary by village" is not in the S118 abstract. The abstract says nothing about stigma, attitudes or access.
+74:**L8. Missing periods.** Pointer: entry lines 203–211. Section 13 gives no years for Kusters 2010 (S118), Mayberry and Kluender 2018 (S119), Humphries et al. 2012 (S122), or the 2007 survey (S113). The counts carry no access date. Registry line 37 lists period as required. **Fix:** add the years and access dates.
+76:**L9. Letter overload.** Pointer: entry line 145 ("rows rest on opened sources (**B**)") and line 207 ("C … (S118)", where S118 is tier B). Calibration codes and source tiers share the letters B and C. **Fix:** write "tier B" where the source tier is meant.
+104:| S118 | https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1093/deafed/enp026&resultType=core&format=json | Abstract: "a utopia in the eyes of many Deaf people"; typologies from urban Deaf communities; "critically reviews the existing literature". No stigma, attitudes or access. | Partial; see M3 | B (abstract) | Partial |
+rc=0

@@ -1466,3 +1466,14 @@ successful-refused record form remain carried.
 - `lessons/round-97.md` — S225 (B) and S226 (C, corroboration only) admitted; CADTH Table 9 rejected for route (403); `web.archive.org` unreachable from this host.
 - Frontier advanced: the gap `corpus/README.md:1456` names — "the PRESS 2015 checklist's own element wording" — is held at question level through a reprint, not through the guideline; the round-96 self-test's measured blind spots (`R96MutantsC1` classes B and C, `R96SentinelC1` F1/F7) are closed for the named mutants.
 - Left open: the guideline statement, the E&E and CADTH's Table 9 (all 403 here); 17 of S225's 33 question lines are not quoted; which reprint's wording is the guideline's; the lane's records count files, not hits per line, and carry no reviewer or subject-heading field.
+
+## Round98 coverage and frontier (2026-11-09)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/press-2015-statement-questions-r98.md` | what the PRESS 2015 Guideline Statement's own abstract says PRESS 2015 is (four documents, of which the checklist is one), how it was made (systematic review, survey of experts, consensus forum), what its review found about the elements, the six retained elements and the removed seventh in the statement's words compared with the reprint's headings; and the 20 checklist question lines the round-97 entry did not quote (36/36 across the two entries) | S231 (B), S225 (B); S228-S230 rejected for route |
+| `../tools/search-rerun.py --selftest` | Round-98 self-test: 67 cases, led by a guard canary (`g00`) that runs the guard and summary code on fixed case sets; battery `corpus/evidence/round98/selftest-controls-r98.py` scores it against the 37 mutants round-97 seat `R97MutantsC1` wrote (35 killed, the round-97 tool kills 12), requires three equivalent mutants to survive and refuses a hash-of-self self-test | `.ufo/waves/round-98/claims.md`; `corpus/evidence/round98/` |
+
+- `lessons/round-98.md` — S231 admitted (B, the statement's abstract through Europe PMC's record); S228 (CADTH report 477 appendices, 403), S229 (PubMed, cookie challenge), S230 (NCBI Bookshelf, an http-200 reCAPTCHA page) rejected for route.
+- Frontier advanced: README Round97's "17 of S225's 33 question lines are not quoted" is closed (every question-mark line of the checklist is quoted whole); the guideline statement is held at abstract level; round-97 routed defects 1 (19 uncovered survivors, 18 now killed) and 2 (hash-of-self) are closed for the self-test.
+- Left open: the statement's body, the E&E and Table 9 (403 or challenge pages here); which reprint's question wording is the guideline's; `tools/gate-records.py` admits a quote from an http-200 challenge page (QUALITY 229, routed); `u01`/`u05` and the self-test's own exit path are not scored by the self-test.

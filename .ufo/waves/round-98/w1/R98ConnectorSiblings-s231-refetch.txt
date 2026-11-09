@@ -1,0 +1,19 @@
+# C2/S231 capture re-fetch probe (read-only; scratch=/fast/scratch/hyaku/chousa-r98/R98ConnectorSiblings, deleted before yield)
+# date: 2026-11-09T03:11:40Z
+# URL (from SOURCES row S231): https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:27005575%20AND%20SRC:MED&resultType=core&format=json
+# cmd: curl -sS -o a.json -w "HTTP=%{http_code} bytes=%{size_download}\n" "$U"  (twice, 2 s apart)
+HTTP=200 bytes=7289
+HTTP=200 bytes=7289
+# cmd: sha256sum a.json b.json   (live A, live B)
+e847017786e235a3ce442441f575be03bbe99192fd0287c4c4163fc52b419cd1  a.json
+e847017786e235a3ce442441f575be03bbe99192fd0287c4c4163fc52b419cd1  b.json
+# cmd: git -C chousa-shokunin show F:corpus/captures/4ec85a1e83553aa272caeb69.{raw,txt} | sha256sum
+4111c45aa041736ed313d577bdecd6581adffa62fb26e8630ccc6f9a054f0429  cap.raw
+4111c45aa041736ed313d577bdecd6581adffa62fb26e8630ccc6f9a054f0429  cap.txt
+# cmd: python3 json compare of cap.raw vs live a.json -> values equal, abstractText equal 1835 chars, no key value differs;
+# first differing byte at offset 2910: journalInfo.journal key order (nlmid before vs after isoabbreviation).
+cap : ..."issn":"0895-4356","nlmid":"8801383","isoabbreviation":"J Clin Epidemiol"...
+live: ..."issn":"0895-4356","isoabbreviation":"J Clin Epidemiol","nlmid":"8801383"...
+# conclusion: the body is semantically stable (same-day refetches byte-identical to each other) but the serialization is
+# not byte-stable against the committed capture; every quote still locates (gate-records operates on the capture text).
+rc=0

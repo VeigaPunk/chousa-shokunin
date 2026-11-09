@@ -1,0 +1,18 @@
+# (a) sibling: mado round-41 control-suite nonce lottery (determinism hazard for any kill tally)
+## command: git -C mado-shokunin rev-parse --short HEAD
+f77ed5e9
+## command: git -C mado-shokunin show HEAD:.ufo/waves/round-41/w1/MutC1CounterGates/matrix.md | grep -n -A6 'Control-suite flakiness'
+40:## Control-suite flakiness found while testing (side finding)
+41-
+42-Two controls have rare nonce-dependent kill conditions and fired on draws where the counter edit under test
+43-**cannot** have caused them:
+44-
+45-- **M27-boot-uppercase** flipped MET once (`nonce=041b7c817fd6b54a`, in the S02 first run; its 24/24 requires
+46-  gen3's interleaved noise to sample the uppercase `-- Boot AAAA…` line mid-session, which is `rng.choice`-dependent).
+# ==== (a) sibling: kagi round-62 instrument falsifiability (guard/self-invocation must execute)
+## command: git -C kagi-shokunin show HEAD:corpus/knowledge/claim-instrument-falsifiability.md | sed -n '5,8p'
+
+# Instrument falsifiability: a gate's self-invocation must execute its own aggregation, and a structural item must test its token in the asserting position
+
+Scope: the two round-62 claims of the kagi lane, measured on `kagi-shokunin` at BASE
+rc=0

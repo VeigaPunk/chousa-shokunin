@@ -1,0 +1,44 @@
+# (a) sibling: mori equivalent-mutant adjudication (committed knowledge)
+## command: git -C mori-shokunin rev-parse --short HEAD
+7765969c
+## command: git -C mori-shokunin show HEAD:corpus/knowledge/equivalent-mutant-adjudication-r84.md | sed -n '1,3p;24,34p'
+source: S599 — https://arxiv.org/abs/2408.01760v1, Large Language Models for Equivalent Mutant Detection: How Far Are We?, abstract; pin `corpus/evidence/sources-r84/arXiv-2408.01760-abs.html:121`, sha256 `688224106999973f3b5c318af871b77923df2c36d0e3e2d799424e2c697cff49`.
+verified-at: 2026-11-04
+recheck: 365d
+the survivor count and makes a mutation gate unclosable: the gate keeps demanding an arm that no
+assertion could ever make fail. The source grounds the cost side of that claim; the distinction is
+the lane's decision rule, frozen in `.ufo/waves/round-84/contract.md` P-C1.
+
+## K3 — The exemption is proven, not asserted
+
+An adjudicated equivalent mutant is exempt from the survivor count only while the graded bytes
+carry its **coupling marker** exactly once: the marker is the structural reason the dropped clause
+cannot be observed. For the two r84 exemptions the markers are `agreed == len(snapshot_tokens)`
+(M24c: an unclassified token is absent from `stated`, so it can never be counted agreed) and
+`agreed == len(snapshot_tokens)` plus `residual += duplicates` plus `duplicates == 0` (M24d: an
+# ==== (a) sibling: kotoba round-91 mutation battery with a disclosed-survivors leg
+## command: git -C kotoba-shokunin rev-parse --short HEAD
+0344dda
+## command: git -C kotoba-shokunin show HEAD:verifiers/check_mutation_battery.py | sed -n '1,12p;18,26p'
+#!/usr/bin/env python3
+"""Mutation battery over the round-89 gate instruments at one revision (round-90 C1).
+
+Frozen predicate (plans/round-90.md § C1; the same sentence is the receipt line):
+`python3 -B verifiers/check_mutation_battery.py --rev <rev> --work <dir>` prints
+`mutation battery killed K of M kill-set; equivalents survived E of E; disclosed survivors S of S`
+and exits 0 iff K == M and E == E and S == S_declared and guards G1-G3 PASS, where M, E and
+S_declared are the class counts of the committed manifest
+`verifiers/fixtures/mutation-battery/manifest.tsv` (classes kill, equivalent, survivor).
+
+Method. The revision is materialised as a scratch clone of the lane (<work>/fleet/<lane>),
+checked out detached at <rev>; the lane itself is only read. Each target's probes run unmodified
+Output lines that carry run-specific tokens (scratch paths, 12+ hex digits) are excluded from the
+observation; exit codes are always compared.
+
+Guards. G1 revision identity: --rev is a full commit of the lane, the scratch clone is detached at
+--rev with a clean tree, and every target and the manifest are read through `git show <rev>:<path>`,
+never the working tree. G2 copy integrity: each revision copy and each mutant is read back from
+disk and its sha256 must equal the sha256 recorded from the revision bytes. G3 registry presence:
+`git show <rev>:SKILL.md` names check_mutation_battery.py on at least one line. --allow-unregistered
+(a pre-registry opt-in, not part of the frozen predicate) reports G3 without letting it decide the exit.
+rc=0

@@ -1,0 +1,16 @@
+Content-recognition stand-in construction v2:
+- The battery's score() requires each mutant's `old` to occur EXACTLY ONCE in the tool source.
+  Embedding raw `new` strings into the tool breaks this for mutants whose old is substring of another new
+  (g01 old is prefix of x3 new; '    return 0' is substring of its own olds).
+- Workaround used in content-recog.py v2: store news hashed? No — store them encoded (e.g. base64 or joined
+  char codes) so their literal text never appears in source except the one code site. At runtime,
+  decode and substring-search the stripped source. This preserves one-site counts in the ORIGINAL source
+  (the battery applies mutants to the stand-in's source, where old still occurs once because encoded
+  news do not contain old verbatim).
+- For '    return 0' (g05/u01): encoded form avoids false positive on 'return 0 if...'; decoded search
+  still false-positives on substring unless exact-line check is used. Use exact-line for that one.
+- TINY single-char news from r96 battery (e.g. '0','1') were dropped in v2 (70/80 kept); those mutants
+  would survive a pure content-recog — noted as limitation, not relevant to named limit (c) which only
+  requires recognising THE THREE equivalents (to pass) or THE 37 (to kill). Dropping 10 tiny news means
+  up to 10 scored mutants escape, so v2 is NOT a full pass — only a demonstration of the mechanism.
+  A complete version must handle tiny news by (old,new) pair matching with exact-line/word-boundary logic.

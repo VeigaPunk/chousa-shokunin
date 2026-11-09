@@ -1,0 +1,16 @@
+# round 98 L1 probe at F=aac82684 (tools/gate-records.py unchanged since base): a GATE-RECORD quoting S230's http-200 reCAPTCHA body
+$ cat <scratch>/forged-s230.md
+# forged
+
+GATE-RECORD S230 url=https://www.ncbi.nlm.nih.gov/books/NBK98350/ fetched=2026-11-09T02:48:10Z tier=A decision=admit capture=corpus/captures/b5b8d050eea0c638e95ba674.txt capture_sha256=4f25f0b14fb2450c633eefc0bfc0b09db390dab39f51e357866703da5c187802 words=5 quote="Checking your browser before accessing"
+$ python3 -B tools/gate-records.py verify --root . <scratch>/forged-s230.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r98/L1/forged-s230.md:3 S230 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+$ /usr/bin/grep -lE 'Checking your browser|Cookies must be enabled|Just a moment|reCAPTCHA' corpus/captures/*.txt   # QUALITY 229 check, all stored captures
+corpus/captures/0954149536aaad411000e1fb.txt
+corpus/captures/58725f5e0ac436166546a5ec.txt
+corpus/captures/b5b8d050eea0c638e95ba674.txt
+corpus/captures/ff9013bd7d9387e45cd6e000.txt
+$ QUALITY 229 check over captures cited by a GATE-RECORD in corpus/knowledge and corpus/lessons (must print nothing)
+end

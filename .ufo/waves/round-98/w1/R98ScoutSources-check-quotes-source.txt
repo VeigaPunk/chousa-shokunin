@@ -1,0 +1,13 @@
+source lines 85-96 of entry-controls-r98.py at F (sed -n 85,96p)
+def check_quotes(text, caps):
+    bad = []
+    s225_lines = [norm(ln) for ln in caps["S225"].split("\n")]
+    for qid, src, q in quotes(text):
+        nq = norm(q)
+        if src not in caps or nq not in norm(caps[src]) or not 1 <= len(q.split()) <= 25:
+            bad.append(qid)
+        elif src == "S225" and not any(nq in ln for ln in s225_lines):
+            bad.append(qid)
+    return bad
+
+

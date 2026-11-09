@@ -1429,3 +1429,12 @@ the admitted entry that motivates it. Tier definitions live in
     and the other was wrong (12 for 16). Check: `grep -nE '[0-9]+ of the [0-9]+|[0-9]+/[0-9]+'` over the entry lists
     no count that the entry's controls do not recompute or that a named limit does not mark as unchecked.
     — `lessons/round-97.md` Mistakes 4.
+229. **A capture is quoted only when its text is the document — an http 200 can carry a challenge page.** Round 98's
+    NCBI Bookshelf GET (S230) answered http 200 with a reCAPTCHA page ("Checking your browser before accessing
+    www.ncbi.nlm.nih.gov"); `tools/capture-fetch.py` stored it and `tools/gate-records.py` accepts a GATE-RECORD
+    quoting it (`OK`, exit 0, `corpus/evidence/round98/gate-records-challenge-200.txt`) — the round-85 repair
+    narrowed admission to http 200, which does not rule this out. Check: `for k in $(grep -ohE
+    'capture=corpus/captures/[0-9a-f]{24}\.txt' corpus/knowledge/*.md corpus/lessons/*.md | cut -d= -f2 | sort -u);
+    do grep -lE 'Checking your browser|Cookies must be enabled|Just a moment|reCAPTCHA' "$k"; done` prints nothing
+    (a lexical floor: a challenge page in other words passes it; the gate-records rule is routed to round 99).
+    — `lessons/round-98.md` Mistakes 2.

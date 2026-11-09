@@ -1,0 +1,52 @@
+# C1 battery --no-regression under strace -f (trace=file,network,process); rc=0; SELFTEST_CONTROLS_R98=PASS
+## index: before (mtime; sha256[:16]) and after
+before 00:06:02.590639688 c2dc9db45995886d
+after  2026-11-09 00:07:42.104667677 -0300 c2dc9db45995886d
+## git subcommands executed on the lane root (argv after -C)
+    194 git, rev-parse
+    194 git, cat-file, blob, 00000000000000000000000000000000
+     24 git, -C, /fast/scratch/hyaku/chousa-r98/R, show, 98b8177c1e8b39cdf1167928e4f5d609
+     12 git, -C, /fast/scratch/hyaku/chousa-r98/R, status, --porcelain
+     12 git, -C, /fast/scratch/hyaku/chousa-r98/R, diff
+      6 git, -C, /fast/scratch/hyaku/chousa-r98/R, show, c8087ac529003e667505bcc624f9a7bd
+## write-capable opens, excluding /dev/null and the --work tree
+      1 3468208 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 3654853 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 3700403 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 3711370 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 3840944 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 3844019 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 3967450 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 3976286 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 4124659 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 4130877 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 83936 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+      1 91518 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+## count of /dev/null O_RDWR opens (git children)
+440
+## count of write opens under --work
+712
+## mutating fs syscalls not under --work
+     11 unlink("/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock") = 0
+      6 unlinkat(3, "empty", AT_REMOVEDIR) = 0
+      6 unlinkat(3, "cwd", AT_REMOVEDIR) = 0
+      6 unlinkat(3, "base-v02-env-drop-terminal.py", 0) = 0
+      6 unlinkat(3, "base-v01-env-git-prefix.py", 0) = 0
+      6 unlinkat(3, "base-u07-record-exists-refused.py", 0) = 0
+      6 unlinkat(3, "base-u06-git-timeout-0.py", 0) = 0
+      6 unlinkat(3, "base-u05-tree-files-jj.py", 0) = 0
+      6 unlinkat(3, "base-u04-static-dir-bracket.py", 0) = 0
+      6 unlinkat(3, "base-u03-blob-silent.py", 0) = 0
+## sockets
+0
+## execve counts (successful)
+      1 1576  execve("/usr/bin/python3", ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r98/R"..., "--selftest"], 0x7fffcda07c80 /* 273 vars */ <unfinished ...>
+      1 2842  execve("/usr/bin/python3", ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r98/R"..., "--selftest"], 0x7fffcda07c80 /* 273 vars */ <unfinished ...>
+      1 4247  execve("/usr/bin/python3", ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r98/R"..., "--selftest"], 0x7fffcda07c80 /* 273 vars */ <unfinished ...>
+      1 5349  execve("/usr/bin/python3", ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r98/R"..., "--selftest"], 0x7fffcda07c80 /* 273 vars */ <unfinished ...>
+      1 6292  execve("/usr/bin/python3", ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r98/R"..., "--selftest"], 0x7fffcda07c80 /* 273 vars */ <unfinished ...>
+      1 7539  execve("/usr/bin/python3", ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r98/R"..., "--selftest"], 0x7fffcda07c80 /* 273 vars */ <unfinished ...>
+      1 8723  execve("/usr/bin/python3", ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r98/R"..., "--selftest"], 0x7fffcda07c80 /* 273 vars */ <unfinished ...>
+      1 9628  execve("/usr/bin/python3", ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r98/R"..., "--selftest"], 0x7fffcda07c80 /* 273 vars */ <unfinished ...>
+    442 /usr/bin/git
+    717 /usr/bin/python3

@@ -1,0 +1,8 @@
+# C1 battery nondeterminism probe
+## command: git -C chousa-shokunin show F:corpus/evidence/round98/selftest-controls-r98.py | grep -n -e 'random' -e 'token_hex' -e 'shuffle' -e 'uuid' -e 'time'
+13:  EXTERNAL_R97  the 37 `R97MutantsC1` mutants (`MUTANTS` of the probe at BASE) applied one at a time; KILLED = exit 1,
+140:                print(f"CASE {tag} {name} SETUP applies {n} times FAIL")
+240:                print(f"CASE equivalent {name} SETUP applies {n} times FAIL")
+# every match is the substring 'times' inside 'SETUP ... applies N times' lines; no random/token_hex/shuffle/uuid/time module use.
+rc=0
+# correction: matches are the word 'time'/'times' only (docstring line 13 'at a time'; lines 140/240 'applies N times'); no random/token_hex/shuffle/uuid/time module use in the battery.

@@ -1,0 +1,22 @@
+# C1: does any predicate require the survivors to BE u01/u05? (F=aac826848dda5029ba459568b29d9a92176dc2b6)
+## command: git show aac826848dda5029ba459568b29d9a92176dc2b6:corpus/evidence/round98/selftest-controls-r98.py | grep -n 'NAMED_SURVIVORS\|required = \|KILL_REQUIRED\|reported, not required'
+15:                `Traceback` on stderr. Required: every mutant outside `NAMED_SURVIVORS` is KILLED (35 of 37); the two
+16:                named survivors are reported, not required
+58:NAMED_SURVIVORS = ("u01-verify-return-0", "u05-tree-files-jj")
+206:        if len(external) != 37 or not set(NAMED_SURVIVORS) <= set(external):
+209:        required = sorted(set(external) - set(NAMED_SURVIVORS))
+216:        t["KILL_REQUIRED"] = (k_req if not setup else 0, len(required))
+# derivation: KILL_REQUIRED k_req counts required = external - NAMED_SURVIVORS; EXTERNAL_R97_KILLED is printed, not asserted;
+# with |external|=37, a printed 35/37 and KILL_REQUIRED=35/35 force survivors == {u01,u05} (2 survive, none of the 35 required survives).
+# => the claim's 'all except the named survivors' is enforced indirectly, by the printed count under K1, not by a survivor-identity leg.
+## command: git show aac826848dda5029ba459568b29d9a92176dc2b6:tools/search-rerun.py | sed -n '253,258p;262p;487p'  (e3 equivalence witness)
+def lines_of(data):
+    """GNU grep's text lines: a final newline ends the last line; an empty file has none."""
+    lines = data.split(b"\n")
+    if lines and lines[-1] == b"":
+        lines.pop()
+    return lines
+    for line in lines_of(data):
+    case("m01-lines", lambda: lines_of(b"a\n") == [b"a"] and lines_of(b"") == [] and lines_of(b"a\n\n") == [b"a", b""])
+# lines_of always splits bytes (data.split(b"\n")) and its only in-tool caller is hit(); e3 (== b"" -> not ...) cannot differ on a bytes list.
+rc=0

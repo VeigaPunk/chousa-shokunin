@@ -2880,3 +2880,37 @@ connector 1, scribe 1), 0 dead; ledger `.ufo/waves/round-97/claim-falsification.
   m05) → SCORECARD planned r98; `R97ScoutSources` lead: CADTH report 477 appendices (PRESS checklist).
 - Census: start exit 0 (223 rows), end exit 0 (226 rows; new W01 for S226 tier C mined). QUALITY 227-228 added;
   mistakes mined: 5 (`corpus/lessons/round-97.md`).
+
+## Round 98 — 2026-11-09
+
+Lane `chousa`, round 98 (attempt 1, L1 `ChousaR98`). Base `98b8177c`; F `aac82684`; carrier `bc3ebc7c`; F2
+`1689f4ad`; F3 `1c6e01c5` (wording only). Claims `.ufo/waves/round-98/claims.md` (judged at the F2 sentences and
+predicates; F3 amends C1 named limit (e) and the C2 controls' docstring). One v1 wave, 12 seats (executor 2,
+mutation-tester 2, reviewer 2, critic 1, sentinel 1, scout 1, revenger 1, connector 1, scribe 1); ledger
+`.ufo/waves/round-98/claim-falsification.tsv` (16 rows, 9 falsifies-wording).
+
+- Motivating evidence C1: round-97 spot-check routed defects 1-2 — `R97MutantsC1`'s 37 mutants, 25 surviving the
+  round-97 self-test (g01-g05 in the guard and summary code), and a hash-of-self self-test passing the round-97
+  battery. After: self-test 67 cases led by a guard canary; F2 battery `KILL_REQUIRED=35/35`,
+  `EXTERNAL_R97_KILLED=35/37` (survivors u01, u05, named), base tool `12/37`; `EQUIVALENT_SURVIVED=3/3`,
+  `ORACLES_REJECTED=5/5` incl. hash-of-self and guard-blind; `KILL_RULE=4/4`, `DIRECT_PATH=2/2`
+  (`corpus/evidence/round98/after-f2/c1-all.txt`, `before-f2/c1-base.txt`).
+- Motivating evidence C2: SCORECARD planned item 2 — PRESS 2015 held through reprints only, 16 of S225's 36
+  question-mark lines quoted. Routes: CADTH report 477 appendices 403 (S228), PubMed cookie challenge (S229), NCBI
+  Bookshelf reCAPTCHA at http 200 (S230), Europe PMC REST record of PMID 27005575 200 (S231). After:
+  `corpus/knowledge/press-2015-statement-questions-r98.md`, `ENTRY_CONTROLS_R98=PASS`, 36/36 (base 16/36),
+  `FIELD_SCOPED=15/15`, `IDENTITY=1/1`, `FORGERY_REFUSED=12/12` (`after-f3/c2-all.txt`).
+- Correction (plan, A5, `R98RevenPrior`): "19 mutants no lane instrument catches" is R97MutantsC1's count; at BASE the
+  round-97 battery, run with `--tool`, fails on g01, g03 and g04. The C1 sentence speaks of the self-test.
+- Correction (C1 named limit (e), A6, `R98SentinelC1` F1-F2): the NO_WRITE leg does not observe writes outside its
+  empty directory; the self-test's git children open `/dev/null` O_RDWR and read the global git config.
+- Correction (approval table, `R98ScribeLesson` F2): its first sentence said the whole table preceded every GET;
+  three rows were appended between GETs, each before its own GET. Corrected at F2 with the reason in the file.
+- Correction (S231 tier, B5): A → B before landing (carrier rule; kotodama grades the same shape B).
+- Found: `tools/gate-records.py` admits a quote from an http-200 challenge page (S230;
+  `corpus/evidence/round98/gate-records-challenge-200.txt`); QUALITY 229 added, the tool rule routed to round 99.
+- Routed: `R98MutantsC1` G01-G03/D05 and `R98ScribeLesson` F1 (checker-of-the-checker survivors);
+  `R98ConnectorSiblings` R1 (battery determinism), R3 (equivalence witness); `R98MutantsC2` m10, E3; `R98SentinelC1`
+  F8 (tracked absolute symlink `.ufo/waves/round-84/w1/R84ExecForge/forge/linkcap.txt` into a scratch path); D1
+  (`R98RevenPrior` proposes requiring the content-addressed key in both `gate-records.py` refetch branches).
+- Census: start exit 0, end exit 0 (rows 226 → 230). QUALITY 229 added; mistakes mined: 4 (`corpus/lessons/round-98.md`).

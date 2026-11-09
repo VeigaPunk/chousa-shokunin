@@ -1,0 +1,89 @@
+# C1 battery legs at F=aac826848dda5029ba459568b29d9a92176dc2b6
+## command: git -C chousa-shokunin rev-parse aac826848dda5029ba459568b29d9a92176dc2b6:corpus/evidence/round98/selftest-controls-r98.py
+5a29d673371cdf3bf2ce868c5ab7d6fd3887d229
+## command: git show aac826848dda5029ba459568b29d9a92176dc2b6:corpus/evidence/round98/selftest-controls-r98.py | sha256sum
+942b70692069c7b42108f1274c78f37acbe063fbf48b27ad7fd0166443b03179  -
+
+## docstring lines 13-35 (legs, survivors rule)
+  EXTERNAL_R97  the 37 `R97MutantsC1` mutants (`MUTANTS` of the probe at BASE) applied one at a time; KILLED = exit 1,
+                `SEARCH_RERUN_SELFTEST: FAIL` printed, at least one `CASE_IDS` id (or `setup`) in `failed=`, no
+                `Traceback` on stderr. Required: every mutant outside `NAMED_SURVIVORS` is KILLED (35 of 37); the two
+                named survivors are reported, not required
+  DO_NOTHING    the same 37 applied to the tool at BASE (the round-97 landing) under the same rule; the control is
+                refused when it fails the EXTERNAL_R97 requirement; its count is printed as BASE_KILLED
+  PRIOR         the 34 external mutants of the round-97 battery (its `EXCLUDED`, `SENTINEL`, `RESIDUE` literals and
+                the round-96 probe it reads, all at BASE) and the 23 `MUTANTS` of the round-96 battery, still killed
+  EQUIVALENT    three mutants that do not change what the tool computes (a trailing comment line, a reworded
+                docstring, `lines[-1] == b""` written as `not lines[-1]` on a list of bytes) must SURVIVE: exit 0 and
+                the POSITIVE last line. A self-test that kills by noticing any change to its own bytes fails here
+  ORACLES       five stand-ins scored by this battery must FAIL it: a constant PASS printer, a hollow self-test,
+                an always-FAIL self-test, a guard-blind self-test (canary result forced ok), and a hash-of-self
+                self-test (the real tool plus a check of its own sha256 that fails on any byte change)
+  NO_WRITE      the lane's `git status --porcelain` and `git diff` digest at battery start; `--selftest` run with cwd,
+                HOME and TMPDIR in an empty directory under --work; the directory stays empty and the lane status and
+                diff digest equal the battery-start ones
+  REGRESSION    `corpus/evidence/round95/rerun-controls-r95.py --tool <tool>` prints `RERUN_CONTROLS=PASS` and
+                `corpus/evidence/round95/mutants-r95.py` prints `MUTANTS_KILLED=10/10` (only with the default tool)
+
+Named survivors (not required to die; the self-test does not exercise these readers): `u01-verify-return-0`
+(`verify`'s exit code; the round-95 battery catches it) and `u05-tree-files-jj` (the disk reader's `.jj` pruning;
+no lane instrument catches it).
+
+## lines 56-82 (NAMED_SURVIVORS, EQUIVALENT)
+N_CASES = 67
+PASS_LINE = f"SEARCH_RERUN_SELFTEST: PASS cases={N_CASES}/{N_CASES}"
+NAMED_SURVIVORS = ("u01-verify-return-0", "u05-tree-files-jj")
+CASE_IDS = (
+    "g00-guard-canary",
+    "p01-parse-good", "p02-no-section", "p03-header", "p04-engine", "p05-globstar", "p06-dotdot", "p07-posix-class",
+    "p08-backtick", "p09-short-rev", "p10-zero-with-set", "p11-dup-id", "p12-row-after-break", "p13-absolute-glob",
+    "r01-signed-hits", "r02-bad-date", "r03-upper-rev", "r04-q0-id", "r05-empty-expression", "r06-empty-segment",
+    "r07-trailing-comma", "r16-sep-width", "p14-escaped-pipe", "r08-upper-digest-is-a-path", "m01-lines",
+    "m02-dotfile", "m03-segment", "r09-glob-longer", "m04-per-line", "m05-case", "r10-regex-mid-line",
+    "r11-regex-non-utf8", "m06-digest", "m07-static-dir", "r12-static-dir-literal", "m08-env-scrub", "r13-env-guards",
+    "j01-exact", "j02-count", "j03-set", "j04-digest", "j05-dup-path", "j06-tree-moved", "j07-tree-strict",
+    "j08-tree-swap", "j09-zero", "r14-two-codes", "r15-digest-at-rev", "j10-tally",
+    "r17-row-no-end-pipe", "r18-heading-suffix", "r19-two-sections", "r20-two-dash-sep", "r21-dash-set-nonzero",
+    "r22-dot-segment", "r23-open-backtick", "r24-posix-upper", "r25-digest-byte-order",
+    "r26-git-prefix-not-git-underscore", "r27-static-dir-bracket", "r28-at-rev-two-static-dirs",
+    "r29-blob-unreadable", "r30-record-not-symlink", "r31-fixed-mid-line", "r32-rev-token", "r33-count-over",
+    "r34-git-runs-bounded",
+)
+EQUIVALENT = {
+    "e1-trailing-comment": ("\nif __name__ == \"__main__\":\n    sys.exit(main(sys.argv[1:]))\n",
+                            "\nif __name__ == \"__main__\":\n    sys.exit(main(sys.argv[1:]))\n# equivalent mutant\n"),
+    "e2-digest-docstring": ("    \"\"\"sha256 of the paths as bytes, byte-sorted,",
+                            "    \"\"\"SHA-256 of the paths as bytes, byte-sorted,"),
+    "e3-lines-not-empty": ('    if lines and lines[-1] == b"":', "    if lines and not lines[-1]:"),
+}
+HASH_ANCHOR = "    try:\n        guard_ok, guard_detail = _guard_canary()\n"
+
+## lines 205-220 (required-set construction)
+        external = {m[0]: (m[1], m[2]) for m in literal(reads["probe"], "MUTANTS")}
+        if len(external) != 37 or not set(NAMED_SURVIVORS) <= set(external):
+            print(f"SETUP expected 37 R97MutantsC1 mutants including the named survivors, got {len(external)}")
+            return 2
+        required = sorted(set(external) - set(NAMED_SURVIVORS))
+        src = open(tool, encoding="utf-8").read()
+
+        res, setup = rn.score(src, external, work, "r97ext")
+        k_req = sum(1 for m in required if res.get(m))
+        k_all = sum(1 for v in res.values() if v)
+        survivors = sorted(m for m, v in res.items() if not v)
+        t["KILL_REQUIRED"] = (k_req if not setup else 0, len(required))
+        print(f"CASE external-r97 EXTERNAL_R97_KILLED={k_all}/{len(external)} setup={setup} "
+              f"survivors={','.join(survivors) or '-'}")
+
+        bres, bsetup = rn.score(reads["base"], external, work, "base")
+
+## lines 300-308 (summary + pass gate)
+            print(f"CASE regression-mutants-r95 rc={rc} {'ok' if ok else 'FAIL'}")
+            reg += 1 if ok else 0
+            t["REGRESSION_R95"] = (reg, 2)
+
+        print(" ".join(f"{k}={x}/{y}" for k, (x, y) in t.items())
+              + f" EXTERNAL_R97_KILLED={k_all}/{len(external)} BASE_KILLED={bk}/{len(external)} CASES={N_CASES}")
+        passed = all(x == y and y > 0 for x, y in t.values())
+        print("SELFTEST_CONTROLS_R98=" + ("PASS" if passed else "FAIL"))
+        return 0 if passed else 1
+rc=0

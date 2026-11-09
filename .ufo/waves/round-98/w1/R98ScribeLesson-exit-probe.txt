@@ -1,0 +1,27 @@
+# R98ScribeLesson exit-path probe (scribe). Mutant m1 = F's tools/search-rerun.py with selftest()'s final 'return _summary(results)' replaced by '_summary(results)' + 'return 0' (one site; the 'return _summary(results)' line is unique at F: count=1).
+# drive.py replaces the 67-case set with ONE failing case (probe-false) and keeps the real guard canary; selftest() return value is printed.
+$ python3 -B drive.py <F tool copy base.py>
+SELFTEST g00-guard-canary ok fail_set=ok pass_set=ok
+SELFTEST probe-false FAIL
+SEARCH_RERUN_SELFTEST: FAIL cases=1/2 failed=probe-false
+selftest() returned 1
+exit=0
+$ python3 -B drive.py m1-selftest-swallows-fail.py
+SELFTEST g00-guard-canary ok fail_set=ok pass_set=ok
+SELFTEST probe-false FAIL
+SEARCH_RERUN_SELFTEST: FAIL cases=1/2 failed=probe-false
+selftest() returned 0
+exit=0
+$ healthy F tree: python3 -B tools/search-rerun.py --selftest (cwd=/fast/scratch/hyaku/chousa-r98/R98ScribeLesson/repo)
+SEARCH_RERUN_SELFTEST: PASS cases=67/67
+exit=0
+$ healthy m1 tree: python3 -B search-rerun.py --selftest (cwd=/fast/scratch/hyaku/chousa-r98/R98ScribeLesson/mut)
+SEARCH_RERUN_SELFTEST: PASS cases=67/67
+exit=0
+$ diff F vs m1 (expect one hunk)
+723c723,724
+<     return _summary(results)
+---
+>     _summary(results)
+>     return 0
+diff_exit=1

@@ -1,0 +1,7 @@
+import importlib.util, io, contextlib, os, sys
+spec = importlib.util.spec_from_file_location("sr", sys.argv[1])
+mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+b = dict(os.environ)
+with contextlib.redirect_stdout(io.StringIO()):
+    r1 = mod.selftest(); r2 = mod.selftest()
+print("twice", r1, r2, "env_same", dict(os.environ) == b)

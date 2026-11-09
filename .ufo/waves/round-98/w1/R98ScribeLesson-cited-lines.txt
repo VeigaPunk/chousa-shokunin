@@ -1,0 +1,35 @@
+# R98ScribeLesson — the probe's SHA, plus the line numbers cited by the drafts (observed now)
+$ sha256sum corpus/evidence/round98/selftest-controls-r98.py (lane) and the F copy
+942b70692069c7b42108f1274c78f37acbe063fbf48b27ad7fd0166443b03179  corpus/evidence/round98/selftest-controls-r98.py
+942b70692069c7b42108f1274c78f37acbe063fbf48b27ad7fd0166443b03179  /fast/scratch/hyaku/chousa-r98/R98ScribeLesson/repo/corpus/evidence/round98/selftest-controls-r98.py
+$ git show 98b8177c:tools/search-rerun.py | sed -n '569,587p' (base guard lines)
+L1+568	    def case(cid, fn):
+L2+568	        try:
+L3+568	            got = fn()
+L4+568	            ok, detail = got if isinstance(got, tuple) else (got, "")
+L5+568	        except Exception as exc:  # a crash inside a case is that case's failure
+L6+568	            ok, detail = False, f"raised {type(exc).__name__}: {exc}"
+L7+568	        results.append((cid, bool(ok)))
+L8+568	        print(f"SELFTEST {cid} {'ok' if ok else 'FAIL'}" + (f" {detail}" if detail else ""))
+L9+568	
+L10+568	    try:
+L11+568	        _selftest_cases(case)
+L12+568	    except Exception as exc:  # a crash in shared set-up (or in `case`) fails the run with a summary
+L13+568	        results.append(("setup", False))
+L14+568	        print(f"SELFTEST setup FAIL raised {type(exc).__name__}: {exc}")
+L15+568	
+L16+568	    n, k = len(results), sum(1 for _, ok in results if ok)
+L17+568	    bad = [cid for cid, ok in results if not ok]
+L18+568	    print(f"SEARCH_RERUN_SELFTEST: {'PASS' if k == n else 'FAIL'} cases={k}/{n}" + (f" failed={','.join(bad)}" if bad else ""))
+L19+568	    return 0 if k == n else 1
+$ F lines: _guard_canary def, selftest def, canary call, return
+662:def _summary(results):
+667:    return 0 if k == n else 1
+676:def _guard_canary():
+702:def selftest():
+715:        guard_ok, guard_detail = _guard_canary()
+723:    return _summary(results)
+$ round-97 battery guard mutants (x1-x3 are raise-only)
+125:    "x1-git-env-raises": (
+129:    "x2-st-row-raises": (  # anchored on the prefix of st_row's return line, which base and F share
+133:    "x3-case-raises-after-guard": (

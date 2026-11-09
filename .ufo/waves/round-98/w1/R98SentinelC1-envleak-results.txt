@@ -1,0 +1,24 @@
+## envleak in-process (selftest(), GITFOO preset / unset / GIT_DIR+GIT_NO_LAZY_FETCH+GIT_NO_REPLACE_OBJECTS preset / GIT_CONFIG_PARAMETERS+GIT_TRACE)
+--- GITFOO=preset-val
+rc 0 last SEARCH_RERUN_SELFTEST: PASS cases=67/67
+env_diff_after_selftest {}
+GITFOO after 'preset-val' GIT_DIR after None
+exit=0
+--- GITFOO unset
+rc 0 last SEARCH_RERUN_SELFTEST: PASS cases=67/67
+env_diff_after_selftest {}
+GITFOO after None GIT_DIR after None
+exit=0
+--- GIT_DIR=/nonexistent GIT_NO_LAZY_FETCH=0 GIT_NO_REPLACE_OBJECTS=0 GITFOO=x
+rc 0 last SEARCH_RERUN_SELFTEST: PASS cases=67/67
+env_diff_after_selftest {}
+GITFOO after 'x' GIT_DIR after '/nonexistent'
+exit=0
+--- GIT_CONFIG_PARAMETERS + GIT_TRACE + GITFOO=x
+rc 0 last SEARCH_RERUN_SELFTEST: PASS cases=67/67
+env_diff_after_selftest {}
+GITFOO after 'x' GIT_DIR after None
+exit=0
+--- selftest twice in one process
+twice 0 0 env_same True
+exit=0

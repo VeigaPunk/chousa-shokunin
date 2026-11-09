@@ -1,0 +1,30 @@
+# R98SentinelC1 strace audit of: python3 -B tools/search-rerun.py --selftest (clone at F aac826848dda5029ba459568b29d9a92176dc2b6)
+# strace -f -qq -e trace=file,network,process ; exit: SEARCH_RERUN_SELFTEST: PASS cases=67/67
+## python/git execve (successful, ENOENT PATH probes excluded)
+pid 3083652 /usr/bin/python3
+pid 3084467 /usr/bin/git
+pid 3084517 /usr/bin/git
+## processes: clone/vfork count
+2
+## write-capable opens (O_WRONLY|O_RDWR|O_CREAT|O_APPEND|O_TRUNC)
+3084467 openat(AT_FDCWD, "/dev/null", O_RDWR) = 3
+3084517 openat(AT_FDCWD, "/dev/null", O_RDWR) = 3
+## mutating fs syscalls (rename/unlink/mkdir/rmdir/chmod/truncate/link/symlink)
+0
+## socket/connect syscalls
+0
+## /dev/null opens
+3084467 execve("/home/vgpnk/.opencode/bin/git", ["git", "-C", "/dev/null", "cat-file", "blob", "00000000000000000000000000000000"...], 0x55b61918cc00 /* 272 var
+3084467 openat(AT_FDCWD, "/dev/null", O_RDWR) = 3
+3083652 openat(AT_FDCWD, "/dev/null", O_RDONLY|O_CLOEXEC) = 3
+3084517 execve("/home/vgpnk/.opencode/bin/git", ["git", "-C", "/dev/null", "rev-parse"], 0x55b61918b280 /* 272 vars */) = -1 ENOENT (No such file or directory)
+3084517 openat(AT_FDCWD, "/dev/null", O_RDWR) = 3
+## git config reads
+3084467 access("/etc/gitconfig", R_OK)  = -1 ENOENT (No such file or directory)
+3084467 access("/home/vgpnk/.config/git/config", R_OK) = 0
+3084467 openat(AT_FDCWD, "/home/vgpnk/.config/git/config", O_RDONLY) = 3
+3084467 access("/home/vgpnk/.gitconfig", R_OK) = -1 ENOENT (No such file or directory)
+3084517 access("/etc/gitconfig", R_OK)  = -1 ENOENT (No such file or directory)
+3084517 access("/home/vgpnk/.config/git/config", R_OK) = 0
+3084517 openat(AT_FDCWD, "/home/vgpnk/.config/git/config", O_RDONLY) = 3
+3084517 access("/home/vgpnk/.gitconfig", R_OK) = -1 ENOENT (No such file or directory)

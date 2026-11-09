@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+"""R98MutantsC1 second probe: (a) combined tool mutants that the one-site probe cannot reach (a guard fault plus a
+second fault that only the canary's all/any, exit-code or direct-FAIL leg would notice), scored by the frozen
+killed() rule; (b) six one-site mutants of the battery corpus/evidence/round98/selftest-controls-r98.py, each run with
+--no-regression --work <scratch>; a battery mutant SURVIVES if it still prints SELFTEST_CONTROLS_R98=PASS."""
+import os
+import subprocess
+import sys
+
+S = "/fast/scratch/hyaku/chousa-r98/R98MutantsC1"
+REPO = os.path.join(S, "repo")
+OUT = os.path.join(S, "probe98b")
+os.makedirs(OUT, exist_ok=True)
+TOOL_SRC = open(os.path.join(REPO, "tools", "search-rerun.py"), encoding="utf-8").read()
+BAT_SRC = open(os.path.join(REPO, "corpus", "evidence", "round98", "selftest-controls-r98.py"), encoding="utf-8").read()
+
+COMBOS = {
+    # canary exit-code leg dropped (G03) + summary wrong only on the 3-failure canary set (rc 0 when k==1 and n==4)
+    "X1-G03+rc-wrong-on-canary-fail": [
+        ("seen.append(rc == want_rc and tuple(", "seen.append(tuple("),
+        ("    return 0 if k == n else 1", "    return 0 if k == n or k == 1 else 1"),
+    ],
+    # canary all->any (G06) + a summary that breaks only the 1-case pass set (never reached by the real run)
+    "X2-G06+pass-set-only-break": [
+        ("    return all(seen), f\"fail_set=", "    return any(seen), f\"fail_set="),
+        ("    return 0 if k == n else 1", "    return 0 if k == n and n > 1 else 1"),
+    ],
+    # guard drops the pass set (fails the canary) and the direct FAIL path returns 0: the battery's killed() needs rc 1
+    "X3-G04+direct-FAIL-rc0": [
+        ("((failing, CANARY_FAIL, 1), (passing, CANARY_PASS, 0)):", "((failing, CANARY_FAIL, 1),):"),
+        ("        return 1\n    return _summary(results)", "        return 0\n    return _summary(results)"),
+    ],
+    # one real case fails (R17) and the summary exits 0 for k == n-1: the self-test prints FAIL with rc 0
+    "X4-R17+summary-rc0-on-one-fail": [
+        ('st_row().rstrip("\\n").rstrip("|") + "\\n"', 'st_row().rstrip("\\n") + "\\n"'),
+        ("    return 0 if k == n else 1", "    return 0 if k >= n - 1 else 1"),
+    ],
+}
+# the r17 site in the tool is the refusal() tuple: the replacement above targets the tool's own literal
+COMBO_SRC_FIX = {
+    "X4-R17+summary-rc0-on-one-fail": ('ST_HEAD + st_row().rstrip("\\n").rstrip("|") + "\\n"',
+                                       'ST_HEAD + st_row().rstrip("\\n") + "\\n"'),
+}
+
+BATTERY = {
+    "B1-kill-rule-no-rc": ('dead = rc == 1 and "SEARCH_RERUN_SELFTEST: FAIL" in out',
+                           'dead = "SEARCH_RERUN_SELFTEST: FAIL" in out'),
+    "B2-equivalent-inverted": ("surv += 1 if ok else 0", "surv += 0 if ok else 1"),
+    "B3-named-widened": ('NAMED_SURVIVORS = ("u01-verify-return-0", "u05-tree-files-jj")',
+                         'NAMED_SURVIVORS = ("u01-verify-return-0", "u05-tree-files-jj", "u02-run-at-rev-tops-0")'),
+    "B4-do-nothing-flipped": ("ok = bsetup == 0 and breq < len(required)",
+                              "ok = bsetup == 0 and breq >= len(required)"),
+    "B5-oracle-dropped": ('                "hash-of-self": hos,\n', ""),
+    "B6-required-from-survivors": ("        k_req = sum(1 for m in required if res.get(m))",
+                                   "        required = [m for m in required if res.get(m)]\n"
+                                   "        k_req = sum(1 for m in required if res.get(m))"),
+}
+
+
+def apply(src, edits):
+    out = src
+    for old, new in edits:
+        n = out.count(old)
+        if n != 1:
+            return None, n
+        out = out.replace(old, new)
+    return out, 1
+
+
+def selftest(path):
+    p = subprocess.run([sys.executable, "-B", path, "--selftest"], capture_output=True, text=True, cwd=OUT)
+    failed = next((ln.split("failed=")[1] for ln in p.stdout.splitlines() if "failed=" in ln), "-")
+    dead = p.returncode == 1 and "SEARCH_RERUN_SELFTEST: FAIL" in p.stdout and "Traceback" not in p.stderr
+    last = p.stdout.splitlines()[-1] if p.stdout.splitlines() else ""
+    return dead, p.returncode, failed, last
+
+
+def main():
+    out = []
+    # (a) combos: sites applied once each; killed() rule unchanged
+    for name, edits in COMBOS.items():
+        if name in COMBO_SRC_FIX:
+            edits = [COMBO_SRC_FIX[name]] + edits[1:]
+        src, n = apply(TOOL_SRC, edits)
+        if src is None:
+            out.append(f"COMBO {name} SETUP applies {n} times SKIP")
+            continue
+        mp = os.path.join(OUT, f"combo-{name}.py")
+        open(mp, "w", encoding="utf-8").write(src)
+        dead, rc, failed, last = selftest(mp)
+        out.append(f"COMBO {name} rc={rc} {'KILLED' if dead else 'SURVIVED'} failed={failed} last={last!r}")
+    # (b) battery mutants
+    for name, (old, new) in BATTERY.items():
+        n = BAT_SRC.count(old)
+        if n != 1:
+            out.append(f"BATTERY {name} SETUP applies {n} times SKIP")
+            continue
+        mp = os.path.join(OUT, f"bat-{name}.py")
+        mut = BAT_SRC.replace(old, new)
+        open(mp, "w", encoding="utf-8").write(mut)
+        work = os.path.join(OUT, f"w-{name}")
+        p = subprocess.run([sys.executable, "-B", mp, "--root", REPO, "--work", work, "--no-regression"],
+                           capture_output=True, text=True, cwd=OUT, timeout=900)
+        lines = p.stdout.splitlines()
+        verdict = [ln for ln in lines if ln.startswith("SELFTEST_CONTROLS_R98=")]
+        tally = [ln for ln in lines if ln.startswith("POSITIVE=")]
+        survived = bool(verdict) and verdict[-1] == "SELFTEST_CONTROLS_R98=PASS"
+        out.append(f"BATTERY {name} rc={p.returncode} {'SURVIVED' if survived else 'KILLED'} "
+                   f"verdict={verdict[-1] if verdict else '(none)'}")
+        out.append(f"  tally: {tally[-1] if tally else '(none)'}")
+        out.append(f"  stderr_tail: {p.stderr.strip().splitlines()[-1] if p.stderr.strip() else '-'}")
+    text = "\n".join(out) + "\n"
+    sys.stdout.write(text)
+    open(os.path.join(S, "probe98b-out.txt"), "w", encoding="utf-8").write(text)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,21 @@
+seat: R98ReviewerC2; capture corpus/captures/347c55ba9be9d63afe17986e.txt (sha abd08a93... verified)
+form feeds (FF) bytes in file: 2; CR: 0; LF: 83 -> sed/grep and python splitlines number lines differently (r97 entry documented for line 73/74; r98 entry states no convention)
+
+sed 66: 1 ?s :: Have the appropriate fields been searched; for example, is the choice of the text word fie
+sed 67: 1 ?s :: or excluded (database specific)?
+sed 68: 1 ?s :: Should any long strings be broken into several shorter search statements?
+sed 78: 3 ?s :: Are any potentially helpful limits or filters missing? Are the limits or filters too broad
+sed 79: 1 ?s :: Are sources cited for the filters used?
+sed 53: 2 ?s :: Are major headings (“starring” or restrict to focus) used? If so, is there adequate justif
+sed 64: 3 ?s :: Are acronyms or abbreviations used appropriately? Do they capture irrelevant material? Are
+sed 65: 3 ?s :: Are the keywords specific enough or too broad? Are too many or too few keywords used? Are 
+
+python splitlines 66: '                                        Are the keywords specific enough or too broad? Are'
+python splitlines 67: '                                        Have the appropriate fields been searched; for exa'
+python splitlines 68: '                                        or excluded (database specific)?'
+python splitlines 78: '                                        Are all limits and filters used appropriately and '
+python splitlines 79: '                                        Are any potentially helpful limits or filters miss'
+
+entry lines 31-32 (K17-K18=line66, K19=line67, K21-K22=line78): correct under sed/grep, off-by-one under splitlines; convention unstated.
+claims (c)/entry Named limits 'lines 64,65,78 carry several; 66-67 one': sed multi-? lines are 53(2),64(3),65(3),78(3) -> 53 omitted; '66-67 one' true as ?-count (1 each), false as question-count (two questions: one whole + one split K17-K19).
+commands: sed -n Np; grep -n; python splitlines probe. exit 0.

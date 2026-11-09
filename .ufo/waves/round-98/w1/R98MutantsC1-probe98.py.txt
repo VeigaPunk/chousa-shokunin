@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""R98MutantsC1 probe: 30 NEW one-site mutants of tools/search-rerun.py at aac8268, weighted on the round-98
+code (guard canary, _collect, _summary, the direct FAIL path, cases r17-r34). Each (name, old, new) must apply
+exactly once to the attacked source. KILLED = `python3 -B <mutant> --selftest` exits 1, prints
+`SEARCH_RERUN_SELFTEST: FAIL`, names a case id or `setup` in failed=, and prints no Traceback on stderr (the
+frozen battery's killed() rule, unchanged)."""
+import os
+import subprocess
+import sys
+
+S = "/fast/scratch/hyaku/chousa-r98/R98MutantsC1"
+REPO = os.path.join(S, "repo")
+OUT = os.path.join(S, "probe")
+os.makedirs(OUT, exist_ok=True)
+SRC = open(os.path.join(REPO, "tools", "search-rerun.py"), encoding="utf-8").read()
+
+MUTANTS = [
+    # --- guard canary (_guard_canary) ---
+    ("G01-canary-compare-prefix", "seen.append(rc == want_rc and tuple(buf.getvalue().splitlines()) == want)",
+     "seen.append(rc == want_rc and tuple(buf.getvalue().splitlines()[:len(want)]) == want)"),
+    ("G02-canary-compare-sorted", "seen.append(rc == want_rc and tuple(buf.getvalue().splitlines()) == want)",
+     "seen.append(rc == want_rc and tuple(sorted(buf.getvalue().splitlines())) == tuple(sorted(want)))"),
+    ("G03-canary-want-rc-ignored", "seen.append(rc == want_rc and tuple(",
+     "seen.append(tuple("),
+    ("G04-canary-drop-pass-set", "((failing, CANARY_FAIL, 1), (passing, CANARY_PASS, 0)):",
+     "((failing, CANARY_FAIL, 1),):"),
+    ("G05-canary-drop-fail-set", "((failing, CANARY_FAIL, 1), (passing, CANARY_PASS, 0)):",
+     "((passing, CANARY_PASS, 0),):"),
+    ("G06-canary-seen-any", "    return all(seen), f\"fail_set=",
+     "    return any(seen), f\"fail_set="),
+    ("G07-canary-detail-hardcoded", "f\"fail_set={'ok' if seen[0] else 'WRONG'} pass_set",
+     "f\"fail_set=ok pass_set"),
+    ("G08-canary-no-redirect", "        with contextlib.redirect_stdout(buf):",
+     "        with contextlib.nullcontext():"),
+    ("G09-canary-fail-text", "\"SELFTEST canary-false FAIL\",", "\"SELFTEST canary-false ok\","),
+    ("G10-canary-pass-text", "\"SEARCH_RERUN_SELFTEST: PASS cases=1/1\")", "\"SEARCH_RERUN_SELFTEST: PASS cases=1/2\")"),
+    ("G11-canary-fail-summary-text", "failed=canary-false,canary-raise,setup\")",
+     "failed=canary-false,canary-raise\")"),
+    # --- _collect ---
+    ("K01-collect-canary-false-counts", "results.append((cid, bool(ok)))",
+     "results.append((cid, bool(ok) or cid == \"canary-false\"))"),
+    ("K02-collect-setup-true", "results.append((\"setup\", False))", "results.append((\"setup\", True))"),
+    ("K03-collect-setup-text", "print(f\"SELFTEST setup FAIL raised", "print(f\"SELFTEST setup FAIL was raised"),
+    ("K04-collect-cases-skipped", "        cases(case)\n", "        pass\n"),
+    # --- _summary ---
+    ("S01-summary-pass-any", "{'PASS' if k == n else 'FAIL'} cases={k}/{n}", "{'PASS' if k else 'FAIL'} cases={k}/{n}"),
+    ("S02-summary-failed-truncated", "bad = [cid for cid, ok in results if not ok]",
+     "bad = [cid for cid, ok in results if not ok][:3]"),
+    ("S03-summary-rc-tolerant", "    return 0 if k == n else 1", "    return 0 if k >= n - 1 else 1"),
+    # --- selftest(): canary wiring and the direct FAIL path ---
+    ("D01-direct-fail-id", "failed=g00-guard-canary\")", "failed=setup\")"),
+    ("D02-direct-fail-rc0", "        return 1\n    return _summary(results)", "        return 0\n    return _summary(results)"),
+    ("D03-canary-except-narrow", "    except Exception as exc:  # the canary itself crashed",
+     "    except Setup as exc:  # the canary itself crashed"),
+    ("D04-direct-fail-skipped", "    if not guard_ok:", "    if False:"),
+    ("D05-g00-label", "print(f\"SELFTEST g00-guard-canary {", "print(f\"SELFTEST g00-guard-canary-x {"),
+    # --- cases r17-r34 (the case's input or the code it reads) ---
+    ("R17-row-no-end-pipe-kept", r'st_row().rstrip("\n").rstrip("|") + "\n"', r'st_row().rstrip("\n") + "\n"'),
+    ("R18-heading-startswith", 'ln.rstrip() == "## Searches"', 'ln.strip().startswith("## Searches")'),
+    ("R19-two-sections-allowed", "    if len(starts) != 1:", "    if len(starts) > 2:"),
+    ("R20-separator-2-to-3-dash", 'all(re.fullmatch(r":?-{3,}:?", c) for c in sep)',
+     'all(re.fullmatch(r":?-{2,3}:?", c) for c in sep)'),
+    ("R22-dot-segment-first-only", '".." in parts or "" in parts or "." in parts:',
+     '".." in parts or "" in parts or "." in parts[:1]:'),
+    ("R25-digest-replace-encode", 'keys = sorted(p.encode("utf-8", "surrogateescape") for p in paths)',
+     'keys = sorted(p.encode("utf-8", "replace") for p in paths)'),
+    ("R27-static-dir-first-seg", "    for s in segs:", "    for s in segs[:1]:"),
+    ("R28-at-rev-one-top", 'for g in r["globs"]}))', 'for g in r["globs"]}))[:1]'),
+    ("R29-blob-empty-bytes", '            raise Setup("REV", f"blob {obj} unreadable")', '            return b""'),
+    ("R30-devnull-as-symlink", "        if os.path.islink(path):", "        if os.path.islink(path) or path == os.devnull:"),
+    ("R31-fixed-drop-last-char", '            if r["needle"] in line:', '            if r["needle"] in line[:-1]:'),
+    ("R32-rev-token-double-space", 'f"SEARCH_RERUN {r[\'id\']} rev=', 'f"SEARCH_RERUN  {r[\'id\']} rev='),
+    ("R33-count-over-by-one", '        if len(at_rev) != r["n"]:', '        if len(at_rev) > r["n"] + 1:'),
+    ("R34-git-rc-zero", "    return p.returncode, p.stdout", "    return 0, p.stdout"),
+]
+
+
+def selftest(path):
+    p = subprocess.run([sys.executable, "-B", path, "--selftest"], capture_output=True, text=True, cwd=OUT)
+    dead = p.returncode == 1 and "SEARCH_RERUN_SELFTEST: FAIL" in p.stdout and "Traceback" not in p.stderr
+    failed = next((ln.split("failed=")[1] for ln in p.stdout.splitlines() if "failed=" in ln), "-")
+    last = p.stdout.splitlines()[-1] if p.stdout.splitlines() else ""
+    return dead, p.returncode, failed, last, p.stderr.count("Traceback")
+
+
+def main():
+    out, killed, survived = [], 0, []
+    for name, old, new in MUTANTS:
+        n = SRC.count(old)
+        if n != 1:
+            out.append(f"SETUP {name} applies {n} times SKIP")
+            continue
+        mp = os.path.join(OUT, f"mut-{name}.py")
+        with open(mp, "w", encoding="utf-8") as fh:
+            fh.write(SRC.replace(old, new))
+        dead, rc, failed, last, tb = selftest(mp)
+        out.append(f"MUTANT {name} rc={rc} {'KILLED' if dead else 'SURVIVED'} failed={failed} "
+                   f"tracebacks={tb} last={last!r}")
+        if dead:
+            killed += 1
+        else:
+            survived.append(name)
+    out.append(f"PROBE killed={killed} survived={len(survived)} applied={sum(1 for l in out if l.startswith('MUTANT'))} "
+               f"listed={len(MUTANTS)}")
+    out.append("SURVIVORS " + (",".join(survived) or "-"))
+    text = "\n".join(out) + "\n"
+    sys.stdout.write(text)
+    with open(os.path.join(S, "probe98-out.txt"), "w", encoding="utf-8") as fh:
+        fh.write(text)
+
+
+if __name__ == "__main__":
+    main()

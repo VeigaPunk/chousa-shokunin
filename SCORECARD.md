@@ -4349,3 +4349,45 @@ appended rows and one `## Search log` entry; `SKILL.md` gains one correction lin
 3. carried debt: D1 (`S224` names two documents in `refetch.tsv`; needs a reader rule, not a row — `R97RevenPrior`
    Q3), the four gate-kind tools with no `--selftest`, the round-94 planned items, the round-74 source-blind order
    oracle, the r82 clip range, QUALITY 173's successful-refused record form, the r80 backlog Gate ids.
+
+## Round 98 verdict — the self-test checks its own guard, and PRESS 2015 is held through its statement's own abstract (2026-11-09)
+
+Base `98b8177c`; freeze F `aac82684`; wave-forced re-freeze F2 `1689f4ad` (A1-A5, B1-B7) and F3 `1c6e01c5` (A6-A7,
+B8, wording only; C1's instrument bytes identical F2..F3, `after-f3/c1-f2-equals-f3.txt`). C1 numbers from
+`corpus/evidence/round98/after-f2/c1-all.txt`, C2 from `corpus/evidence/round98/after-f3/c2-all.txt`. Two claims, two
+axes, no exploratory claim; C2 sourced on `S231` (opened this round) and `S225`. One v1 wave, 12 seats.
+
+| claim | axis | before | after | delta | verdict |
+|---|---|---|---|---|---|
+| C1 `C1-SELFTEST-R97MUTANTS-R98` | operability (lowest, historical 3/10) | base tool under the F2 battery: `KILL_REQUIRED=12/35`, `EQUIVALENT_SURVIVED=0/3`, `DIRECT_PATH=0/2`, `SELFTEST_CONTROLS_R98=FAIL` (`before-f2/c1-base.txt`) | `SEARCH_RERUN_SELFTEST: PASS cases=67/67`; `POSITIVE=1/1 KILL_RULE=4/4 DIRECT_PATH=2/2 KILL_REQUIRED=35/35 DO_NOTHING_REFUSED=1/1 PRIOR_R97_KILLED=34/34 R96_MUTANTS_KILLED=23/23 EQUIVALENT_SURVIVED=3/3 ORACLES_REJECTED=5/5 NO_WRITE=1/1 REGRESSION_R95=2/2 EXTERNAL_R97_KILLED=35/37 BASE_KILLED=12/37 CASES=67`, `SELFTEST_CONTROLS_R98=PASS` | 23 more non-author mutants killed (12 → 35 of 37); hash-of-self and guard-blind stand-ins refused; numeric score unchanged (historical 3/10 frozen by its own rule) | **verified at F2 on the amended sentence (author-measured; non-author closure pending)** |
+| C2 `C2-ENTRY-R98` | depth | entry absent (gate exit 2); 16 of S225's 36 question-mark lines quoted (`before/c2-base.txt`) | `GATE_RECORDS files=1 records=38 ok=38 fail=0`, `METADATA_COMPLETE=1/1`, `rev_match=5/5 SEARCH_RERUN: CLEAN`, `ENTRY_CONTROLS_R98=PASS` with `QUESTION_LINES_HELD=36/36 BASE_HELD=16/36 FIELD_SCOPED=15/15 IDENTITY=1/1 FORGERY_REFUSED=12/12 ACCEPTED=2/2` | one knowledge entry: the guideline statement's own abstract (14 quotes + title) and 20 more question lines (16/36 → 36/36) | **verified at F2/F3 (author-measured; M1, row 2, limit (c), tier repaired at B1-B5 after `R98ReviewerC2`)** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | the search re-run gate's self-test now kills 35 of the 37 mutants round-97 seats wrote, where the round-97 tool killed 12, and checks its own guard and summary code (C1) |
+| depth | **improved** | PRESS 2015 held through the statement's own abstract (four documents, method, element evidence, the removed seventh by name) and at full question-line coverage (C2) |
+| coverage | unchanged | registry 226 → 230 rows (`S231` admitted; `S228`-`S230` rejected for route); `PROVINCE.md` untouched |
+| freshness | unchanged | no re-verification claim |
+| calibration | unchanged | both sentences narrowed to their instruments before filing (A1-A7, B1-B8); QUALITY 229 added; no calibration claim |
+| adjacency | unchanged | sibling patterns routed by `R98ConnectorSiblings`, not absorbed |
+
+No axis harmed: `verify` prints byte-identical output to the base tool, plain and `--strict`, on four records
+(`after-f2/c1-verify-harm.txt`); the round-95 battery and mutant rebuild pass (`REGRESSION_R95=2/2`);
+`tools/gate-records.py`, `tools/research-gate.sh` and `tools/capture-fetch.py` are unchanged; the registry diff is
+four appended rows, one `used-by` cell (S225) and one `## Search log` entry; `SKILL.md` gains one correction line
+after the round-97 one.
+
+## Planned — round 99 (intent, not a predicate)
+
+1. **operability (lowest)** — `tools/gate-records.py` admits a quote from an http-200 challenge page (S230;
+   `corpus/evidence/round98/gate-records-challenge-200.txt`, QUALITY 229): a reader rule refusing challenge bodies at
+   admission, and `R98RevenPrior`'s D1 rule (require the content-addressed key in both refetch branches), each with a
+   committed failing-before control.
+2. **operability, carried** — the checker-of-the-checker survivors (`R98MutantsC1` G01-G03, D05; `R98ScribeLesson` F1
+   `return 0` after `_summary`), `u05-tree-files-jj`, battery determinism (`R98ConnectorSiblings` R1), equivalence
+   witnesses (R3); NO_WRITE blind to writes elsewhere (`R98SentinelC1` F1).
+3. **depth** — the statement's body, the E&E and Table 9 are still 403 or challenge pages here; the guideline's own
+   question wording is not held.
+4. carried debt: the four gate-kind tools with no `--selftest`, the round-94 planned items, the round-74 source-blind
+   order oracle, the r82 clip range, QUALITY 173's successful-refused record form, the r80 backlog Gate ids, the
+   tracked absolute symlink `R84ExecForge/forge/linkcap.txt` (`R98SentinelC1` F8).

@@ -1,0 +1,19 @@
+# R98ScribeLesson — K3 harm leg at F (scribe): base tool 98b8177c vs F tool aac82684, plain and --strict, four fixtures
+# base: git show 98b8177c1e8b39cdf1167928e4f5d609f6fa81b6:tools/search-rerun.py ; F: git show aac82684:tools/search-rerun.py ; run with cwd = scratch clone at F
+SAME corpus/fixtures/search-rerun-r95.md plain :: SEARCH_RERUN: CLEAN rc=0 
+SAME corpus/fixtures/search-rerun-r95.md --strict :: SEARCH_RERUN: DRIFT rc=1 
+SAME corpus/knowledge/search-peer-review-dedup-r96.md plain :: SEARCH_RERUN: CLEAN rc=0 
+SAME corpus/knowledge/search-peer-review-dedup-r96.md --strict :: SEARCH_RERUN: DRIFT rc=1 
+SAME corpus/knowledge/press-checklist-questions-r97.md plain :: SEARCH_RERUN: CLEAN rc=0 
+SAME corpus/knowledge/press-checklist-questions-r97.md --strict :: SEARCH_RERUN: DRIFT rc=1 
+SAME corpus/knowledge/press-2015-statement-questions-r98.md plain :: SEARCH_RERUN: CLEAN rc=0 
+SAME corpus/knowledge/press-2015-statement-questions-r98.md --strict :: SEARCH_RERUN: DRIFT rc=1 
+$ git -C <F clone> ls-tree -r --name-only aac82684 -- corpus/evidence/round98  (after/ absent at F)
+(4 entries under round98, 3 under before/: census-start.txt, egress-approval.md, entry-controls-r98.py, selftest-controls-r98.py; before/c1-base.txt, c1-verify-harm.txt, c2-base.txt; no after/ directory)
+corpus/evidence/round98/before/c1-base.txt
+corpus/evidence/round98/before/c1-verify-harm.txt
+corpus/evidence/round98/before/c2-base.txt
+corpus/evidence/round98/census-start.txt
+corpus/evidence/round98/egress-approval.md
+corpus/evidence/round98/entry-controls-r98.py
+corpus/evidence/round98/selftest-controls-r98.py

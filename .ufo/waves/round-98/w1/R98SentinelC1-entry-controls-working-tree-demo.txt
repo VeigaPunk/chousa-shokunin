@@ -1,0 +1,23 @@
+## entry-controls on a CLONE whose working-tree entry differs from HEAD (uncommitted K1 wording edit); HEAD bytes shown too
+ M corpus/knowledge/press-2015-statement-questions-r98.md
+--- working tree K1 row:
+52:| K1 | S225 | "Are the search concepts clear, really?" |
+--- HEAD K1 row:
+52:| K1 | S225 | "Are the search concepts clear?" |
+--- entry-controls --root /fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo2
+CASE positive held=35/36 bad_quotes=['K1'] elements231=7/7 elements225=6/6 warrants=10/10 lane_filled=10/10 FAIL
+CASE do-nothing-base entry_at_base=absent BASE_HELD=16/36 ok
+CASE new-only prior=16 own=19 overlap=- FAIL
+CASE forgery f1-drop-word held=34/36 bad_quotes=['K1', 'K2'] elements=7/6 warrants=10/10 refused ok
+CASE forgery f2-swap-k18-k19 held=34/36 bad_quotes=['K1'] elements=7/6 warrants=10/10 refused ok
+CASE forgery f3-widen-across-lines held=35/36 bad_quotes=['K1'] elements=7/6 warrants=10/10 refused ok
+CASE forgery f4-s223-grouping held=35/36 bad_quotes=['K1'] elements=7/5 warrants=10/10 refused ok
+CASE forgery f5-s231-in-s225-words held=35/36 bad_quotes=['K1'] elements=6/6 warrants=10/10 refused ok
+CASE forgery f6-unknown-qid held=35/36 bad_quotes=['K1'] elements=7/6 warrants=9/10 refused ok
+CASE forgery f7-wrong-source held=35/36 bad_quotes=['K1'] elements=7/6 warrants=9/10 refused ok
+POSITIVE=0/1 DO_NOTHING_REFUSED=1/1 NEW_ONLY=0/1 FORGERY_REFUSED=7/7 QUESTION_LINES_HELD=35/36 BASE_HELD=16/36 ELEMENTS=7+6/7+6 WARRANTS_OK=10/10 LANE_FILLED=10/10
+ENTRY_CONTROLS_R98=FAIL
+exit=1
+--- entry-controls --root /fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo (committed == working tree)
+ENTRY_CONTROLS_R98=PASS
+exit=0

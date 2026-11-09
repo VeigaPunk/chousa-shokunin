@@ -65,3 +65,11 @@ and g05 were caught by nothing. C1 speaks of the self-test.
 L1 re-score of `R98MutantsC1`'s probe (`R98MutantsC1-probe98.py.txt` MUTANTS) on the F2 tool, frozen kill rule: S02,
 S03 now KILLED; D01-D04 still survive the self-test alone (the battery's DIRECT_PATH leg catches them); G01-G03, D05,
 R32 survive (A4; R32 is caught by the round-95 battery).
+
+## Amendments — F3 (wording only)
+
+`.ufo/waves/round-98/claims.md` § Amendments — F3: A6 (C1 named limit (e) rewritten in `R98SentinelC1`'s exact form —
+the NO_WRITE leg does not observe writes outside its empty directory, strace does), A7 (the battery scores the
+tool's on-disk bytes; its regression leg writes more under `--work` than its docstring lists), B8 (the C2 controls'
+docstring said "committed lane bytes only"). C1's instrument bytes are identical F2..F3
+(`corpus/evidence/round98/after-f3/c1-f2-equals-f3.txt`); C2 receipts re-taken at F3.

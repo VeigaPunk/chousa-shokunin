@@ -1,0 +1,13 @@
+import importlib.util, io, contextlib, os, sys
+spec = importlib.util.spec_from_file_location("sr", sys.argv[1])
+mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+before = dict(os.environ)
+buf = io.StringIO()
+with contextlib.redirect_stdout(buf):
+    rc = mod.selftest()
+after = dict(os.environ)
+diff = {k: (before.get(k), after.get(k)) for k in set(before) | set(after) if before.get(k) != after.get(k)}
+last = buf.getvalue().strip().splitlines()[-1]
+print("rc", rc, "last", last)
+print("env_diff_after_selftest", diff)
+print("GITFOO after", repr(os.environ.get("GITFOO")), "GIT_DIR after", repr(os.environ.get("GIT_DIR")))

@@ -1,0 +1,30 @@
+# C1 battery FULL (with regression leg) under strace -f, filtered trace (openat,open,rename*,unlink*,mkdir*,rmdir,execve,socket,connect,creat,chmod,fchmodat,truncate,link*,symlink*); rc=0; SELFTEST_CONTROLS_R98=PASS
+## index-full-before.txt as written by the job (line1 mtime before run, line2 sha, line3 mtime after run):
+2026-11-09 00:07:42.104667677 -0300
+c2dc9db45995886d
+2026-11-09 00:07:42.104667677 -0300
+## index now: 2026-11-09 00:07:42.104667677 -0300 c2dc9db45995886d
+## write-capable opens with ABSOLUTE paths outside --work (excluding /dev/null)
+     12 openat(AT_FDCWD, "/fast/scratch/hyaku/chousa-r98/R98SentinelC1/repo/.git/index.lock", O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, 0666) = 3
+## /dev/tty O_RDWR attempts (ENXIO, no file written)
+1485
+## write-capable opens with RELATIVE paths (git worktree writes inside a --work clone after chdir; argv truncated by strace)
+1330340 openat(AT_FDCWD, "<rel>", O_WRONLY|O_CREAT|O_EXCL, 0666) = 4
+  70455 openat(AT_FDCWD, "<rel>", O_WRONLY|O_CREAT|O_EXCL, 0777) = 4
+    494 openat(AT_FDCWD, "<rel>", O_RDWR|O_CREAT|O_EXCL, 0444) = -1 ENOENT (No such file or directory)
+    275 openat(AT_FDCWD, "<rel>", O_RDWR|O_CREAT|O_EXCL, 0444) = 5
+    165 openat(AT_FDCWD, "<rel>", O_WRONLY|O_CREAT|O_APPEND, 0666) = 3
+    165 openat(AT_FDCWD, "<rel>", O_RDWR|O_CREAT|O_EXCL, 0444) = 4
+    110 openat(AT_FDCWD, "<rel>", O_WRONLY|O_CREAT|O_APPEND, 0666) = -1 ENOENT (No such file or directory)
+     55 openat(AT_FDCWD, "<rel>", O_WRONLY|O_CREAT|O_TRUNC, 0666) = 3
+## symlink() calls with relative link names (git checkout creating tracked symlinks in a --work clone)
+385
+## git checkout execs of /usr/bin/git (execve lines, unfinished+resumed=2 per exec) -> 55 checkouts
+55
+## lane .git writes: index.lock creations / index renames
+12
+0
+## sockets
+0
+## workdir leftovers (battery removes its own subtree)
+/fast/scratch/hyaku/chousa-r98/R98SentinelC1/w-full

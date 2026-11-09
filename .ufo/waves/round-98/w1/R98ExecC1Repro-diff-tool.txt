@@ -1,0 +1,235 @@
+diff --git a/tools/search-rerun.py b/tools/search-rerun.py
+index 73988105..2dfd8355 100755
+--- a/tools/search-rerun.py
++++ b/tools/search-rerun.py
+@@ -45,17 +45,24 @@ Usage:
+     python3 tools/search-rerun.py verify RECORD [--root LANE] [--strict]
+     python3 tools/search-rerun.py --selftest
+ 
+-`--selftest` (round 96, extended in round 97) runs in-memory cases against expectations fixed in the tool — the
+-round-96 32 (14 parse, 8 matching, 10 judgement cases that call `evaluate`, the function `verify` also calls) plus
++`--selftest` (round 96, extended in rounds 97 and 98) runs in-memory cases against expectations fixed in the tool —
++the round-96 32 (14 parse, 8 matching, 10 judgement cases that call `evaluate`, the function `verify` also calls),
+ round-97 cases `r01`-`r16` (signed hits, bad date, uppercase rev, `Q0`, empty expression, empty glob segment,
+ trailing comma, a 7-cell separator, an uppercase digest read as a path, glob longer than path, regex mid-line and
+ non-UTF-8 lines, a literal-filename static directory, all three `git_env` guards and the full `GIT_*` scrub, a
+-two-code row, a digest row judged at the revision) — and prints `SELFTEST <case> ok|FAIL`, then
++two-code row, a digest row judged at the revision) and round-98 cases `r17`-`r34` (a row without its end pipe, a
++suffixed or doubled heading, a 2-dash separator, `-` as a non-zero hit set, a `.` glob segment, an unclosed
++backtick, an uppercase POSIX class, the byte order of a non-UTF-8 digest, a `GIT`-prefixed non-`GIT_` variable, a
++bracket static directory, the at-revision reader over two static directories on a pre-filled cache, the blob
++reader's refusal, the record reader on /dev/null, a fixed match mid-line, the printed rev token, a count above the
++recorded one, and `git`'s process call) — and prints `SELFTEST <case> ok|FAIL`, then
+ `SEARCH_RERUN_SELFTEST: PASS|FAIL cases=<k>/<n>`; exit 0 PASS, 1 FAIL. Every case runs inside a guard, and the
+ shared fixture set-up runs inside an outer guard, so an exception becomes a FAIL line and the summary still prints.
+-It is written to read no file, run no git and open no socket (observed by seats, not enforced by a battery leg). It
+-does not exercise the git and disk readers, nor whether `verify` uses `evaluate`'s verdict; the round-95 battery
+-does both through the CLI.
++From round 98 a guard canary (`g00`) first runs the guard and summary code on fixed case sets; when it fails, the
++run prints `SEARCH_RERUN_SELFTEST: FAIL guard-canary` itself and exits 1. It writes no file and opens no socket;
++it reads /dev/null and runs `git -C /dev/null` twice (r29, r34), which cannot open a repository (observed by
++seats, not enforced by a battery leg). It does not exercise the disk reader, nor whether `verify` uses
++`evaluate`'s verdict; the round-95 battery does both through the CLI.
+ 
+ Output, one line per search, then a summary and a verdict:
+     SEARCH_RERUN <id> rev=<MATCH|DRIFT> tree=<SAME|CHANGED> recorded=<n> at_rev=<n> at_tree=<n> [codes]
+@@ -85,8 +92,10 @@ so a partial clone's missing blob is a setup error, not a network fetch. Objects
+ Python 3.13+ standard library only.
+ """
+ import argparse
++import contextlib
+ import fnmatch
+ import hashlib
++import io
+ import os
+ import re
+ import subprocess
+@@ -415,6 +424,9 @@ ST_HEAD = ("## Searches\n\n| id | engine | where | expression | rev | searched |
+ ST_REV = "a" * 40
+ ST_AB_DIGEST = "1f89e694bffa56052d9fb134ec6d9fbd05d1fdb27003772c06ad4ba8175ecd50"  # sha256 of b"corpus/a.txt\ncorpus/b.txt\n"
+ ST_AC_DIGEST = "b5ffc9674501cd88b9070cfa973f489c13bae3e6ace1a78054de8f0789ff64ea"  # sha256 of b"corpus/a.txt\ncorpus/c.txt\n"
++# sha256 of b"corpus/\xa8.txt\ncorpus/\xc7\x8e.txt\n": the bytes of "corpus/\udca8.txt" (surrogateescape) sort before
++# those of "corpus/\u01ce.txt" (UTF-8), the reverse of their str order (round 98, R97MutantsC1 m05)
++ST_NONUTF8_DIGEST = "4d7e31c7d2d9d078296d0cab96465d9c4f19dc5e7e023b2d10840c3e020cc87b"
+ 
+ 
+ def st_row(qid="Q1", engine="fixed", where="corpus/*.txt", expr="`PRESS`", rev=ST_REV, hits="1",
+@@ -423,7 +435,7 @@ def st_row(qid="Q1", engine="fixed", where="corpus/*.txt", expr="`PRESS`", rev=S
+ 
+ 
+ def _selftest_cases(case):
+-    """The self-test's cases (round 96 p/m/j, round 97 r01-r16), each registered through `case`; the shared fixtures
++    """The self-test's cases (round 96 p/m/j, round 97 r01-r16, round 98 r17-r34), each registered through `case`; the shared fixtures
+     below are built here, inside the caller's outer guard."""
+     def refused(text):
+         try:
+@@ -553,17 +565,81 @@ def _selftest_cases(case):
+         return (f, ok, same) == (1, 1, 2), f"got={(f, ok, same)}"
+     case("j10-tally", j10)
+ 
++    # round 98: inputs and readers the round-97 cases never reached (R97MutantsC1 survivors), one case each
++    for cid, text, code in (
++        ("r17-row-no-end-pipe", ST_HEAD + st_row().rstrip("\n").rstrip("|") + "\n", "ROW"),
++        ("r18-heading-suffix", good.replace("## Searches", "## Searches catalog"), "SECTION"),
++        ("r19-two-sections", good + "\n" + good, "SECTION"),
++        ("r20-two-dash-sep", good.replace("|---|---|---|---|---|---|---|---|", "|--|--|--|--|--|--|--|--|"), "TABLE"),
++        ("r21-dash-set-nonzero", ST_HEAD + st_row(hits="2", hit_set="-"), "HIT_SET"),
++        ("r22-dot-segment", ST_HEAD + st_row(where="corpus/./*.txt"), "WHERE"),
++        ("r23-open-backtick", ST_HEAD + st_row(expr="`abc"), "EXPRESSION"),
++        ("r24-posix-upper", ST_HEAD + st_row(engine="regex", expr="`[[:ALPHA:]]+`"), "EXPRESSION"),
++    ):
++        case(cid, refusal(code, text))
++
++    # bytes-sorted digest: U+01CE sorts before U+DCA8 as str, after its surrogateescape byte 0xA8 as bytes
++    case("r25-digest-byte-order", lambda: digest(["corpus/\u01ce.txt", "corpus/\udca8.txt"]) == ST_NONUTF8_DIGEST)
++
++    saved_gitfoo = os.environ.get("GITFOO")
++    os.environ["GITFOO"] = "1"
++    try:
++        env_foo = git_env()
++    finally:
++        if saved_gitfoo is None:
++            del os.environ["GITFOO"]
++        else:
++            os.environ["GITFOO"] = saved_gitfoo
++    case("r26-git-prefix-not-git-underscore", lambda: env_foo.get("GITFOO") == "1")
++    case("r27-static-dir-bracket", lambda: static_dir("a[b]/c.txt") == "" and static_dir("a/[x]/c.txt") == "a")
++
++    def r28():
++        # run_at_rev on a pre-filled cache: no git process runs (the revision and every blob are already cached)
++        cache = {ST_REV: {"a/x.txt": ("100644", "blob", "o1"), "b/y.txt": ("100644", "blob", "o2"),
++                          "c/z.txt": ("100644", "blob", "o3")},
++                 "blobs": {"o1": b"PRESS\n", "o2": b"PRESS\n", "o3": b"PRESS\n"}}
++        r = parse_text(ST_HEAD + st_row(where="a/*.txt, b/*.txt", hits="2", hit_set="a/x.txt, b/y.txt"))[0]
++        got = run_at_rev(os.devnull, r, cache)
++        return got == ["a/x.txt", "b/y.txt"], f"got={got}"
++    case("r28-at-rev-two-static-dirs", r28)
++
++    def r29():
++        # `git -C /dev/null` cannot open any repository: the blob reader must refuse, never return empty bytes
++        try:
++            got = blob(os.devnull, "0" * 40, {})
++        except Setup as exc:
++            code = exc.code
++            return code == "REV", f"code={code}"
++        return False, f"returned {got!r}"
++    case("r29-blob-unreadable", r29)
++
++    def r30():
++        # /dev/null is a readable non-symlink with no `## Searches` heading: refused SECTION, not RECORD_TYPE
++        try:
++            parse_record(os.devnull)
++        except Setup as exc:
++            code = exc.code
++            return code == "SECTION", f"code={code}"
++        return False, "parsed"
++    case("r30-record-not-symlink", r30)
++    case("r31-fixed-mid-line", lambda: hit(b"a PRESS\n", needles()[1]) and not hit(b"a PRES\n", needles()[1]))
++
++    def r32():
++        tokens = []
++        for row in (exact, st_row(hits="3", hit_set="corpus/a.txt, corpus/c.txt")):
++            _, _, _, lines = evaluate(parse_text(ST_HEAD + row), mem(base), mem(base), False)
++            tokens.append(lines[0].split()[2])
++        return tokens == ["rev=MATCH", "rev=DRIFT"], f"got={tokens}"
++    case("r32-rev-token", r32)
++    case("r33-count-over", lambda: (lambda got: (got == (2, 0, 1, ["COUNT_DRIFT", "SET_DRIFT"]), f"got={got}"))(
++        judge(st_row(hits="1", hit_set="corpus/a.txt"), base)))
++    case("r34-git-runs-bounded", lambda: (lambda rc: (rc not in (0, None), f"rc={rc}"))(git(os.devnull, "rev-parse")[0]))
+ 
+ 
+-def selftest():
+-    """In-memory self-test (round 96; round 97 adds cases r01-r16 and two guards): parse refusals, matching rules,
+-    the digest form, the `git_env` guards and the decision code of `evaluate`, each case against an expectation fixed
+-    in this file. Every case runs inside a guard, so an exception inside a case (a parse that raises, a decode error)
+-    is that case's FAIL; the shared fixture set-up runs inside an outer guard, so an exception there (or in `case`
+-    itself) is a `setup` FAIL — never a traceback that ends the run without a summary line (round-96 `R96MutantsC1`
+-    class B; round-97 `R97ScribeLesson` F3). No file, git or network access; exit 0 PASS, 1 FAIL. It does not
+-    exercise the git and disk readers (`run_at_rev`, `run_on_tree`, `tree_files`) — the round-95 battery
+-    `corpus/evidence/round95/rerun-controls-r95.py` does, through the CLI."""
++def _collect(cases):
++    """Run `cases(case)`; every case inside a guard (an exception raised inside a case is that case's FAIL) and the
++    whole set-up inside an outer guard (an exception there, or in `case` itself, is a `setup` FAIL). Prints one
++    `SELFTEST <id> ok|FAIL` line per case and returns the (id, ok) results in order."""
+     results = []
+ 
+     def case(cid, fn):
+@@ -576,17 +652,77 @@ def selftest():
+         print(f"SELFTEST {cid} {'ok' if ok else 'FAIL'}" + (f" {detail}" if detail else ""))
+ 
+     try:
+-        _selftest_cases(case)
++        cases(case)
+     except Exception as exc:  # a crash in shared set-up (or in `case`) fails the run with a summary
+         results.append(("setup", False))
+         print(f"SELFTEST setup FAIL raised {type(exc).__name__}: {exc}")
++    return results
+ 
++
++def _summary(results):
++    """Print the summary line for `results`; return the exit code (0 every case ok, else 1)."""
+     n, k = len(results), sum(1 for _, ok in results if ok)
+     bad = [cid for cid, ok in results if not ok]
+     print(f"SEARCH_RERUN_SELFTEST: {'PASS' if k == n else 'FAIL'} cases={k}/{n}" + (f" failed={','.join(bad)}" if bad else ""))
+     return 0 if k == n else 1
+ 
+ 
++CANARY_FAIL = ("SELFTEST canary-pass ok", "SELFTEST canary-false FAIL", "SELFTEST canary-raise FAIL raised ValueError: canary",
++               "SELFTEST setup FAIL raised RuntimeError: canary set-up",
++               "SEARCH_RERUN_SELFTEST: FAIL cases=1/4 failed=canary-false,canary-raise,setup")
++CANARY_PASS = ("SELFTEST canary-pass ok", "SEARCH_RERUN_SELFTEST: PASS cases=1/1")
++
++
++def _guard_canary():
++    """Round 98 (R97MutantsC1 g01-g05): run `_collect` and `_summary` themselves on two fixed case sets — one with a
++    passing case, a False case, a raising case and a raising set-up; one with a single passing case — with their
++    output captured in memory, and compare every printed line and the exit code with the expected ones. A guard or
++    summary that records a failure as a pass, lets an exception escape, miscounts, prints PASS for a failure or
++    returns 0 for one fails this check."""
++    def failing(case):
++        def boom():
++            raise ValueError("canary")
++        case("canary-pass", lambda: True)
++        case("canary-false", lambda: False)
++        case("canary-raise", boom)
++        raise RuntimeError("canary set-up")
++
++    def passing(case):
++        case("canary-pass", lambda: True)
++
++    seen = []
++    for cases, want, want_rc in ((failing, CANARY_FAIL, 1), (passing, CANARY_PASS, 0)):
++        buf = io.StringIO()
++        with contextlib.redirect_stdout(buf):
++            rc = _summary(_collect(cases))
++        seen.append(rc == want_rc and tuple(buf.getvalue().splitlines()) == want)
++    return all(seen), f"fail_set={'ok' if seen[0] else 'WRONG'} pass_set={'ok' if seen[1] else 'WRONG'}"
++
++
++def selftest():
++    """In-memory self-test (round 96; round 97 adds cases r01-r16 and two guards; round 98 adds the guard canary
++    g00 and cases r17-r34): parse refusals, matching rules, the digest form, the `git_env` guards, the decision code
++    of `evaluate` and, from round 98, the at-revision reader on a pre-filled cache (r28), the blob reader's refusal
++    (r29), the record reader on /dev/null (r30) and `git`'s process call (r34), each case against an expectation
++    fixed in this file. Every case runs inside a guard and the shared set-up inside an outer guard (`_collect`), so
++    an exception is a case FAIL or a `setup` FAIL — never a traceback without a summary line. Before the cases run,
++    `_guard_canary` checks `_collect` and `_summary` against fixed case sets; if that check fails the summary is
++    printed here, not by `_summary`, so a broken summary cannot report its own run as PASS. No file is written and
++    no network is opened; files read: /dev/null (r30); processes: `git -C /dev/null` (r29, r34), which cannot open
++    a repository. Exit 0 PASS, 1 FAIL. The disk reader (`tree_files`, `run_on_tree`) and `verify` are not exercised
++    — the round-95 battery `corpus/evidence/round95/rerun-controls-r95.py` does, through the CLI."""
++    try:
++        guard_ok, guard_detail = _guard_canary()
++    except Exception as exc:  # the canary itself crashed: the guard machinery is broken
++        guard_ok, guard_detail = False, f"raised {type(exc).__name__}: {exc}"
++    print(f"SELFTEST g00-guard-canary {'ok' if guard_ok else 'FAIL'} {guard_detail}")
++    results = [("g00-guard-canary", guard_ok)] + _collect(_selftest_cases)
++    if not guard_ok:
++        print("SEARCH_RERUN_SELFTEST: FAIL guard-canary failed=g00-guard-canary")
++        return 1
++    return _summary(results)
++
++
+ 
+ 
+ def main(argv):

@@ -1,0 +1,128 @@
+=== base-good
+base exit:1
+new exit:1
+--- base:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN Q3 rev=DRIFT tree=SAME recorded=0 at_rev=25 at_tree=25 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=7 at_tree=8 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=3/5 tree_same=3/5 findings=4
+SEARCH_RERUN: DRIFT
+--- new:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN Q3 rev=DRIFT tree=SAME recorded=0 at_rev=25 at_tree=25 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=7 at_tree=8 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=3/5 tree_same=3/5 findings=4
+SEARCH_RERUN: DRIFT
+stdout SAME
+=== f-count
+base exit:2
+new exit:2
+--- base:
+SEARCH_RERUN_ERROR HIT_SET Q1: hits 1 needs a path list or a sha256 digest
+--- new:
+SEARCH_RERUN_ERROR HIT_SET Q1: hits 1 needs a path list or a sha256 digest
+stdout SAME
+=== f-path
+base exit:1
+new exit:1
+--- base:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=DRIFT tree=SAME recorded=2 at_rev=2 at_tree=2 SET_DRIFT
+SEARCH_RERUN Q3 rev=DRIFT tree=SAME recorded=0 at_rev=25 at_tree=25 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=7 at_tree=8 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=2/5 tree_same=3/5 findings=5
+SEARCH_RERUN: DRIFT
+--- new:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=DRIFT tree=SAME recorded=2 at_rev=2 at_tree=2 SET_DRIFT
+SEARCH_RERUN Q3 rev=DRIFT tree=SAME recorded=0 at_rev=25 at_tree=25 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=7 at_tree=8 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=2/5 tree_same=3/5 findings=5
+SEARCH_RERUN: DRIFT
+stdout SAME
+=== f-digest
+base exit:1
+new exit:1
+--- base:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=DRIFT tree=SAME recorded=2 at_rev=2 at_tree=2 SET_DRIFT
+SEARCH_RERUN Q3 rev=DRIFT tree=SAME recorded=0 at_rev=25 at_tree=25 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=7 at_tree=8 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=2/5 tree_same=3/5 findings=5
+SEARCH_RERUN: DRIFT
+--- new:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=DRIFT tree=SAME recorded=2 at_rev=2 at_tree=2 SET_DRIFT
+SEARCH_RERUN Q3 rev=DRIFT tree=SAME recorded=0 at_rev=25 at_tree=25 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=7 at_tree=8 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=2/5 tree_same=3/5 findings=5
+SEARCH_RERUN: DRIFT
+stdout SAME
+=== f-rev
+base exit:1
+new exit:1
+--- base:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q2 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN Q3 rev=DRIFT tree=SAME recorded=0 at_rev=25 at_tree=25 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q4 rev=DRIFT tree=SAME recorded=1 at_rev=8 at_tree=8 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=2/5 tree_same=5/5 findings=6
+SEARCH_RERUN: DRIFT
+--- new:
+SEARCH_RERUN Q1 rev=DRIFT tree=SAME recorded=0 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q2 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN Q3 rev=DRIFT tree=SAME recorded=0 at_rev=25 at_tree=25 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q4 rev=DRIFT tree=SAME recorded=1 at_rev=8 at_tree=8 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=2/5 tree_same=5/5 findings=6
+SEARCH_RERUN: DRIFT
+stdout SAME
+=== f-glob
+base exit:1
+new exit:1
+--- base:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=DRIFT tree=SAME recorded=2 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q3 rev=DRIFT tree=CHANGED recorded=0 at_rev=34 at_tree=35 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=3 at_tree=4 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=2/5 tree_same=2/5 findings=6
+SEARCH_RERUN: DRIFT
+--- new:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=DRIFT tree=SAME recorded=2 at_rev=1 at_tree=1 COUNT_DRIFT,SET_DRIFT
+SEARCH_RERUN Q3 rev=DRIFT tree=CHANGED recorded=0 at_rev=34 at_tree=35 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=3 at_tree=4 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=2/5 tree_same=2/5 findings=6
+SEARCH_RERUN: DRIFT
+stdout SAME
+=== f-engine
+base exit:1
+new exit:1
+--- base:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN Q3 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=7 at_tree=8 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=4/5 tree_same=3/5 findings=2
+SEARCH_RERUN: DRIFT
+--- new:
+SEARCH_RERUN Q1 rev=MATCH tree=CHANGED recorded=0 at_rev=0 at_tree=1 TREE_CHANGED
+SEARCH_RERUN Q2 rev=MATCH tree=SAME recorded=2 at_rev=2 at_tree=2
+SEARCH_RERUN Q3 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN Q4 rev=DRIFT tree=CHANGED recorded=1 at_rev=7 at_tree=8 COUNT_DRIFT,SET_DRIFT,TREE_CHANGED
+SEARCH_RERUN Q5 rev=MATCH tree=SAME recorded=0 at_rev=0 at_tree=0
+SEARCH_RERUN_SUMMARY searches=5 rev_match=4/5 tree_same=3/5 findings=2
+SEARCH_RERUN: DRIFT
+stdout SAME
