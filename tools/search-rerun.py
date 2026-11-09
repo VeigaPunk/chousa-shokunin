@@ -45,13 +45,17 @@ Usage:
     python3 tools/search-rerun.py verify RECORD [--root LANE] [--strict]
     python3 tools/search-rerun.py --selftest
 
-`--selftest` (round 96) runs in-memory cases against expectations fixed in the tool — 14 parse cases (12 setup
-refusals, one well-formed record and the `\\|` alternation), 8 matching cases (line rule, dotfile rule, segment
-rule, per-line match, case, digest form, static directory, caller `GIT_*` scrub) and 10 judgement cases that call
-`evaluate`, the function `verify` also calls — and prints `SELFTEST <case> ok|FAIL`, then
-`SEARCH_RERUN_SELFTEST: PASS|FAIL cases=<k>/<n>`; exit 0 PASS, 1 FAIL. It is written to read no file, run no git
-and open no socket (observed by round-96 seats, not enforced by a battery leg). It does not exercise the git and
-disk readers, nor whether `verify` uses `evaluate`'s verdict; the round-95 battery does both through the CLI.
+`--selftest` (round 96, extended in round 97) runs in-memory cases against expectations fixed in the tool — the
+round-96 32 (14 parse, 8 matching, 10 judgement cases that call `evaluate`, the function `verify` also calls) plus
+round-97 cases `r01`-`r16` (signed hits, bad date, uppercase rev, `Q0`, empty expression, empty glob segment,
+trailing comma, a 7-cell separator, an uppercase digest read as a path, glob longer than path, regex mid-line and
+non-UTF-8 lines, a literal-filename static directory, all three `git_env` guards and the full `GIT_*` scrub, a
+two-code row, a digest row judged at the revision) — and prints `SELFTEST <case> ok|FAIL`, then
+`SEARCH_RERUN_SELFTEST: PASS|FAIL cases=<k>/<n>`; exit 0 PASS, 1 FAIL. Every case runs inside a guard, and the
+shared fixture set-up runs inside an outer guard, so an exception becomes a FAIL line and the summary still prints.
+It is written to read no file, run no git and open no socket (observed by seats, not enforced by a battery leg). It
+does not exercise the git and disk readers, nor whether `verify` uses `evaluate`'s verdict; the round-95 battery
+does both through the CLI.
 
 Output, one line per search, then a summary and a verdict:
     SEARCH_RERUN <id> rev=<MATCH|DRIFT> tree=<SAME|CHANGED> recorded=<n> at_rev=<n> at_tree=<n> [codes]
@@ -418,25 +422,9 @@ def st_row(qid="Q1", engine="fixed", where="corpus/*.txt", expr="`PRESS`", rev=S
     return f"| {qid} | {engine} | {where} | {expr} | {rev} | {searched} | {hits} | {hit_set} |\n"
 
 
-def selftest():
-    """In-memory self-test (round 96; round 97 adds cases r01-r15 and the per-case guard): parse refusals,
-    matching rules, the digest form, the `git_env` guards and the decision code of `evaluate`, each case against an
-    expectation fixed in this file. Every case runs inside a guard, so an exception inside a case (a parse that
-    raises, a decode error) is that case's FAIL, never a traceback that ends the run without a summary line
-    (round-96 `R96MutantsC1` class B). No file, git or network access; exit 0 PASS, 1 FAIL. It does not exercise
-    the git and disk readers (`run_at_rev`, `run_on_tree`, `tree_files`) — the round-95 battery
-    `corpus/evidence/round95/rerun-controls-r95.py` does, through the CLI."""
-    results = []
-
-    def case(cid, fn):
-        try:
-            got = fn()
-            ok, detail = got if isinstance(got, tuple) else (got, "")
-        except Exception as exc:  # a crash inside a case is that case's failure
-            ok, detail = False, f"raised {type(exc).__name__}: {exc}"
-        results.append((cid, bool(ok)))
-        print(f"SELFTEST {cid} {'ok' if ok else 'FAIL'}" + (f" {detail}" if detail else ""))
-
+def _selftest_cases(case):
+    """The self-test's cases (round 96 p/m/j, round 97 r01-r16), each registered through `case`; the shared fixtures
+    below are built here, inside the caller's outer guard."""
     def refused(text):
         try:
             parse_text(text)
@@ -470,6 +458,7 @@ def selftest():
         ("r05-empty-expression", ST_HEAD + st_row(expr="``"), "EXPRESSION"),
         ("r06-empty-segment", ST_HEAD + st_row(where="corpus//*.txt"), "WHERE"),
         ("r07-trailing-comma", ST_HEAD + st_row(hits="1", hit_set="corpus/a.txt,"), "HIT_SET"),
+        ("r16-sep-width", good.replace("|---|---|---|---|---|---|---|---|", "|---|---|---|---|---|---|---|"), "TABLE"),
     ):
         case(cid, refusal(code, text))
 
@@ -563,6 +552,34 @@ def selftest():
         f, ok, same, _ = evaluate(ab, mem(base), mem(base), False)
         return (f, ok, same) == (1, 1, 2), f"got={(f, ok, same)}"
     case("j10-tally", j10)
+
+
+
+def selftest():
+    """In-memory self-test (round 96; round 97 adds cases r01-r16 and two guards): parse refusals, matching rules,
+    the digest form, the `git_env` guards and the decision code of `evaluate`, each case against an expectation fixed
+    in this file. Every case runs inside a guard, so an exception inside a case (a parse that raises, a decode error)
+    is that case's FAIL; the shared fixture set-up runs inside an outer guard, so an exception there (or in `case`
+    itself) is a `setup` FAIL — never a traceback that ends the run without a summary line (round-96 `R96MutantsC1`
+    class B; round-97 `R97ScribeLesson` F3). No file, git or network access; exit 0 PASS, 1 FAIL. It does not
+    exercise the git and disk readers (`run_at_rev`, `run_on_tree`, `tree_files`) — the round-95 battery
+    `corpus/evidence/round95/rerun-controls-r95.py` does, through the CLI."""
+    results = []
+
+    def case(cid, fn):
+        try:
+            got = fn()
+            ok, detail = got if isinstance(got, tuple) else (got, "")
+        except Exception as exc:  # a crash inside a case is that case's failure
+            ok, detail = False, f"raised {type(exc).__name__}: {exc}"
+        results.append((cid, bool(ok)))
+        print(f"SELFTEST {cid} {'ok' if ok else 'FAIL'}" + (f" {detail}" if detail else ""))
+
+    try:
+        _selftest_cases(case)
+    except Exception as exc:  # a crash in shared set-up (or in `case`) fails the run with a summary
+        results.append(("setup", False))
+        print(f"SELFTEST setup FAIL raised {type(exc).__name__}: {exc}")
 
     n, k = len(results), sum(1 for _, ok in results if ok)
     bad = [cid for cid, ok in results if not ok]

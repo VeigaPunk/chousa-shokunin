@@ -90,3 +90,65 @@ content word and includes an S225 quote, not that the paraphrase is faithful —
 (b) Neither reprint is the guideline statement; where they differ the entry does not choose. (c) The corroboration
 counts are string tests: *letters* can match across a line break in S226 and cannot see a reordering. (d) The
 searches are per line over the lane's own capture store.
+
+## Amendments after the freeze — re-frozen at F2 (wave-forced; the text above stays as the F record)
+
+Every amendment is forced by a named wave artifact under `.ufo/waves/round-97/w1/`; reasons and artifacts are in
+`plans/round-97.md` § Amendments (A1-A5, B1-B10). The claims are judged at F2 on the sentences and predicates below.
+
+### C1 amended sentence (F2)
+
+`tools/search-rerun.py --selftest` prints 48 named case lines `SELFTEST <id> ok`, in a fixed order, and exits 0 with
+`SEARCH_RERUN_SELFTEST: PASS cases=48/48`; each case runs inside a guard that turns an exception inside it into
+that case's FAIL, and the shared set-up runs inside an outer guard that turns an exception there (or in `case`)
+into a `setup` FAIL. Each of 34 named external one-site mutants — the 29 `R96MutantsC1` mutants that applied in
+round 96 (read by the battery from the committed probe at base; `n30` is scored, A1), the two `git_env` mutants
+`R96SentinelC1` reported, and the three set-up mutants `R97ScribeLesson` built against F (`x1`-`x3`, transcribed) —
+makes it exit 1, print `SEARCH_RERUN_SELFTEST: FAIL` naming at least one failing case (or `setup`), and print no
+`Traceback` on stderr; the base tool kills 10 of the same 34 by the same rule. The round-96 battery's 23 mutants are
+still killed, three stand-ins fail the battery, the self-test writes nothing into an empty cwd/HOME/TMPDIR and leaves
+the lane's `git status --porcelain` and `git diff` digest equal to their battery-start values, and the round-95
+battery and mutant rebuild still pass on the changed tool.
+
+**Predicate (F2):**
+
+1. `python3 -B tools/search-rerun.py --selftest` → exit 0, last line `SEARCH_RERUN_SELFTEST: PASS cases=48/48`.
+2. `python3 -B corpus/evidence/round97/selftest-controls-r97.py --root . --work <scratch>` → exit 0, prints
+   `POSITIVE=1/1 EXTERNAL_KILLED=34/34 DO_NOTHING_REFUSED=1/1 R96_MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=1/1 REGRESSION_R95=2/2 BASE_KILLED=10/34 CASES=48`
+   and `SELFTEST_CONTROLS_R97=PASS`.
+
+**Before (F2 battery on the base tool).** `corpus/evidence/round97/before-f2/c1-base.txt`.
+
+**Named limit (a) (F2):** the 34 mutants were known when the 16 new cases and the outer guard were written; the claim
+is that these named sites are covered, not that the self-test detects defects in general. **(b) (F2):** a mutant of
+the summary line, of the outer guard itself, or one that turns the guard into a no-op while forging lines is outside
+the 34. **(g) (new, A4):** the battery reads the self-test's printed lines; a self-test that prints the 48 expected
+lines without computing them (for example, keyed on a hash of its own source — `R97CriticClaims` F4) is not
+distinguished. Limits (c)-(f) stand; (f) now reads: `n08` is excluded because it applied 0 times in round 96.
+
+### C2 amended sentence (F2)
+
+The lane holds `corpus/knowledge/press-checklist-questions-r97.md`, whose 8 decision rows each cite at least one
+located quote of the PRESS 2015 checklist questions as Cochrane reprints them for editors (`S225`, tier B, opened
+this round) — 16 of the 33 question lines that reprint prints — with a second reprint on another host (`S226`,
+Karolinska Institutet University Library, tier C, opened this round) used for corroboration, every row that cites it
+also naming an S225 quote: its 30 `GATE-RECORD` lines (29 located quotes and 1 unreachable-route reject of the CADTH
+Table 9 PDF, `S227`) all verify; the Located-quotes strings equal the 29 quoted records as a multiset; each quote is a
+substring of one line of its own source's capture; every row's Do cell shares a content word with its warrant quotes
+(a lexical floor), every Lane cell is filled and every row names an S225 quote; the entry states, in
+`## Two reprints compared` and in the Citing row's Lane cell, and the controls recompute from the two captures, that
+10 of the 26 S225 quotes occur verbatim in S226 (16 do not) and 14 after deleting every non-alphanumeric character
+(12 do not); and the entry's 7 searches, run with GNU grep at `c8087ac5`, re-run at that revision with the recorded
+count and set.
+
+**Predicate (F2):** 1-3 as F. 4: `python3 -B corpus/evidence/round97/entry-controls-r97.py --root . --work <scratch>`
+→ exit 0, prints
+`POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 SOLE_SUPPORT=2/2 CORROBORATION=3/3 SEARCHES=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1`
+with `LQ_BOUND=29/29 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8 SOLE_SUPPORT=8/8 ONE_LINE=29/29 VERBATIM=10/26 LETTERS=14/26`,
+and `ENTRY_CONTROLS=PASS`.
+
+**Named limits (F2):** (a) as F, and: Never cells are not instrument-checked, and a Do cell that inverts its quote
+while sharing a content word passes WARRANT_TERMS (`R97CriticClaims` F3, `R97MutantsC2` F1); the Never cells were
+repaired by the reviewer's reading (B5). (e) (new) SOLE_SUPPORT checks that an S225 quote is named, not that it
+carries the row's point (`R97MutantsC2` F2). (f) (new) S226 links CADTH's 2016 report as its source; the two reprints
+are separate transcriptions, not shown independent of one upstream.

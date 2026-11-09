@@ -7,8 +7,9 @@ this entry's records), plus two groups of its own:
   SOLE_SUPPORT   every decision-table row's Warrant names at least one located quote whose source is S225 (tier B):
                  S226 (tier C) corroborates and is never a row's only support (CORPUS.md tier C); a copy whose row
                  cites only an S226 quote must drop the tally by one
-  CORROBORATION  the entry's `## Two reprints compared` sentence "verbatim V/N, letters T/N" equals what this
-                 script recomputes from the two committed captures: V = S225 quotes whose whitespace-collapsed text
+  CORROBORATION  the entry's `## Two reprints compared` sentence "verbatim V/N, letters T/N", and (F2) the miss counts
+                 the `Citing the checklist` Lane cell states (N-V, N-T), equal what this script recomputes from the
+                 two committed captures: V = S225 quotes whose whitespace-collapsed text
                  occurs in the whitespace-collapsed S226 capture, T = the same after lowercasing and deleting every
                  non-alphanumeric character; a copy stating other numbers must be refused
   ONE_LINE       (inside POSITIVE) every located quote is a substring of one line of its own source's capture;
@@ -133,6 +134,14 @@ def stated(text):
     return (int(m.group(1)), int(m.group(3)), int(m.group(2))) if m and m.group(2) == m.group(4) else None
 
 
+def lane_counts(text):
+    """F2 (amendment B9, R97CriticClaims F1/F2): the miss counts the `Citing the checklist` Lane cell states, as
+    (not_verbatim, not_letters, n)."""
+    row = next((ln for ln in section(text, "Decision table").splitlines() if ln.startswith("| Citing the checklist")), "")
+    m = re.search(r"([0-9]+) of the ([0-9]+) S225 quotes are not found verbatim in S226 and ([0-9]+) not even after", row)
+    return (int(m.group(1)), int(m.group(3)), int(m.group(2))) if m else None
+
+
 def words(s):
     return {w for w in re.findall(r"[a-z]+", s.lower()) if len(w) >= 5 and w not in STOP}
 
@@ -247,12 +256,17 @@ def main(argv):
         # CORROBORATION: the stated counts equal the recomputed ones; a copy stating other numbers is refused.
         cv, cl, cn = corroboration(root, text)
         st = stated(text)
-        c_pos = st == (cv, cl, cn)
-        print(f"CASE corroboration-stated stated={st} computed={(cv, cl, cn)} {'ok' if c_pos else 'FAIL'}")
+        lc = lane_counts(text)
+        c_pos = st == (cv, cl, cn) and lc == (cn - cv, cn - cl, cn)
+        print(f"CASE corroboration-stated stated={st} lane_misses={lc} computed={(cv, cl, cn)} {'ok' if c_pos else 'FAIL'}")
         forged = text.replace(f"verbatim {cv}/{cn}", f"verbatim {cv + 2}/{cn}", 1)
         c_neg = forged != text and stated(forged) != (cv, cl, cn)
         print(f"CASE corroboration-forged stated={stated(forged)} {'ok' if c_neg else 'FAIL'}")
-        t["CORROBORATION"] = ((1 if c_pos else 0) + (1 if c_neg else 0), 2)
+        # the round-97 F text's own error: the Lane cell gave the letters-miss count as the verbatim-miss count
+        forged2 = text.replace(f"{cn - cv} of the {cn} S225 quotes", f"{cn - cl} of the {cn} S225 quotes", 1)
+        c_neg2 = forged2 != text and lane_counts(forged2) != (cn - cv, cn - cl, cn)
+        print(f"CASE corroboration-lane-forged lane_misses={lane_counts(forged2)} {'ok' if c_neg2 else 'FAIL'}")
+        t["CORROBORATION"] = ((1 if c_pos else 0) + (1 if c_neg else 0) + (1 if c_neg2 else 0), 3)
 
         # SEARCHES: the entry's own search record, re-run by tools/search-rerun.py (a different program from the
         # recording GNU grep); two one-cell forgeries must be refused at the recorded revision.

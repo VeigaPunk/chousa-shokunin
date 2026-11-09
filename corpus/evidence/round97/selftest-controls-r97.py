@@ -4,14 +4,18 @@
 Round 96 left the self-test's grip measured by a non-author seat: `R96MutantsC1` wrote 30 one-site mutants of the
 tool, and 19 of them survived `--selftest` (classes A, B, C of `.ufo/waves/round-96/w1/R96MutantsC1.md`);
 `R96SentinelC1` wrote two more that survived it (F1: `GIT_NO_REPLACE_OBJECTS` dropped from `git_env`; F7: only
-`GIT_DIR` scrubbed). This battery scores the round-97 self-test against exactly those mutants, read from the
-committed round-96 bytes (never retyped here), through the public CLI as fresh processes:
+`GIT_DIR` scrubbed). This battery scores the round-97 self-test against exactly those mutants through the public CLI
+as fresh processes. The `R96MutantsC1` set is read from the committed round-96 probe bytes; the two sentinel mutants
+and the three round-97 set-up mutants (`x1`-`x3`) are transcribed here from the seats' receipts (`s1`'s exact line is
+the lane's own `env.update` line with one key removed, as F1 describes; R97CriticClaims F5):
 
-  POSITIVE      `python3 -B <tool> --selftest` exits 0 and its last line is `SEARCH_RERUN_SELFTEST: PASS cases=47/47`
-  EXTERNAL      the 30 external mutants (below) applied one at a time to the tool under test; each must exit 1,
-                print `SEARCH_RERUN_SELFTEST: FAIL` and print no `Traceback` (a crash is not a detection)
+  POSITIVE      `python3 -B <tool> --selftest` exits 0, its last line is `SEARCH_RERUN_SELFTEST: PASS cases=48/48`, and it
+                prints the 48 `CASE_IDS` lines `SELFTEST <id> ok` in order (F2)
+  EXTERNAL      the 34 external mutants (below) applied one at a time to the tool under test; each must exit 1,
+                print `SEARCH_RERUN_SELFTEST: FAIL`, name at least one case id (or `setup`) in `failed=`, and print no
+                `Traceback` on stderr (a crash is not a detection)
   DO_NOTHING    the same 30 mutants applied to the tool at BASE (the round-96 landing, before any round-97 work),
-                scored by the same rule; the do-nothing control is refused when it kills fewer than 30 — its count
+                scored by the same rule; the do-nothing control is refused when it kills fewer than all — its count
                 is printed as BASE_KILLED
   R96_MUTANTS   the 23 round-96 battery mutants (`MUTANTS` of corpus/evidence/round96/selftest-controls-r96.py at
                 BASE) still killed on the tool under test, by the same rule
@@ -23,10 +27,12 @@ committed round-96 bytes (never retyped here), through the public CLI as fresh p
   REGRESSION    `corpus/evidence/round95/rerun-controls-r95.py --tool <tool>` prints `RERUN_CONTROLS=PASS` and
                 `corpus/evidence/round95/mutants-r95.py` prints `MUTANTS_KILLED=10/10` (only with the default tool)
 
-The 30 external mutants: the 29 `R96MutantsC1` mutants that applied in round 96 (`n08` applied 0 times there and
-is not counted) minus `n30` (the seat's own verdict: equivalent, since the header check already fixes the
-separator width) — 28 — plus `s1-no-replace-objects` and `s2-partial-scrub`, transcribed from the one edited
-line in `R96SentinelC1-replace-refs-false-clean.txt` (F1) and `R96SentinelC1-partial-git-scrub.txt` (F7).
+The external mutants: at F, 30 — the 29 `R96MutantsC1` mutants that applied in round 96 (`n08` applied 0 times there
+and is not counted) minus `n30` (excluded at F as equivalent), plus `s1-no-replace-objects` and `s2-partial-scrub`,
+transcribed from the one edited line in `R96SentinelC1-replace-refs-false-clean.txt` (F1) and
+`R96SentinelC1-partial-git-scrub.txt` (F7). At F2 (wave-forced, `plans/round-97.md` § Amendments), 34: `n30` is
+scored (`R97ConnectorSiblings` showed a witness: a 7-cell separator), and the three set-up crash mutants
+`R97ScribeLesson` built against F (`x1`-`x3`) are added.
 
 Usage: python3 -B corpus/evidence/round97/selftest-controls-r97.py --root LANE --work DIR [--tool PATH] [--no-regression]
 Prints one CASE line per case, the tallies and `SELFTEST_CONTROLS_R97=PASS|FAIL`. Exit 0 PASS, 1 FAIL, 2 setup.
@@ -44,10 +50,66 @@ BASE = "c8087ac529003e667505bcc624f9a7bde0cffbce"
 TOOL = "tools/search-rerun.py"
 MUTPROBE = ".ufo/waves/round-96/w1/R96MutantsC1-mutprobe.py.txt"
 R96_BATTERY = "corpus/evidence/round96/selftest-controls-r96.py"
-N_CASES = 47
+N_CASES = 48
 PASS_LINE = f"SEARCH_RERUN_SELFTEST: PASS cases={N_CASES}/{N_CASES}"
-EXCLUDED = {"n08-hits-regex-sign": "applied 0 times in round 96 (R96MutantsC1.md:34)",
-            "n30-sep-row-lenient": "equivalent (R96MutantsC1.md:154-159)"}
+# F2 (amendment A4, R97CriticClaims F4): the POSITIVE run must print each of these case lines, in this order, as
+# `SELFTEST <id> ok`, and a KILLED mutant must name at least one of them (or `setup`) in `failed=`. A self-test that
+# prints the summary without the case lines (the critic's hash-of-self stand-in) fails; one that prints forged case
+# lines without computing them is not distinguished (named limit (g)).
+CASE_IDS = (
+    "p01-parse-good",
+    "p02-no-section",
+    "p03-header",
+    "p04-engine",
+    "p05-globstar",
+    "p06-dotdot",
+    "p07-posix-class",
+    "p08-backtick",
+    "p09-short-rev",
+    "p10-zero-with-set",
+    "p11-dup-id",
+    "p12-row-after-break",
+    "p13-absolute-glob",
+    "r01-signed-hits",
+    "r02-bad-date",
+    "r03-upper-rev",
+    "r04-q0-id",
+    "r05-empty-expression",
+    "r06-empty-segment",
+    "r07-trailing-comma",
+    "r16-sep-width",
+    "p14-escaped-pipe",
+    "r08-upper-digest-is-a-path",
+    "m01-lines",
+    "m02-dotfile",
+    "m03-segment",
+    "r09-glob-longer",
+    "m04-per-line",
+    "m05-case",
+    "r10-regex-mid-line",
+    "r11-regex-non-utf8",
+    "m06-digest",
+    "m07-static-dir",
+    "r12-static-dir-literal",
+    "m08-env-scrub",
+    "r13-env-guards",
+    "j01-exact",
+    "j02-count",
+    "j03-set",
+    "j04-digest",
+    "j05-dup-path",
+    "j06-tree-moved",
+    "j07-tree-strict",
+    "j08-tree-swap",
+    "j09-zero",
+    "r14-two-codes",
+    "r15-digest-at-rev",
+    "j10-tally",
+)
+
+EXCLUDED = {"n08-hits-regex-sign": "applied 0 times in round 96 (R96MutantsC1.md:34)"}
+# F2 (amendment A1, R97ConnectorSiblings): n30 is NOT equivalent — a 7-cell separator row is refused TABLE by the tool
+# and parsed by the mutant (.ufo/waves/round-97/w1/R97ConnectorSiblings-n30-witness.txt); it is scored, not excluded.
 SENTINEL = {
     "s1-no-replace-objects": (
         '    env.update({"GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1", "GIT_TERMINAL_PROMPT": "0"})\n',
@@ -55,6 +117,22 @@ SENTINEL = {
     "s2-partial-scrub": (
         '    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}\n',
         '    env = {k: v for k, v in os.environ.items() if k != "GIT_DIR"}\n'),
+}
+# F2 (amendment A2): the three set-up crash mutants R97ScribeLesson built against F (its builder,
+# .ufo/waves/round-97/w1/R97ScribeLesson-residue-mutant-builder.py.txt, transcribed); each raised outside the per-case
+# guard at F and survived the kill rule with a traceback.
+RESIDUE = {
+    "x1-git-env-raises": (
+        '    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}',
+        '    raise RuntimeError("mutant: git_env raises")\n'
+        '    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}'),
+    "x2-st-row-raises": (  # anchored on the prefix of st_row's return line, which base and F share
+        '    return f"| {qid} | {engine} | {where} | {expr} | {rev} | ',
+        '    raise RuntimeError("mutant: st_row raises")\n'
+        '    return f"| {qid} | {engine} | {where} | {expr} | {rev} | '),
+    "x3-case-raises-after-guard": (
+        '        results.append((cid, bool(ok)))',
+        '        results.append((cid, bool(ok)))\n        if cid == "j05-dup-path": raise RuntimeError("mutant: raise after guard")'),
 }
 
 
@@ -91,8 +169,9 @@ def literal(src, name):
 
 def killed(tool_path):
     rc, out, err = selftest(tool_path)
-    dead = rc == 1 and "SEARCH_RERUN_SELFTEST: FAIL" in out and "Traceback" not in err
     failed = next((ln.split("failed=")[1] for ln in out.splitlines() if "failed=" in ln), "-")
+    named = set(failed.split(",")) & (set(CASE_IDS) | {"setup"})
+    dead = rc == 1 and "SEARCH_RERUN_SELFTEST: FAIL" in out and "Traceback" not in err and bool(named)
     return dead, rc, failed
 
 
@@ -137,8 +216,11 @@ def main(argv):
         t = {}
         rc, out, _ = selftest(tool)
         lines = out.splitlines()
-        ok = rc == 0 and bool(lines) and lines[-1] == PASS_LINE
-        print(f"CASE positive rc={rc} expect=0 last={lines[-1] if lines else ''!r} {'ok' if ok else 'FAIL'}")
+        case_lines = [ln for ln in lines if ln.startswith("SELFTEST ")]
+        lines_ok = [ln.split()[1:3] for ln in case_lines] == [[i, "ok"] for i in CASE_IDS]
+        ok = rc == 0 and bool(lines) and lines[-1] == PASS_LINE and lines_ok
+        print(f"CASE positive rc={rc} expect=0 last={lines[-1] if lines else ''!r} case_lines={len(case_lines)}"
+              f"/{len(CASE_IDS)} named_ok={lines_ok} {'ok' if ok else 'FAIL'}")
         t["POSITIVE"] = (1 if ok else 0, 1)
 
         prc, probe, _ = run(["git", "-C", root, "show", f"{BASE}:{MUTPROBE}"])
@@ -148,10 +230,11 @@ def main(argv):
             print(f"SETUP unreadable at {BASE}: mutprobe={prc} tool={brc} r96-battery={rrc}")
             return 2
         external = {m[0]: (m[1], m[2]) for m in literal(probe, "MUTANTS") if m[0] not in EXCLUDED}
-        if len(external) != 28:
-            print(f"SETUP expected 28 R96MutantsC1 mutants after exclusions, got {len(external)}")
+        if len(external) != 29:
+            print(f"SETUP expected 29 R96MutantsC1 mutants after exclusions, got {len(external)}")
             return 2
         external.update(SENTINEL)
+        external.update(RESIDUE)
         src = open(tool, encoding="utf-8").read()
 
         k, n, setup = score(src, external, work, "external")
@@ -168,11 +251,11 @@ def main(argv):
         if default_tool:
             stubs = {
                 "constant-pass": f"import sys\nprint({PASS_LINE!r})\nsys.exit(0)\n",
-                "hollow-selftest": src.replace("    good = ST_HEAD + st_row()\n",
-                                               f"    print({PASS_LINE!r})\n    return 0\n    good = ST_HEAD + st_row()\n"),
-                "always-fail": src.replace("    good = ST_HEAD + st_row()\n",
+                "hollow-selftest": src.replace("    try:\n        _selftest_cases(case)\n",
+                                               f"    print({PASS_LINE!r})\n    return 0\n    try:\n        _selftest_cases(case)\n"),
+                "always-fail": src.replace("    try:\n        _selftest_cases(case)\n",
                                            f"    print('SEARCH_RERUN_SELFTEST: FAIL cases=0/{N_CASES}')\n    return 1\n"
-                                           "    good = ST_HEAD + st_row()\n"),
+                                           "    try:\n        _selftest_cases(case)\n"),
             }
             rejected = 0
             for name, body in stubs.items():

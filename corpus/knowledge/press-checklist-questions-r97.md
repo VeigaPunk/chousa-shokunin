@@ -8,11 +8,14 @@ recheck: on-release
 
 The round-96 entry (`search-peer-review-dedup-r96.md`) holds that PRISMA-S asks a report to describe any search
 peer review, and holds the PRESS 2015 update's six elements by name only, through its authors' abstract (S223,
-tier B); its first named limit says "the checklist's own element wording ... [is] not held". This entry holds the
-checklist's *questions* under each of the six elements, as Cochrane reprints them for editors (S225, tier B), read
-against a second, independent reprint (S226, tier C, never sole support here). The guideline statement itself and
-the CADTH Table 9 that both reprints derive from answered http 403 (S227, rejected for route; also the round-96
-attempts), so where the two reprints differ, this entry cannot say which wording is the guideline's.
+tier B); its first named limit says "the checklist's own element wording ... [is] not held". This entry holds 16 of the
+checklist's *questions* (of the 33 question lines S225 prints), at least two under each of the six elements, as
+Cochrane reprints them for editors (S225, tier B), read against a second reprint on another host (S226, tier C; every
+decision row also names an S225 quote). S225 says it is "Derived from" the guideline statement (J Clin Epidemiol
+2016); S226 links CADTH's 2016 PRESS report as its source, so the two are separate transcriptions, not shown to be
+independent of one upstream. The guideline statement and the CADTH Table 9 answered http 403 (S227, rejected for
+route; also the round-96 attempts), so where the two reprints differ, this entry cannot say which wording is the
+guideline's.
 
 What the lane held before this round, measured by the `## Searches` record below at the base revision `c8087ac5`:
 no capture holds the question "Are there any spelling errors" (Q3), the phrase "orphan lines" (Q1) or "hits per
@@ -21,8 +24,9 @@ captures (Q4-Q6), none of them a reprint of the checklist; "PICO" occurs in twel
 is this lane's reading; it is not what PRESS, Cochrane or Karolinska says.
 
 Text forms: S225 is `pdftotext -layout` of a two-page landscape PDF whose question column is one line per question,
-so every S225 quote is a substring of one capture line (L21 and L22 are the two halves of one 32-word question on
-capture line 74, split to stay within 25 words). S226 is the recipe's HTML text form, one question per line.
+so every S225 quote is a substring of one capture line (L21 and L22 are the two halves of one 30-word question on
+capture line 73 as `sed -n 73p` counts lines, split to stay within 25 words; Python's `splitlines()` also breaks at
+the form feeds between pages and counts that line as 74). S226 is the recipe's HTML text form, one question per line.
 
 ## Located quotes
 
@@ -62,28 +66,29 @@ capture line 74, split to stay within 25 words). S226 is the recipe's HTML text 
 
 | Situation | Do | Never | Warrant | Lane |
 |---|---|---|---|---|
-| Checking that a strategy answers the question it serves | check that the search strategy matches the research question/PICO, that it has neither too many nor too few PICO elements, and that unconventional or complex strategies are explained | review the syntax of a strategy without first reading the question it is meant to answer | L3, L4, L5, L7 (S225) | chousa frames the question before it searches (SKILL.md question framing); a reviewer seat is handed the framed question with the record, not the record alone |
-| Judging how much a search retrieves | show the number of hits per line, so the reviewer can ask whether the search retrieves too many or too few records | file only a final total, which hides the line that over- or under-retrieves | L6 (S225) | the lane's `## Searches` record files one count per expression (`hits`), which is its form of hits per line; `tools/search-rerun.py` re-derives each count |
+| Checking that a strategy answers the question it serves | check that the search strategy matches the research question/PICO, that it has neither too many nor too few PICO elements, and that unconventional or complex strategies are explained | leave an unconventional or complex strategy unexplained | L3, L4, L5, L7 (S225) | chousa frames the question before it searches (SKILL.md question framing); a reviewer seat is handed the framed question with the record, not the record alone |
+| Judging how much a search retrieves | show the number of hits per line, so the reviewer can ask whether the search retrieves too many or too few records | leave out the number of hits per line | L6 (S225) | the lane's `## Searches` record files one count per expression (`hits`), but that count is the number of *files* with at least one matching line (`tools/search-rerun.py` re-derives it as a file count), not hits per line; the lane does not yet meet this question, it only keeps each expression in its own row |
 | Checking Boolean and proximity operators | check that Boolean or proximity operators are used correctly (they vary by search service) and whether a NOT causes unintended exclusions | add a NOT without checking what it excludes | L8, L9, L10 (S225) | the lane's local searches are single GNU grep expressions with no NOT; an exclusion would be a second expression, filed as its own row, so its effect is countable |
-| Checking subject headings | check that relevant subject headings are not missing (for example previous index terms) and that both subject headings and free-text terms are used for each concept | rely on subject headings alone for a concept | L11, L12, L13 (S225); L29 (S226) | the lane's capture store has no controlled vocabulary, so this element does not apply to its local searches; a record says so rather than counting the element as passed |
-| Checking free-text words | check spelling variants (UK vs. US), that truncation is at the correct place, and whether long strings should be broken into several shorter search statements | assume one spelling or one word ending covers a concept | L14, L15, L16, L17 (S225) | a `regex` row can carry variants (`[Ss]ubject headings?`, Q5 below); a `fixed` row matches one spelling only, so a variant needs its own row |
+| Checking subject headings | check that relevant subject headings are not missing (for example previous index terms) and that both subject headings and free-text terms are used for each concept | rely on subject headings alone for a concept | L11, L12, L13 (S225); L29 (S226) | the capture store holds text *about* controlled vocabularies (`git grep -l -i -E 'emtree|mesh|thesaurus'` finds 12 captures at the freeze), but the lane's local searches are GNU grep expressions over plain text with no subject-heading index, so this element does not apply to them; no lane record yet says so, which is a gap, not a pass |
+| Checking free-text words | check spelling variants (UK vs. US), that truncation is at the correct place, and whether long strings should be broken into several shorter search statements | leave out spelling variants, or place truncation where it misses relevant endings | L14, L15, L16, L17 (S225) | a `regex` row can carry variants (`[Ss]ubject headings?`, Q5 below); a `fixed` row matches one spelling only, so a variant needs its own row |
 | Checking spelling, syntax and line numbers | check for spelling errors, for syntax from a different search interface (such as another interface's truncation symbol), and for incorrect line combinations or orphan lines | leave a line that the final combination never refers to | L18, L19, L20, L21, L22 (S225) | `tools/search-rerun.py` refuses a POSIX bracket class in a `regex` row because Python reads that syntax differently from the PCRE that recorded it — the lane's case of another interface's syntax; its records have no combined lines, so orphan lines cannot occur in them |
 | Checking limits and filters | check that limits and filters are appropriate and relevant to the research question, and that sources are cited for the filters used | apply a filter without citing where it comes from | L23, L24, L25 (S225) | PRISMA-S items 9 and 10 (round-95 entry, S222) ask the same of a report; a chousa record's only limit is its `where` glob, filed in the row |
-| Citing the checklist | cite the guideline statement that the reprint says the checklist is derived from, and name the reprint as the route the wording was read through | cite a reprint's wording as the guideline's own where reprints differ | L1, L2, L26 (S225); L27, L28 (S226) | the lane holds two reprints, not the guideline (S227 and the round-96 routes answered 403); 12 of the 26 S225 quotes are not found verbatim in S226 (`## Two reprints compared`) |
+| Citing the checklist | cite the guideline statement that the reprint says the checklist is derived from, and name the reprint as the route the wording was read through | (none stated by the sources; the lane's guard is in the Lane column) | L1, L2, L26 (S225); L27, L28 (S226) | the lane holds two reprints, not the guideline (S227 and the round-96 routes answered 403); 16 of the 26 S225 quotes are not found verbatim in S226 and 12 not even after deleting non-alphanumerics (`## Two reprints compared`), so the lane never cites a reprint's wording as the guideline's |
 
 ## Two reprints compared
 
 Each S225 quote was looked up in the S226 capture under two readings, by `corpus/evidence/round97/entry-controls-r97.py`
 (group CORROBORATION): *verbatim* — the quote, whitespace-collapsed as `tools/gate-records.py` normalizes it, is a
 substring of the whitespace-collapsed S226 text; *letters* — after lowercasing and deleting every character that is
-not a letter or digit from both. At round 97: verbatim 10/26, letters 14/26. Of the 12 not found under *letters*,
-5 are element headings (S225 numbers them and adds the parentheticals "these vary based on search service",
-"database specific", "free text"; S226 prints the heading and the parenthetical as separate lines without numbers),
-one is S225's own pointer (L1), one the PRESS checklist title (L2), and five are questions where the wording itself
-differs: S225 "for example" where S226 has "e.g." (L12, L20), S225 "eg," for S226 "e.g.," and "vs." for "versus"
-(L15), and S225 "see the following" for S226 "see below" (L13 against L29). L26 (the citation) is found only under
-*letters* (S226 prints "Statement ." with a space and "2016 Jul;75:40–46."). Which wording is the guideline
-statement's is not decidable from these two bytes; the guideline is not held.
+not a letter or digit from both. At round 97: verbatim 10/26, letters 14/26 — so 16 are not found verbatim and 12
+not under *letters*. Of those 12, six are element headings (L3, L8, L11, L14, L18, L23: S225 numbers them, S226 does
+not — with digits also deleted, 20/26 are found, so the headings differ only by their numbers), one is S225's own
+pointer (L1), one the PRESS checklist title (L2), and four are questions whose wording differs: S225 "for example"
+where S226 has "e.g." (L12, L20), S225 "eg," for S226 "e.g.," and "vs." for "versus" (L15), and S225 "see the
+following" for S226 "see below" (L13 against L29). Four more (L4, L16, L21, L26) are found under *letters* but not
+verbatim: spacing and abbreviation points ("question/ PICO ?", "i.e.," for "ie,", "Statement ." with a space and
+"2016 Jul;75:40–46."). Which wording is the guideline statement's is not decidable from these two bytes; the
+guideline is not held.
 
 ## As run
 
@@ -118,7 +123,11 @@ one at `c8087ac5` and over the current tree.
   reprints differ, neither is taken as the guideline's wording.
 - S225 is tier B for the scope "the checklist questions as Cochrane reprints them for editors"; it says it is
   "derived from" the guideline statement, which is a citation, not a statement that the text is verbatim.
-- S226 is tier C: a university library's guide page; it corroborates, and no decision row rests on it alone.
+- S226 is tier C: a university library's guide page; it corroborates, and every decision row also names an S225
+  quote (the controls check that an S225 quote is named, not that it carries the row's point). S226 links CADTH's
+  2016 report as its source, so its agreement with S225 is two transcriptions agreeing, not two independent witnesses.
+- `## Two reprints compared` is a string test: *letters* can match across a line break in S226 and cannot see a
+  reordering; its numbers depend on keeping digits (14/26 with digits, 20/26 without).
 - The checklist's assessment form, the E&E's explanation of each element and the evidence behind each element are
   not held.
 - The searches are over the lane's own capture store, per line; Q1-Q3's zero counts say the store held no line
