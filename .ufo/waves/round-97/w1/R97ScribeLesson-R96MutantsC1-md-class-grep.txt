@@ -1,0 +1,19 @@
+# R96MutantsC1.md class counts (round-95 battery verdict per mutant, as written in the seat report)
+$ grep -n 'Round-95 battery PASS\|RERUN_CONTROLS=FAIL\|Round-95 battery: \|Class A\|Class B\|Class C\|VERDICT' R96MutantsC1.md
+51:### Class A — equivalent on the 32 in-memory cases, killed by the round-95 CLI battery
+62:  `POSITIVE=0/1 … RERUN_CONTROLS=FAIL` (the self-test never exercises a digest
+64:- n17 regex `search` → `match` in `hit`: round-95 battery `RERUN_CONTROLS=FAIL`,
+70:- n27 expression minimum length 3→2: round-95 battery `RERUN_CONTROLS=FAIL`,
+74:### Class B — crash (exit 1) without the FAIL line: survive the battery's letter
+103:### Class C — pass --selftest (PASS 32/32) and pass the round-95 battery (RERUN_CONTROLS=PASS)
+115:  bad codes. Round-95 battery: `POSITIVE=1/1 … RERUN_CONTROLS=PASS` (full
+120:  would `int()` fine and be judged. Round-95 battery PASS.
+123:  forgery either. Round-95 battery PASS.
+127:  Round-95 battery PASS (all three).
+131:  of matching per GNU grep byte semantics. Round-95 battery PASS.
+140:  Round-95 battery PASS.
+147:  Round-95 battery PASS.
+150:  Round-95 battery PASS.
+153:  no case exercises a trailing comma. Round-95 battery PASS.
+247:VERDICT: R96MutantsC1 C1 held — 10/29 new mutants killed by --selftest, 19 survive it (15 of them also pass the round-95 CLI battery), but every survivor falls under named limit (b) or the batte
+$ grep -c 'Round-95 battery PASS' (lines in Class C) -> 8

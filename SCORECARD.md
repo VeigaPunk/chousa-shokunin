@@ -4312,3 +4312,40 @@ Gates row.
 3. carried debt: the four gate-kind tools with no `--selftest` (`R96RevenPrior` Q3), the round-94 planned items,
    the round-74 source-blind order oracle, the r82 clip range, QUALITY 173's successful-refused record form, the
    r80 backlog Gate ids.
+
+## Round 97 verdict — the self-test is scored against the mutants its attackers wrote, and the PRESS 2015 checklist is held question by question through a reprint (2026-11-09)
+
+Base `c8087ac5`; freeze F `9a0ce201`; wave-forced re-freeze F2 `d84f4e1e` (A1-A5, B1-B10) and F3 `1042eb97` (B11,
+C2 wording only; C1's paths and both batteries byte-identical F2..F3, `after-f3/c1-f2-equals-f3.txt`). C1 numbers from
+`corpus/evidence/round97/after-f2/c1-all.txt`, C2 from `corpus/evidence/round97/after-f3/c2-all.txt`. Two claims, two
+axes, no exploratory claim; C2 sourced on `S225` and `S226`. One v1 wave, 12 seats.
+
+| claim | axis | before | after | delta | verdict |
+|---|---|---|---|---|---|
+| C1 `C1-SELFTEST-GRIP-R97` | operability (lowest, historical 3/10) | base tool under the F2 battery: `EXTERNAL_KILLED=10/34`, `SELFTEST_CONTROLS_R97=FAIL` (`before-f2/c1-base.txt`); 4 of its survivors crash with a traceback | `SEARCH_RERUN_SELFTEST: PASS cases=48/48`; `POSITIVE=1/1 EXTERNAL_KILLED=34/34 DO_NOTHING_REFUSED=1/1 R96_MUTANTS_KILLED=23/23 ORACLES_REJECTED=3/3 NO_WRITE=1/1 REGRESSION_R95=2/2 BASE_KILLED=10/34`, `SELFTEST_CONTROLS_R97=PASS` | 24 more non-author mutants killed; numeric score unchanged (historical 3/10 frozen by its own rule) | **verified at F2 on the narrowed sentence (author-measured; non-author closure pending)** |
+| C2 `C2-ENTRY-R97` | depth | entry absent (gate exit 2); no base capture holds "Are there any spelling errors" or "orphan lines" (`before/c2-base.txt`) | `GATE_RECORDS files=1 records=30 ok=30 fail=0`, `METADATA_COMPLETE=1/1`, `rev_match=7/7 SEARCH_RERUN: CLEAN`, `ENTRY_CONTROLS=PASS` with `CORROBORATION=3/3 … ONE_LINE=29/29 VERBATIM=10/26 LETTERS=14/26` | one knowledge entry, 8 decision rows, 29 located quotes from two reprints, 16 checklist questions held | **verified at F2/F3 (author-measured; rows' Never and Lane cells repaired at B3-B5 after `R97ReviewerC2`)** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | the search re-run gate's self-test now fails, with a summary line, on 34 mutants written by round-96/97 seats, where the round-96 tool failed on 10 |
+| depth | **improved** | the PRESS 2015 checklist held at question level (16 questions, six elements) with a measured reprint-to-reprint comparison; round 96 held the elements by name only |
+| coverage | unchanged | registry 223 → 226 rows (`S225`, `S226`, `S227` rejected); `PROVINCE.md` untouched |
+| freshness | unchanged | no re-verification claim |
+| calibration | unchanged | both sentences narrowed to their instruments before filing (A1-A5, B9-B11); QUALITY 227-228 added; no calibration claim |
+| adjacency | unchanged | sibling patterns routed by `R97ConnectorSiblings`, not absorbed |
+
+No axis harmed: `verify` prints byte-identical output to the base tool, plain and `--strict`, on the round-95 fixture
+and both entries (`after-f2/c1-verify-harm-and-c2-separable.txt`); the round-95 battery and mutant rebuild pass
+(`REGRESSION_R95=2/2`); `tools/gate-records.py` and `tools/research-gate.sh` are unchanged; the registry diff is three
+appended rows and one `## Search log` entry; `SKILL.md` gains one correction line after row 180.
+
+## Planned — round 98 (intent, not a predicate)
+
+1. **operability (lowest)** — `R97MutantsC1`'s 19 uncovered survivors: the guard and summary machinery has no
+   external oracle (`g01`-`g05`), `u03-blob-silent` turns a missing blob into an empty file, four malformed-record
+   shapes (`p04`-`p07`) pass every instrument; `m05` (str-sort digest) diverges on non-ASCII paths.
+2. **depth** — the PRESS 2015 primary (J Clin Epidemiol statement, CADTH E&E/Table 9) is still 403 here; the CADTH
+   report 477 appendices (`R97ScoutSources` §4) is an untried lead; 17 of S225's question lines are not quoted.
+3. carried debt: D1 (`S224` names two documents in `refetch.tsv`; needs a reader rule, not a row — `R97RevenPrior`
+   Q3), the four gate-kind tools with no `--selftest`, the round-94 planned items, the round-74 source-blind order
+   oracle, the r82 clip range, QUALITY 173's successful-refused record form, the r80 backlog Gate ids.

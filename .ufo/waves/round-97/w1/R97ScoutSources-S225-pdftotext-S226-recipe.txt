@@ -1,0 +1,18 @@
+== pdftotext -layout S225 vs committed capture
+$ pdftotext -layout S225.pdf S225.layout.txt && sha256sum S225.layout.txt && cmp S225.layout.txt /fast/scratch/hyaku/chousa-r97/R97ScoutSources/repo/corpus/captures/347c55ba9be9d63afe17986e.txt; echo cmp_rc=$?
+abd08a9333c7f1ef8306032e4d1dc05a54e751d61ddfb3eb5b7d7861c6d3c9c8  S225.layout.txt
+cmp_rc=0
+[exit 0]
+
+== pdfinfo
+$ pdfinfo S225.pdf | /usr/bin/grep -E 'Pages|Page size'
+Pages:           2
+Page size:       841.68 x 595.2 pts (A4)
+[exit 0]
+
+== S226 recipe (lane recipe_txt) on attempt-1 and attempt-2 raw bytes vs capture
+
+$ python3 -B -c '<recipe_txt from tools/capture-fetch.py>'
+S226.html raw_sha256 c2f9b69fb61e03dd550cc2d8f9dfeea623e06add939663fcd81227b3676202e2 txt_sha256 161144983ec5b3b882afca0bbf83a1e1662ab95c85fc8e869d5441325b0c8ee4 txt==capture True
+S226.attempt2.html raw_sha256 6458281bee1dc10f490bbbfc1dfc1d46845f3a032e2487a39eeae41eb9cec1af txt_sha256 161144983ec5b3b882afca0bbf83a1e1662ab95c85fc8e869d5441325b0c8ee4 txt==capture True
+[exit 0]

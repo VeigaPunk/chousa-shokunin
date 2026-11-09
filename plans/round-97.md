@@ -105,3 +105,10 @@ Routed-defect correction (`R97RevenPrior` Q3): the plan's reason for not writing
 has not been shown safe for all three readers") is wrong — a 9-field row under a fresh id breaks none of the
 readers (scratch-tested). The refusal stands for a different reason: no append-only row withdraws the wrong `S224`
 row, because `gate-records.py` accepts any matching row; D1 needs a reader rule, not a row.
+- **B11 (QUALITY 228, `lessons/round-97.md` Mistakes 4).** "16 of the 33 question lines" left the C2 sentence (no
+  instrument recomputes it); the entry marks it, "12 captures" and "20/26" as seat-measured.
+- **B12 (`R97ConnectorSiblings`).** The separability receipt's name in claims.md was wrong; pointer corrected.
+- **Battery wording, not claim wording (`R97SentinelC1` F1-F3).** The C1 battery docstring's "Read-only on the lane"
+  and "Writes only under --work" are false in detail (`git status` takes `.git/index.lock`; mutant runs inherit the
+  lane as cwd), and NO_WRITE does not see git-ignored paths. The battery bytes stay as frozen at F2; recorded as a
+  `LOG.md` correction and routed to round 98.

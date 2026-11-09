@@ -158,3 +158,10 @@ are separate transcriptions, not shown independent of one upstream.
 The F2 sentence carried "16 of the 33 question lines that reprint prints", a count no C2 instrument recomputes
 (QUALITY 228, `lessons/round-97.md` Mistakes 4); it is removed from the sentence and stays in the entry's prose,
 marked there as seat-measured.
+
+### C2 separability pointer (B12; no instrument byte changed)
+
+The F text names `after/c2-separable-base-tool.txt`, which was never written (`R97ConnectorSiblings`); the separability
+receipt is `corpus/evidence/round97/after/c1-verify-harm-and-c2-separable.txt` at F and
+`corpus/evidence/round97/after-f2/c1-verify-harm-and-c2-separable.txt` at F2 (the base tool re-runs the entry's record
+`SEARCH_RERUN: CLEAN`, byte-identical to the F2 tool).

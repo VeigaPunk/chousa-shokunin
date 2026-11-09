@@ -1,0 +1,197 @@
+#!/usr/bin/env python3
+"""R97MutantsC1 probe: 34 NEW one-site mutants beyond the 30 named in C1.
+
+Each (old, new) must apply exactly once to tools/search-rerun.py at F
+(9a0ce2015fa0254848f2f32f612b20caf7dc5478).  KILLED = `python3 -B <mutant>
+--selftest` exits 1, prints `SEARCH_RERUN_SELFTEST: FAIL`, and prints no
+traceback (the frozen battery's `killed()` rule).  Every survivor is then
+run through the round-95 battery; it is classified covered/uncovered.
+
+Axes: (A) does the claim sentence say more than the 47 cases enforce;
+      (B) does any survivor falsify a C1 sentence as worded (named limits
+      (a)(b) are part of the claim).
+"""
+import os
+import subprocess
+import sys
+
+S = "/fast/scratch/hyaku/chousa-r97/R97MutantsC1"
+SRC = open(os.path.join(S, "repo", "tools", "search-rerun.py"), encoding="utf-8").read()
+
+MUTANTS = [
+    # --- NEW guard machinery (case / refusal / summary) ---
+    ("g01-case-always-true",
+     "        results.append((cid, bool(ok)))",
+     "        results.append((cid, True))"),
+    ("g02-case-setup-only",
+     "        except Exception as exc:  # a crash inside a case is that case's failure",
+     "        except Setup as exc:  # a crash inside a case is that case's failure"),
+    ("g03-case-count-all",
+     "    n, k = len(results), sum(1 for _, ok in results if ok)",
+     "    n, k = len(results), len(results)"),
+    ("g04-summary-always-pass",
+     "    print(f\"SEARCH_RERUN_SELFTEST: {'PASS' if k == n else 'FAIL'} cases={k}/{n}\" + (f\" failed={','.join(bad)}\" if bad else \"\"))",
+     "    print(f\"SEARCH_RERUN_SELFTEST: {'PASS'} cases={k}/{n}\" + (f\" failed={','.join(bad)}\" if bad else \"\"))"),
+    ("g05-selftest-return-0",
+     "    return 0 if k == n else 1",
+     "    return 0"),
+    ("g06-refusal-detail",
+     "            return exc.code",
+     "            return exc.detail"),
+    ("g07-judge-index-8",
+     "        codes = lines[0].split()[7].split(\",\") if len(lines[0].split()) > 7 else []",
+     "        codes = lines[0].split()[8].split(\",\") if len(lines[0].split()) > 7 else []"),
+    # --- parse checks / cells / parse_text ---
+    ("p01-cells-no-endpipe",
+     "    if not (s.startswith(\"|\") and s.endswith(\"|\")) or len(s) < 2:",
+     "    if not s.startswith(\"|\") or len(s) < 2:"),
+    ("p02-heading-contains",
+     "    starts = [i for i, ln in enumerate(lines) if ln.rstrip() == \"## Searches\"]",
+     "    starts = [i for i, ln in enumerate(lines) if \"## Searches\" in ln.rstrip()]"),
+    ("p03-double-section",
+     "    if len(starts) != 1:",
+     "    if not starts:"),
+    ("p04-separator-2dash",
+     'r":?-{3,}:?"',
+     'r":?-{2,}:?"'),
+    ("p05-hitset-dash-path",
+     '        elif hs and hs != "-":',
+     "        elif hs:"),
+    ("p06-where-dot-segment",
+     '            if not g or g.startswith("/") or "\\\\" in g or ".." in parts or "" in parts or "." in parts:',
+     '            if not g or g.startswith("/") or "\\\\" in g or ".." in parts or "" in parts:'),
+    ("p07-expr-no-end-backtick",
+     '        if len(e) < 3 or not (e.startswith("`") and e.endswith("`")) or "`" in e[1:-1]:',
+     '        if len(e) < 3 or not e.startswith("`") or "`" in e[1:-1]:'),
+    ("p08-hitset-no-strip",
+     '            r["set"] = [p.strip() for p in hs.split(",")]',
+     '            r["set"] = [p for p in hs.split(",")]'),
+    ("p09-posix-lower",
+     'POSIX_CLASS_RE = re.compile(r"\\[:[A-Za-z]+:\\]")',
+     'POSIX_CLASS_RE = re.compile(r"\\[:[a-z]+:\\]")'),
+    ("p10-engine-pcre",
+     '        if r["engine"] not in ENGINES:',
+     '        if r["engine"] not in ("fixed", "regex", "pcre"):'),
+    ("p11-cells-no-trailing-strip",
+     "    return [c.strip().replace(\"\\\\|\", \"|\") for c in SPLIT_RE.split(s[1:-1])]",
+     "    return [c.strip().replace(\"\\\\|\", \"|\") for c in SPLIT_RE.split(s[1:])]"),
+    # --- matches / seg_match / hit / lines_of / digest ---
+    ("m01-matches-any",
+     "        if len(pats) == len(segs) and all(seg_match(s, p) for s, p in zip(segs, pats)):",
+     "        if len(pats) == len(segs) and any(seg_match(s, p) for s, p in zip(segs, pats)):"),
+    ("m02-lines-phantom",
+     '    if lines and lines[-1] == b"":',
+     '    if lines and lines[-1] == b"\\n":'),
+    ("m03-hit-fixed-startswith",
+     '            if r["needle"] in line:',
+     '            if line.startswith(r["needle"]):'),
+    ("m04-hit-miss-last-line",
+     "    for line in lines_of(data):",
+     "    for line in lines_of(data)[:-1]:"),
+    ("m05-digest-str-sort",
+     '    keys = sorted(p.encode("utf-8", "surrogateescape") for p in paths)',
+     '    keys = [p.encode("utf-8", "surrogateescape") for p in sorted(paths)]'),
+    # --- evaluate ---
+    ("e01-rev-token-swap",
+     "            f\"SEARCH_RERUN {r['id']} rev={'DRIFT' if ('COUNT_DRIFT' in codes or 'SET_DRIFT' in codes) else 'MATCH'}\"",
+     "            f\"SEARCH_RERUN {r['id']} rev={'MATCH' if ('COUNT_DRIFT' in codes or 'SET_DRIFT' in codes) else 'DRIFT'}\""),
+    ("e02-count-lt",
+     '        if len(at_rev) != r["n"]:',
+     '        if len(at_rev) < r["n"]:'),
+    ("e03-changed-and-not-strict",
+     "        changed = at_tree != at_rev",
+     "        changed = at_tree != at_rev and not strict"),
+    ("e04-findings-times-2",
+     "        findings += len(bad)",
+     "        findings += 2 * len(bad)"),
+    ("e05-treesame-swap",
+     "        tree_same += 0 if changed else 1",
+     "        tree_same += 1 if changed else 0"),
+    # --- git_env ---
+    ("v01-env-git-prefix",
+     '    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}',
+     '    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT")}'),
+    ("v02-env-drop-terminal",
+     '    env.update({"GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1", "GIT_TERMINAL_PROMPT": "0"})',
+     '    env.update({"GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1"})'),
+    # --- verify / git & disk readers (not exercised by the self-test) ---
+    ("u01-verify-return-0",
+     "    return 0 if findings == 0 else 1",
+     "    return 0"),
+    ("u02-run-at-rev-tops-0",
+     "        if not path.startswith(tops) or not matches(path, r[\"globs\"]):",
+     "        if not path.startswith(tops[0]) or not matches(path, r[\"globs\"]):"),
+    ("u03-blob-silent",
+     "        if p.returncode != 0:",
+     "        if False:"),
+    ("u04-static-dir-bracket",
+     '        if any(ch in s for ch in "*?["):',
+     '        if any(ch in s for ch in "*?"):'),
+    ("u05-tree-files-jj",
+     '            dirnames[:] = sorted(d for d in dirnames if not (rel_dir == "." and d in (".git", ".jj")))',
+     '            dirnames[:] = sorted(d for d in dirnames if not (rel_dir == "." and d in (".git",)))'),
+    ("u06-git-timeout-0",
+     '    p = subprocess.run(["git", "-C", root, *args], capture_output=True, env=git_env())',
+     '    p = subprocess.run(["git", "-C", root, *args], capture_output=True, env=git_env(), timeout=0)'),
+    ("u07-record-exists-refused",
+     "        if os.path.islink(path):",
+     "        if os.path.exists(path):"),
+]
+
+
+def run_selftest(path):
+    p = subprocess.run([sys.executable, "-B", path, "--selftest"],
+                       capture_output=True, text=True)
+    dead = p.returncode == 1 and "SEARCH_RERUN_SELFTEST: FAIL" in p.stdout \
+        and "Traceback" not in p.stderr
+    failed = next((ln.split("failed=")[1] for ln in p.stdout.splitlines()
+                   if "failed=" in ln), "-")
+    return dead, p.returncode, failed
+
+
+def run_r95(mutant_path, tag):
+    work = os.path.join(S, "w", tag)
+    cmd = [sys.executable, "-B",
+           os.path.join(S, "repo", "corpus", "evidence", "round95",
+                        "rerun-controls-r95.py"),
+           "--root", os.path.join(S, "repo"), "--work", work,
+           "--tool", mutant_path]
+    p = subprocess.run(cmd, capture_output=True, text=True, timeout=1200)
+    last = [ln for ln in p.stdout.splitlines() if "CONTROLS" in ln]
+    tally = [ln for ln in p.stdout.splitlines() if ln.startswith("CASE")]
+    bad = [ln for ln in tally if "FAIL" in ln]
+    return p.returncode, last[0] if last else "(no verdict line)", bad
+
+
+def main():
+    out = []
+    killed, survived = 0, []
+    for name, old, new in MUTANTS:
+        n = SRC.count(old)
+        if n != 1:
+            out.append(f"SETUP {name} applies {n} times (SKIP)")
+            continue
+        mp = os.path.join(S, f"mut-{name}.py")
+        open(mp, "w", encoding="utf-8").write(SRC.replace(old, new))
+        dead, rc, failed = run_selftest(mp)
+        verdict = "KILLED" if dead else "SURVIVED"
+        out.append(f"MUTANT {name} rc={rc} {verdict} failed={failed}")
+        if dead:
+            killed += 1
+        else:
+            survived.append((name, mp))
+    out.append(f"SELFTEST killed={killed} survived={len(survived)} "
+               f"probed={len(MUTANTS)}")
+    for name, mp in survived:
+        rc, verdict, bad = run_r95(mp, name)
+        cover = "covered-by-r95" if rc != 0 else "UNCOVERED-by-r95"
+        out.append(f"R95 {name} rc={rc} {cover} verdict=[{verdict}]")
+        for ln in bad[:4]:
+            out.append(f"  FAILING: {ln}")
+    text = "\n".join(out) + "\n"
+    sys.stdout.write(text)
+    open(os.path.join(S, "probe-out.txt"), "w").write(text)
+
+
+if __name__ == "__main__":
+    main()

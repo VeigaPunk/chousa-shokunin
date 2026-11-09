@@ -1,0 +1,38 @@
+== attacked tree
+$ git -C /fast/scratch/hyaku/chousa-r97/R97ScoutSources/repo rev-parse HEAD
+9a0ce2015fa0254848f2f32f612b20caf7dc5478
+[exit 0]
+
+== fetch digests (own copies)
+$ sha256sum S225.pdf S226.html S226.attempt2.html S227.pdf
+56c4cdd605dfa3c19ca9b6d0d7e4b43e4a64ec62c8c2daf7c79b1e63cc0dfcc6  S225.pdf
+c2f9b69fb61e03dd550cc2d8f9dfeea623e06add939663fcd81227b3676202e2  S226.html
+6458281bee1dc10f490bbbfc1dfc1d46845f3a032e2487a39eeae41eb9cec1af  S226.attempt2.html
+7e3762049d637e287568212a9f12330bab365be4c5be2c916496d6df295e5a4b  S227.pdf
+[exit 0]
+
+== refetch.tsv rows S225-S227
+$ /usr/bin/grep -P '^S22[567]\t' corpus/evidence/round57/refetch.tsv | cut -f1,3,4,5,6,7,8,9
+S225	347c55ba9be9d63afe17986e	1	2026-11-09T01:59:44Z	0	200	56c4cdd605dfa3c19ca9b6d0d7e4b43e4a64ec62c8c2daf7c79b1e63cc0dfcc6	abd08a9333c7f1ef8306032e4d1dc05a54e751d61ddfb3eb5b7d7861c6d3c9c8
+S226	80a844fe287a1a26d4280251	1	2026-11-09T01:59:45Z	0	200	777b890f6b1e1419068652855685c19cc8e065e6d818d1f8528d2e8199e492b9	161144983ec5b3b882afca0bbf83a1e1662ab95c85fc8e869d5441325b0c8ee4
+S227	4a9ad82f8acc9741421f8f5f	1	2026-11-09T01:59:45Z	22	403	-	-
+[exit 0]
+
+== capture digests
+$ sha256sum corpus/captures/347c55ba9be9d63afe17986e.txt corpus/captures/80a844fe287a1a26d4280251.txt
+abd08a9333c7f1ef8306032e4d1dc05a54e751d61ddfb3eb5b7d7861c6d3c9c8  corpus/captures/347c55ba9be9d63afe17986e.txt
+161144983ec5b3b882afca0bbf83a1e1662ab95c85fc8e869d5441325b0c8ee4  corpus/captures/80a844fe287a1a26d4280251.txt
+[exit 0]
+
+== lane fetch argv (capture-fetch.py)
+$ /usr/bin/grep -n 'cmd = \["curl"' tools/capture-fetch.py
+137:    cmd = ["curl", "-fsSL", "--compressed", "--max-time", "15", "-A", UA,
+[exit 0]
+
+== S227 attempt-2 argv (lane argv, -f)
+$ curl -fsSL --compressed --max-time 15 -A <lane UA> <S227 url>
+HTTP=403 curl_rc=22 (no body saved)
+
+== S227 attempt-1 body head (no -f): Cloudflare interstitial
+$ head -c 160 S227.pdf
+<!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA[exit 0]

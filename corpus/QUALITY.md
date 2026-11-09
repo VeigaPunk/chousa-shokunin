@@ -1419,3 +1419,13 @@ the admitted entry that motivates it. Tier definitions live in
     Check: the leg's `before` state is taken at battery start (or in a fresh clone used by no earlier leg), it
     records a content digest of the tree (e.g. `git stash create` or a tree hash), and a planted lane-writing stand-in
     fails it. — `lessons/round-96.md` Mistakes 6.
+227. **A mutant is excluded as equivalent only with a recorded witness search.** Round 97's F excluded
+    `n30-sep-row-lenient` on the round-96 seat's "equivalent" verdict; a 7-cell separator row distinguishes it
+    (`R97ConnectorSiblings-n30-witness.txt`). Check: every exclusion in a battery names the inputs tried to tell the
+    mutant from the original (at least one per branch the edited line guards) and their outputs; an exclusion with
+    no such record is scored, not excluded. — `lessons/round-97.md` Mistakes 2.
+228. **Every number an entry states about its own sources is either recomputed by its controls or marked as
+    unchecked.** Round 97's F entry stated the corroboration counts twice; the controls recomputed one statement
+    and the other was wrong (12 for 16). Check: `grep -nE '[0-9]+ of the [0-9]+|[0-9]+/[0-9]+'` over the entry lists
+    no count that the entry's controls do not recompute or that a named limit does not mark as unchecked.
+    — `lessons/round-97.md` Mistakes 4.

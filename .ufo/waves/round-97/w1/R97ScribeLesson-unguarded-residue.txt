@@ -1,0 +1,32 @@
+TOOL=sr-F.py rc=0 battery_verdict=SURVIVED
+stdout_last=SEARCH_RERUN_SELFTEST: PASS cases=47/47
+stdout_lines=48 stderr_lines=0
+stderr_tail:
+
+TOOL=mut-genv-raise.py rc=1 battery_verdict=SURVIVED
+stdout_last=SELFTEST r12-static-dir-literal ok
+stdout_lines=33 stderr_lines=11
+stderr_tail:
+    env = git_env()
+  File "/fast/scratch/hyaku/chousa-r97/R97ScribeLesson/mut-genv-raise.py", line 114, in git_env
+    raise RuntimeError("mutant: git_env raises")
+RuntimeError: mutant: git_env raises
+
+TOOL=mut-strow-raise.py rc=1 battery_verdict=SURVIVED
+stdout_last=
+stdout_lines=0 stderr_lines=12
+stderr_tail:
+                     ~~~~~~^^
+  File "/fast/scratch/hyaku/chousa-r97/R97ScribeLesson/mut-strow-raise.py", line 418, in st_row
+    raise RuntimeError("mutant: st_row raises")
+RuntimeError: mutant: st_row raises
+
+TOOL=mut-case-raise-inside.py rc=1 battery_verdict=SURVIVED
+stdout_last=SELFTEST j04-digest ok want=(1, 0, 1, ['SET_DRIFT']) got=(1, 0, 1, ['SET_DRIFT'])
+stdout_lines=39 stderr_lines=15
+stderr_tail:
+  File "/fast/scratch/hyaku/chousa-r97/R97ScribeLesson/mut-case-raise-inside.py", line 438, in case
+    if cid == "j05-dup-path": raise RuntimeError("mutant: raise after guard")
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: mutant: raise after guard
+

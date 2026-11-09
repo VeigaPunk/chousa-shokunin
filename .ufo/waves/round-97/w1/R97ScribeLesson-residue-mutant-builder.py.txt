@@ -1,0 +1,15 @@
+import pathlib, shutil
+src = pathlib.Path("sr-F.py").read_text()
+def mut(name, old, new):
+    assert src.count(old) == 1, (name, src.count(old))
+    pathlib.Path(name).write_text(src.replace(old, new))
+    print("wrote", name)
+mut("mut-genv-raise.py",
+    '    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}',
+    '    raise RuntimeError("mutant: git_env raises")\n    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}')
+mut("mut-strow-raise.py",
+    '    return f"| {qid} | {engine} | {where} | {expr} | {rev} | {searched} | {hits} | {hit_set} |\\n"',
+    '    raise RuntimeError("mutant: st_row raises")\n    return f"| {qid} | {engine} | {where} | {expr} | {rev} | {searched} | {hits} | {hit_set} |\\n"')
+mut("mut-case-raise-inside.py",
+    '        results.append((cid, bool(ok)))',
+    '        results.append((cid, bool(ok)))\n        if cid == "j05-dup-path": raise RuntimeError("mutant: raise after guard")')

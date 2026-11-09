@@ -1,0 +1,29 @@
+# R97ScribeLesson tally of the round-96 probe (copy of /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-96/w1/R96MutantsC1-mutprobe-out.txt)
+$ awk '/^MUTANT/{name=$2; rc=$3; st=$4} /^  failing:/{...}' R96MutantsC1-mutprobe-out.txt
+SURVIVED n02-findings-per-row rc=0 printed PASS cases=32/32
+SURVIVED n07-digest-uses-tree rc=0 printed PASS cases=32/32
+SURVIVED n09-date-regex-loosen rc=0 printed PASS cases=32/32
+SURVIVED n10-date-regex-loosen2 rc=0 printed PASS cases=32/32
+SURVIVED n11-header-order rc=1 no summary line (crash)
+SURVIVED n12-split-lookbehind rc=1 no summary line (crash)
+SURVIVED n13-parse-split-nl rc=1 no summary line (crash)
+SURVIVED n14-rev-regex-case rc=0 printed PASS cases=32/32
+SURVIVED n15-id-regex rc=0 printed PASS cases=32/32
+SURVIVED n16-digest-regex-case rc=0 printed PASS cases=32/32
+SURVIVED n17-regex-search-to-match rc=0 printed PASS cases=32/32
+SURVIVED n20-utf8-strict rc=0 printed PASS cases=32/32
+SURVIVED n22-matches-length-drop rc=0 printed PASS cases=32/32
+SURVIVED n23-staticdir-last-seg rc=0 printed PASS cases=32/32
+SURVIVED n26-cells-strip-order rc=1 no summary line (crash)
+SURVIVED n27-expr-minlen rc=0 printed PASS cases=32/32
+SURVIVED n28-where-empty-seg rc=0 printed PASS cases=32/32
+SURVIVED n29-hitset-empty-path rc=0 printed PASS cases=32/32
+SURVIVED n30-sep-row-lenient rc=0 printed PASS cases=32/32
+KILLED=10 SURVIVED_PASS=15 SURVIVED_NO_SUMMARY=4 SURVIVED_TOTAL=19
+exit=0
+$ /usr/bin/grep -c '^MUTANT' mutprobe-out  →
+29
+$ /usr/bin/grep -n 'KILLED 10/30' mutprobe-out →
+60:KILLED 10/30 total-probed=30
+$ /usr/bin/grep -n 'SKIP' mutprobe-out →
+15:SETUP n08-hits-regex-sign applies 0 times (SKIP)

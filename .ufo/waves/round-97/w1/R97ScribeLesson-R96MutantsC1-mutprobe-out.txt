@@ -1,0 +1,60 @@
+MUTANT n01-atrev-attree-swap rc=1 KILLED failed_cases=3 SEARCH_RERUN_SELFTEST: FAIL cases=29/32 failed=j06-tree-moved,j07-tree-strict,j08-tree-swap
+  failing: SELFTEST j06-tree-moved FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(2, 0, 0, ['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED']) | SELFTEST j07-tree-strict FAIL want=(1, 1, 0, ['TREE_CHANGED']) got=(3, 0, 0, ['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED']) | SELFTEST j08-tree-swap FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(1, 0, 0, ['SET_DRIFT', 'TREE_CHANGED'])
+MUTANT n02-findings-per-row rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n03-revok-tree-mask rc=1 KILLED failed_cases=3 SEARCH_RERUN_SELFTEST: FAIL cases=29/32 failed=j06-tree-moved,j07-tree-strict,j08-tree-swap
+  failing: SELFTEST j06-tree-moved FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 0, 0, ['TREE_CHANGED']) | SELFTEST j07-tree-strict FAIL want=(1, 1, 0, ['TREE_CHANGED']) got=(1, 0, 0, ['TREE_CHANGED']) | SELFTEST j08-tree-swap FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 0, 0, ['TREE_CHANGED'])
+MUTANT n04-treesame-strict rc=1 KILLED failed_cases=2 SEARCH_RERUN_SELFTEST: FAIL cases=30/32 failed=j06-tree-moved,j08-tree-swap
+  failing: SELFTEST j06-tree-moved FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 1, 1, ['TREE_CHANGED']) | SELFTEST j08-tree-swap FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(0, 1, 1, ['TREE_CHANGED'])
+MUTANT n05-count-uses-tree rc=1 KILLED failed_cases=2 SEARCH_RERUN_SELFTEST: FAIL cases=30/32 failed=j06-tree-moved,j07-tree-strict
+  failing: SELFTEST j06-tree-moved FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(1, 0, 0, ['COUNT_DRIFT', 'TREE_CHANGED']) | SELFTEST j07-tree-strict FAIL want=(1, 1, 0, ['TREE_CHANGED']) got=(2, 0, 0, ['COUNT_DRIFT', 'TREE_CHANGED'])
+MUTANT n06-set-uses-tree rc=1 KILLED failed_cases=3 SEARCH_RERUN_SELFTEST: FAIL cases=29/32 failed=j06-tree-moved,j07-tree-strict,j08-tree-swap
+  failing: SELFTEST j06-tree-moved FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(1, 0, 0, ['SET_DRIFT', 'TREE_CHANGED']) | SELFTEST j07-tree-strict FAIL want=(1, 1, 0, ['TREE_CHANGED']) got=(2, 0, 0, ['SET_DRIFT', 'TREE_CHANGED']) | SELFTEST j08-tree-swap FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(1, 0, 0, ['SET_DRIFT', 'TREE_CHANGED'])
+MUTANT n07-digest-uses-tree rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+SETUP n08-hits-regex-sign applies 0 times (SKIP)
+MUTANT n09-date-regex-loosen rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n10-date-regex-loosen2 rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n11-header-order rc=1 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=
+MUTANT n12-split-lookbehind rc=1 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST p12-row-after-break ok want=TABLE got=TABLE // SELFTEST p13-absolute-glob ok want=WHERE got=WHERE
+MUTANT n13-parse-split-nl rc=1 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=
+MUTANT n14-rev-regex-case rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n15-id-regex rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n16-digest-regex-case rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n17-regex-search-to-match rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n18-fixed-substring-to-wholeline rc=1 KILLED failed_cases=10 SEARCH_RERUN_SELFTEST: FAIL cases=22/32 failed=m04-per-line,j01-exact,j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,j10-tally
+  failing: SELFTEST m04-per-line FAIL | SELFTEST j01-exact FAIL want=(0, 1, 1, []) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j02-count FAIL want=(1, 0, 1, ['COUNT_DRIFT']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j03-set FAIL want=(1, 0, 1, ['SET_DRIFT']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j04-digest FAIL want=(1, 0, 1, ['SET_DRIFT']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j05-dup-path FAIL want=(1, 0, 1, ['SET_DRIFT']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j06-tree-moved FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j07-tree-strict FAIL want=(1, 1, 0, ['TREE_CHANGED']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j08-tree-swap FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j10-tally FAIL got=(3, 0, 2)
+MUTANT n19-lines-of-crlf rc=1 KILLED failed_cases=3 SEARCH_RERUN_SELFTEST: FAIL cases=29/32 failed=p14-escaped-pipe,m01-lines,m04-per-line
+  failing: SELFTEST p14-escaped-pipe FAIL '^(x|b)$' | SELFTEST m01-lines FAIL | SELFTEST m04-per-line FAIL
+MUTANT n20-utf8-strict rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n21-segmatch-dotglob-inverse rc=1 KILLED failed_cases=10 SEARCH_RERUN_SELFTEST: FAIL cases=22/32 failed=m02-dotfile,j01-exact,j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,j10-tally
+  failing: SELFTEST m02-dotfile FAIL | SELFTEST j01-exact FAIL want=(0, 1, 1, []) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j02-count FAIL want=(1, 0, 1, ['COUNT_DRIFT']) got=(1, 0, 1, ['SET_DRIFT']) | SELFTEST j03-set FAIL want=(1, 0, 1, ['SET_DRIFT']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j04-digest FAIL want=(1, 0, 1, ['SET_DRIFT']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j05-dup-path FAIL want=(1, 0, 1, ['SET_DRIFT']) got=(2, 0, 1, ['COUNT_DRIFT', 'SET_DRIFT']) | SELFTEST j06-tree-moved FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(2, 0, 0, ['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED']) | SELFTEST j07-tree-strict FAIL want=(1, 1, 0, ['TREE_CHANGED']) got=(3, 0, 0, ['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED']) | SELFTEST j08-tree-swap FAIL want=(0, 1, 0, ['TREE_CHANGED']) got=(2, 0, 0, ['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED']) | SELFTEST j10-tally FAIL got=(3, 0, 2)
+MUTANT n22-matches-length-drop rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n23-staticdir-last-seg rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n24-digest-no-newline rc=1 KILLED failed_cases=1 SEARCH_RERUN_SELFTEST: FAIL cases=31/32 failed=m06-digest
+  failing: SELFTEST m06-digest FAIL
+MUTANT n25-gitenv-no-lazy rc=1 KILLED failed_cases=1 SEARCH_RERUN_SELFTEST: FAIL cases=31/32 failed=m08-env-scrub
+  failing: SELFTEST m08-env-scrub FAIL
+MUTANT n26-cells-strip-order rc=1 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=
+MUTANT n27-expr-minlen rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n28-where-empty-seg rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n29-hitset-empty-path rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+MUTANT n30-sep-row-lenient rc=0 SURVIVED failed_cases=0 -
+  failing: (none) lastlines=SELFTEST j10-tally ok got=(1, 1, 2) // SEARCH_RERUN_SELFTEST: PASS cases=32/32
+KILLED 10/30 total-probed=30

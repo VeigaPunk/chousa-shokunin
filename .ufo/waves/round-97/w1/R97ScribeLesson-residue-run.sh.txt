@@ -1,0 +1,10 @@
+#!/bin/bash
+# usage: run.sh <tool>  -> prints rc, dead-by-battery-rule, last stdout line, stderr tail
+t="$1"; o=$(mktemp -p "$PWD" out.XXXX); e=$(mktemp -p "$PWD" err.XXXX)
+python3 -B "$t" --selftest >"$o" 2>"$e"; rc=$?
+dead=SURVIVED; if [ $rc -eq 1 ] && /usr/bin/grep -q 'SEARCH_RERUN_SELFTEST: FAIL' "$o" && ! /usr/bin/grep -q Traceback "$e"; then dead=KILLED; fi
+echo "TOOL=$t rc=$rc battery_verdict=$dead"
+echo "stdout_last=$(tail -n 1 "$o")"
+echo "stdout_lines=$(wc -l < "$o") stderr_lines=$(wc -l < "$e")"
+echo "stderr_tail:"; tail -n 4 "$e"
+rm -f "$o" "$e"

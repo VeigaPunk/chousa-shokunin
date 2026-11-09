@@ -1,0 +1,42 @@
+== S225 provenance lines
+$ /usr/bin/grep -n -i 'derived\|cadth\|table\|ottawa\|McGowan' corpus/captures/347c55ba9be9d63afe17986e.txt | cut -c1-200
+8:Online resources and browsing                     4 Describe any online or print source purposefully searched or browsed (e.g., tables of contents, print conference proceedings, web sites), and how 
+46:                                                    Is the width of proximity operators suitable (eg, might adj5 pick up more variants than adj2)?
+81:                                        Derived from:
+82:                                        McGowan J, Sampson M, Salzwedel DM, Cogo E, Foerster V, Lefebvre C. PRESS Peer Review of Electronic Search Strategies: 2015 Guideline Statement. J Clin Epide
+[exit 0]
+
+== S226 provenance lines
+$ /usr/bin/grep -n -i 'cadth\|table\|ottawa\|derived\|E&E\|explanation' corpus/captures/80a844fe287a1a26d4280251.txt | cut -c1-200
+549: Is the width of proximity operators suitable (e.g., might adj5 pick up more variants than adj2)?
+637: PRESS – Peer Review of Electronic Search Strategies: 2015 Guideline Explanation and Elaboration (PRESS E&E) . Ottawa: CADTH; 2016 Jan.
+[exit 0]
+
+== S226 raw HTML anchors (attempt 1)
+$ /usr/bin/grep -o -i 'href="[^"]*"' fetch/S226.html | /usr/bin/grep -i 'press\|cadth\|cda\|pubmed' | sort -u
+href="https://kib.ki.se/en/search-evaluate/systematic-reviews/press-2015-checklist-search-strategies"
+href="https://www.cadth.ca/sites/default/files/pdf/CP0015_PRESS_Update_Report_2016.pdf"
+href="http://www.ncbi.nlm.nih.gov/pubmed/27005575"
+[exit 0]
+
+== any 'Table 9' in either capture
+$ /usr/bin/grep -c -i 'table 9\|Table_9' corpus/captures/347c55ba9be9d63afe17986e.txt corpus/captures/80a844fe287a1a26d4280251.txt
+corpus/captures/347c55ba9be9d63afe17986e.txt:0
+corpus/captures/80a844fe287a1a26d4280251.txt:0
+[exit 1]
+
+== quoted-set coverage: S225 question lines vs quoted
+$ /usr/bin/grep -c '?' corpus/captures/347c55ba9be9d63afe17986e.txt; /usr/bin/grep -c '?' corpus/captures/80a844fe287a1a26d4280251.txt
+36
+36
+[exit 0]
+
+== six located quotes with line numbers
+$ /usr/bin/grep -n -F -e 'Does the search strategy match the research question/PICO?' -e 'Are unconventional or complex strategies explained?' -e 'that could indicate an error in an AND or OR statement)?' -e 'Does the search capture relevant truncation' corpus/captures/347c55ba9be9d63afe17986e.txt | cut -c1-120; /usr/bin/grep -n -F -e 'This is the complete and updated PRESS checklist' -e 'Are both subject headings and terms in free text (see below)' -e 'a structured tool for peer review' corpus/captures/80a844fe287a1a26d4280251.txt | cut -c1-120
+34:                                                    Does the search strategy match the research question/PICO?
+39:                                                    Are unconventional or complex strategies explained?
+62:                                        Does the search capture relevant truncation (ie, is truncation at the correct
+73:                                        Are there incorrect line combinations or orphan lines (ie, lines that are not
+503: This is the complete and updated PRESS checklist , a structured tool for peer review of electronic literature searc
+576: Are both subject headings and terms in free text (see below) used for each concept?
+[exit 0]

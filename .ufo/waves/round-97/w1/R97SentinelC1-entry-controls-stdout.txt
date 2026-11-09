@@ -1,0 +1,22 @@
+CASE positive gate_rc=0 meta_rc=0 LQ_BOUND=29/29 records=29 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8 SOLE_SUPPORT=8/8 ONE_LINE=29/29 ok
+CASE g1-word rc=1 expect=1 fail=['QUOTE_ABSENT,WORDS'] want=QUOTE_ABSENT ok
+CASE g2-skip-line rc=1 expect=1 fail=['QUOTE_ABSENT'] want=QUOTE_ABSENT ok
+CASE g3-capture-key rc=1 expect=1 fail=['CAPTURE_KEY,CAPTURE_SHA,QUOTE_ABSENT,REFETCH'] want=CAPTURE_KEY ok
+CASE g4-words rc=1 expect=1 fail=['WORDS'] want=WORDS ok
+CASE g5-tier rc=1 expect=1 fail=['TIER'] want=TIER ok
+CASE g6-fetched rc=1 expect=1 fail=['REFETCH'] want=REFETCH ok
+CASE g7-long rc=1 expect=1 fail=['QUOTE_ABSENT,QUOTE_LEN'] want=QUOTE_LEN ok
+CASE g8-sourceless rc=1 expect=1 records=0 ok
+CASE b1-nonsense-do WARRANT_TERMS=7/8 LANE_FILLED=8/8 expect=terms-drop ok
+CASE b2-wrong-qid WARRANT_TERMS=7/8 LANE_FILLED=8/8 expect=terms-drop ok
+CASE b3-empty-lane WARRANT_TERMS=8/8 LANE_FILLED=7/8 expect=lane-drop ok
+CASE sole-support-tierC SOLE_SUPPORT=7/8 expect=7 ok
+CASE corroboration-stated stated=(10, 14, 26) computed=(10, 14, 26) ok
+CASE corroboration-forged stated=(12, 14, 26) ok
+CASE searches-positive rc=0 expect=0 ok
+CASE s1-count rc=1 expect=1 want=COUNT_DRIFT ok
+CASE s2-path rc=1 expect=1 want=SET_DRIFT ok
+CASE do-nothing-base entry_at_base=absent gate_rc=2 expect=2 ok
+CASE oracle-constant-gate rc=1 expect=1 ok
+POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 SOLE_SUPPORT=2/2 CORROBORATION=2/2 SEARCHES=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1 GATE_RECORDS=30/30 LQ_BOUND=29/29 WARRANTS_OK=8/8 WARRANT_TERMS=8/8 LANE_FILLED=8/8 SOLE_SUPPORT=8/8 ONE_LINE=29/29 VERBATIM=10/26 LETTERS=14/26 METADATA=clean
+ENTRY_CONTROLS=PASS

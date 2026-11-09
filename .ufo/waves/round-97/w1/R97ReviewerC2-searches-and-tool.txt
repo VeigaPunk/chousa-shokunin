@@ -1,0 +1,97 @@
+Q1 fixed `orphan lines` hits=2 rc=0 files=347c55ba9be9d63afe17986e.txt,80a844fe287a1a26d4280251.txt
+Q2 fixed `hits per line` hits=2 rc=0 files=347c55ba9be9d63afe17986e.txt,80a844fe287a1a26d4280251.txt
+Q3 fixed `Are there any spelling errors` hits=2 rc=0 files=347c55ba9be9d63afe17986e.txt,80a844fe287a1a26d4280251.txt
+Q4 fixed `truncation` hits=5 rc=0 files=1a8c36c4c24444967bd9c3ce.txt,347c55ba9be9d63afe17986e.txt,80a844fe287a1a26d4280251.txt,c52a1f15884a78028febcf43.txt,c9d1e74c3ac8d9eb332c9770.txt
+Q5 regex `[Ss]ubject headings?` hits=6 rc=0 files=1a8c36c4c24444967bd9c3ce.txt,347c55ba9be9d63afe17986e.txt,371c55117727d526805f030d.txt,80a844fe287a1a26d4280251.txt,c52a1f15884a78028febcf43.txt,c9d1e74c3ac8d9eb332c9770.txt
+Q6 regex `proximity operators?` hits=5 rc=0 files=347c55ba9be9d63afe17986e.txt,80a844fe287a1a26d4280251.txt,c52a1f15884a78028febcf43.txt,c9d1e74c3ac8d9eb332c9770.txt,e94691f583d644da14661ec1.txt
+Q7 fixed `PICO` hits=14 rc=0 files=16fe8487aa97b98576a0dbac.txt,347c55ba9be9d63afe17986e.txt,34fcefc159bf2ebbd1e09540.txt,5233bf47babaa1ca2b49ed15.txt,62be15a474e866e4bef6c9d5.txt,7194acc65a18f6555e4b8893.txt,80a844fe287a1a26d4280251.txt,bcb4a695b2aa019305121cff.txt,c9d1e74c3ac8d9eb332c9770.txt,de9f5afc3809acbf61f4d5bb.txt,ea5d7a849f67d8048f849a22.txt,f2489455cc311a4de981e926.txt,fd468a36d78ff156b6200946.txt,fd7eed5e0e6c64e22bc1470c.txt
+captures mentioning emtree|mesh|thesaurus: 12 rc=0
+--- tool run_at_rev/run_on_tree/evaluate (lines 287-345, 354-382) ---
+287: def run_at_rev(root, r, cache):
+288:     entries = files_at_rev(root, r["rev"], cache)
+289:     found = []
+290:     tops = tuple(sorted({(static_dir(g) + "/") if static_dir(g) else "" for g in r["globs"]}))
+291:     for path, (mode, kind, obj) in sorted(entries.items()):
+292:         if not path.startswith(tops) or not matches(path, r["globs"]):
+293:             continue
+294:         if kind != "blob" or mode not in ("100644", "100755"):
+295:             raise Setup("WHERE_TYPE", f"{r['id']}: {path} at {r['rev'][:12]} is mode {mode} ({kind})")
+296:         if hit(blob(root, obj, cache.setdefault("blobs", {})), r):
+297:             found.append(path)
+298:     return found
+299: 
+300: 
+301: def static_dir(glob):
+302:     """The directory part of a glob before its first wildcard segment ('' for the root)."""
+303:     segs = glob.split("/")[:-1]
+304:     out = []
+305:     for s in segs:
+306:         if any(ch in s for ch in "*?["):
+307:             break
+308:         out.append(s)
+309:     return "/".join(out)
+310: 
+311: 
+312: def tree_files(root, globs):
+313:     """Files on disk under each glob's static directory; a symlink on the way in is refused, a symlink inside is
+314:     listed (so a glob matching it is a WHERE_TYPE error, never a followed read)."""
+315:     out = set()
+316:     for top in sorted({static_dir(g) for g in globs}):
+317:         cur = root
+318:         for seg in [s for s in top.split("/") if s]:
+319:             cur = os.path.join(cur, seg)
+320:             if os.path.islink(cur):
+321:                 raise Setup("WHERE_TYPE", f"{os.path.relpath(cur, root)} on a glob's path is a symlink")
+322:         if not os.path.isdir(cur):
+323:             continue
+324:         for dirpath, dirnames, filenames in os.walk(cur):
+325:             rel_dir = os.path.relpath(dirpath, root)
+326:             dirnames[:] = sorted(d for d in dirnames if not (rel_dir == "." and d in (".git", ".jj")))
+327:             for name in filenames + [d for d in dirnames if os.path.islink(os.path.join(dirpath, d))]:
+328:                 rel = name if rel_dir == "." else f"{rel_dir}/{name}"
+329:                 out.add(rel.replace(os.sep, "/"))
+330:     return sorted(out)
+331: 
+332: 
+333: def run_on_tree(root, r, listing):
+334:     found = []
+335:     for rel in listing:
+336:         if not matches(rel, r["globs"]):
+337:             continue
+338:         full = os.path.join(root, rel)
+339:         if os.path.islink(full) or not os.path.isfile(full):
+340:             raise Setup("WHERE_TYPE", f"{r['id']}: {rel} in the tree is a symlink or not a regular file")
+341:         with open(full, "rb") as fh:
+342:             if hit(fh.read(), r):
+343:                 found.append(rel)
+344:     return found
+345: 
+354: def evaluate(rows, at_rev_of, at_tree_of, strict):
+355:     """Judge every row from its two re-runs; `at_rev_of(r)` and `at_tree_of(r)` return sorted matching paths.
+356:     Shared by `verify` (git and disk re-runs) and `--selftest` (in-memory re-runs), so the selftest scores the same
+357:     decision code the CLI runs (round 96)."""
+358:     findings, rev_ok, tree_same = 0, 0, 0
+359:     lines = []
+360:     for r in rows:
+361:         at_rev = at_rev_of(r)
+362:         at_tree = at_tree_of(r)
+363:         codes = []
+364:         if len(at_rev) != r["n"]:
+365:             codes.append("COUNT_DRIFT")
+366:         if "digest" in r:
+367:             if digest(at_rev) != r["digest"]:
+368:                 codes.append("SET_DRIFT")
+369:         elif sorted(r["set"]) != at_rev:
+370:             codes.append("SET_DRIFT")
+371:         changed = at_tree != at_rev
+372:         if changed:
+373:             codes.append("TREE_CHANGED")
+374:         bad = [c for c in codes if c != "TREE_CHANGED" or strict]
+375:         findings += len(bad)
+376:         rev_ok += 0 if ("COUNT_DRIFT" in codes or "SET_DRIFT" in codes) else 1
+377:         tree_same += 0 if changed else 1
+378:         lines.append(
+379:             f"SEARCH_RERUN {r['id']} rev={'DRIFT' if ('COUNT_DRIFT' in codes or 'SET_DRIFT' in codes) else 'MATCH'}"
+380:             f" tree={'CHANGED' if changed else 'SAME'} recorded={r['n']} at_rev={len(at_rev)}"
+381:             f" at_tree={len(at_tree)}" + ("" if not codes else " " + ",".join(codes)))
+382:     return findings, rev_ok, tree_same, lines

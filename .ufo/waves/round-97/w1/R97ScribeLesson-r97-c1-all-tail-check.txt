@@ -1,0 +1,18 @@
+# after/c1-all.txt tail check (committed receipt, F=9a0ce2015fa0254848f2f32f612b20caf7dc5478)
+$ wc -l after/c1-all.txt
+142
+$ grep -c 'SELFTEST_CONTROLS_R97=PASS' after/c1-all.txt
+0
+$ grep -c 'regression-mutants-r95\|REGRESSION_R95=' after/c1-all.txt
+0
+$ grep -c '^exit=' after/c1-all.txt
+1
+$ tail -n 2 after/c1-all.txt
+CASE no-write rc=0 left=[] status_same=True diff_same=True ok
+CASE regression-rerun-controls-r95 rc=0 ok
+$ grep -c 'POSITIVE=1/1 EXTERNAL_KILLED=30/30' after/c1-all.txt
+0
+$ grep -n 'EXTERNAL_KILLED' after/c1-all.txt (oracle tallies only)
+138:CASE oracle-constant-pass battery_rc=1 expect=1 tally=[POSITIVE=1/1 EXTERNAL_KILLED=0/30 DO_NOTHING_REFUSED=1/1 R96_MUTANTS_KILLED=0/23 NO_WRITE=1/1 BASE_KI
+139:CASE oracle-hollow-selftest battery_rc=1 expect=1 tally=[POSITIVE=1/1 EXTERNAL_KILLED=0/30 DO_NOTHING_REFUSED=1/1 R96_MUTANTS_KILLED=0/23 NO_WRITE=1/1 BASE_
+140:CASE oracle-always-fail battery_rc=1 expect=1 tally=[POSITIVE=0/1 EXTERNAL_KILLED=30/30 DO_NOTHING_REFUSED=1/1 R96_MUTANTS_KILLED=23/23 NO_WRITE=0/1 BASE_KI

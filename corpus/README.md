@@ -1455,3 +1455,14 @@ successful-refused record form remain carried.
 - Frontier advanced: the gap `corpus/README.md:1445` names — "PRISMA-S item 14 (search peer review) and item 16 (deduplication) are read in the capture but not held" — is closed for what PRISMA-S says a report must state; the first `## Searches` record of a round's own searches (not a fixture) is re-run by the tool.
 - Left open: the PRESS 2015 checklist's own element wording, its assessment form and the evidence per element (the guideline statement and the E&E were unreachable, 403); no lane method for deduplicating records from external databases; per-line matching misses a sentence split across a page break (the entry's Q6).
 - Correction (r95 spot-check D5): `corpus/README.md:1441` points the round-95 `tools/search-rerun.py` row at `corpus/evidence/round95/after/` (receipts at F, `records=9`, 8 forgeries, no mutant receipt); the claimed numbers (13 records, 10/10 forgeries, 10/10 mutants, 4/4 oracles) are in `corpus/evidence/round95/after-f2/` (`.ufo/waves/round-96/w1/R96ScribeCorrections-D5-readme-evidence-pointer.txt`). The original row stays.
+
+## Round97 coverage and frontier (2026-11-09)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/press-checklist-questions-r97.md` | what a search peer reviewer asks under each PRESS 2015 element — 16 of the checklist's 33 question lines as Cochrane reprints them (question/PICO fit, hits per line, unintended NOT exclusions, missing subject headings, spelling variants and truncation, another interface's syntax and orphan lines, cited filters), read against a second reprint (verbatim 10/26, letters 14/26), with the lane's reading confined to a marked column | S225, S226 (S227 rejected, route 403) |
+| `../tools/search-rerun.py --selftest` | Round-97 self-test: 48 cases, each guarded, shared set-up inside an outer guard; battery `corpus/evidence/round97/selftest-controls-r97.py` scores it against the mutants round-96 and round-97 seats wrote (the round-96 tool kills 10 of them) | `.ufo/waves/round-97/claims.md`; `corpus/evidence/round97/` |
+
+- `lessons/round-97.md` — S225 (B) and S226 (C, corroboration only) admitted; CADTH Table 9 rejected for route (403); `web.archive.org` unreachable from this host.
+- Frontier advanced: the gap `corpus/README.md:1456` names — "the PRESS 2015 checklist's own element wording" — is held at question level through a reprint, not through the guideline; the round-96 self-test's measured blind spots (`R96MutantsC1` classes B and C, `R96SentinelC1` F1/F7) are closed for the named mutants.
+- Left open: the guideline statement, the E&E and CADTH's Table 9 (all 403 here); 17 of S225's 33 question lines are not quoted; which reprint's wording is the guideline's; the lane's records count files, not hits per line, and carry no reviewer or subject-heading field.

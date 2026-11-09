@@ -1,0 +1,10 @@
+# seat R97ConnectorSiblings — receipt 3: the guard's launch-site carrier (mado R74 class)
+# mutant M-A: subprocess.run([...], capture_output=True, env=git_env()) -> capture_output=True  (1 application)
+# cmd: python3 -B $S/mutA.py --selftest
+EXIT=0
+SEARCH_RERUN_SELFTEST: PASS cases=47/47
+# cmd: TMPDIR=$S/tmp python3 -B corpus/evidence/round95/rerun-controls-r95.py --root . --work $S/work95 --tool $S/mutA.py  (cwd = F clone)
+EXIT=1   # the round-95 battery reds the launch-site mutant
+CASE containment-git-dir rc=2 expect=0 FAIL
+POSITIVE=1/1 STRICT_TREE=1/1 FORGERY_REFUSED=10/10 PRIOR_ACCEPTED=10/10 SETUP_REFUSED=12/12 CLONE_TREE=2/2 GREP_AGREE=4/4 CONTAINMENT=1/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=4/4
+RERUN_CONTROLS=FAIL

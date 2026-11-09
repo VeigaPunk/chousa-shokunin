@@ -1,0 +1,163 @@
+MUTANT g01-case-always-true rc=0 SURVIVED failed=-
+MUTANT g02-case-setup-only rc=0 SURVIVED failed=-
+MUTANT g03-case-count-all rc=0 SURVIVED failed=-
+MUTANT g04-summary-always-pass rc=0 SURVIVED failed=-
+MUTANT g05-selftest-return-0 rc=0 SURVIVED failed=-
+MUTANT g06-refusal-detail rc=1 KILLED failed=p02-no-section,p03-header,p04-engine,p05-globstar,p06-dotdot,p07-posix-class,p08-backtick,p09-short-rev,p10-zero-with-set,p11-dup-id,p12-row-after-break,p13-absolute-glob,r01-signed-hits,r02-bad-date,r03-upper-rev,r04-q0-id,r05-empty-expression,r06-empty-segment,r07-trailing-comma
+MUTANT g07-judge-index-8 rc=1 KILLED failed=j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,r14-two-codes,r15-digest-at-rev
+MUTANT p01-cells-no-endpipe rc=0 SURVIVED failed=-
+MUTANT p02-heading-contains rc=0 SURVIVED failed=-
+MUTANT p03-double-section rc=0 SURVIVED failed=-
+MUTANT p04-separator-2dash rc=0 SURVIVED failed=-
+MUTANT p05-hitset-dash-path rc=0 SURVIVED failed=-
+MUTANT p06-where-dot-segment rc=0 SURVIVED failed=-
+MUTANT p07-expr-no-end-backtick rc=0 SURVIVED failed=-
+MUTANT p08-hitset-no-strip rc=1 KILLED failed=j01-exact,j02-count,j06-tree-moved,j07-tree-strict,j08-tree-swap,j10-tally
+MUTANT p09-posix-lower rc=0 SURVIVED failed=-
+MUTANT p10-engine-pcre rc=1 KILLED failed=p04-engine
+MUTANT p11-cells-no-trailing-strip rc=1 KILLED failed=p01-parse-good,p04-engine,p05-globstar,p06-dotdot,p07-posix-class,p08-backtick,p09-short-rev,p10-zero-with-set,p11-dup-id,p13-absolute-glob,r01-signed-hits,r02-bad-date,r03-upper-rev,r04-q0-id,r05-empty-expression,r06-empty-segment,r07-trailing-comma,p14-escaped-pipe,r08-upper-digest-is-a-path,m04-per-line,m05-case,r10-regex-mid-line,r11-regex-non-utf8,j01-exact,j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,j09-zero,r14-two-codes,r15-digest-at-rev,j10-tally
+MUTANT m01-matches-any rc=1 KILLED failed=m02-dotfile,j01-exact,j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,r14-two-codes,r15-digest-at-rev,j10-tally
+MUTANT m02-lines-phantom rc=1 KILLED failed=m01-lines,m04-per-line
+MUTANT m03-hit-fixed-startswith rc=0 SURVIVED failed=-
+MUTANT m04-hit-miss-last-line rc=1 KILLED failed=p14-escaped-pipe,m04-per-line,r10-regex-mid-line,r11-regex-non-utf8,j01-exact,j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,r14-two-codes,r15-digest-at-rev,j10-tally
+MUTANT m05-digest-str-sort rc=0 SURVIVED failed=-
+MUTANT e01-rev-token-swap rc=0 SURVIVED failed=-
+MUTANT e02-count-lt rc=0 SURVIVED failed=-
+MUTANT e03-changed-and-not-strict rc=1 KILLED failed=j07-tree-strict,r14-two-codes
+MUTANT e04-findings-times-2 rc=1 KILLED failed=j02-count,j03-set,j04-digest,j05-dup-path,j07-tree-strict,r14-two-codes,j10-tally
+MUTANT e05-treesame-swap rc=1 KILLED failed=j01-exact,j02-count,j03-set,j04-digest,j05-dup-path,j06-tree-moved,j07-tree-strict,j08-tree-swap,j09-zero,r14-two-codes,r15-digest-at-rev,j10-tally
+MUTANT v01-env-git-prefix rc=0 SURVIVED failed=-
+MUTANT v02-env-drop-terminal rc=1 KILLED failed=r13-env-guards
+MUTANT u01-verify-return-0 rc=0 SURVIVED failed=-
+MUTANT u02-run-at-rev-tops-0 rc=0 SURVIVED failed=-
+MUTANT u03-blob-silent rc=0 SURVIVED failed=-
+MUTANT u04-static-dir-bracket rc=0 SURVIVED failed=-
+MUTANT u05-tree-files-jj rc=0 SURVIVED failed=-
+MUTANT u06-git-timeout-0 rc=0 SURVIVED failed=-
+MUTANT u07-record-exists-refused rc=0 SURVIVED failed=-
+SELFTEST killed=12 survived=25 probed=37
+R95 g01-case-always-true rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 g02-case-setup-only rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 g03-case-count-all rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 g04-summary-always-pass rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 g05-selftest-return-0 rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 p01-cells-no-endpipe rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 p02-heading-contains rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 p03-double-section rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 p04-separator-2dash rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 p05-hitset-dash-path rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 p06-where-dot-segment rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 p07-expr-no-end-backtick rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 p09-posix-lower rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 m03-hit-fixed-startswith rc=1 covered-by-r95 verdict=[RERUN_CONTROLS=FAIL]
+  FAILING: CASE positive rc=1 expect=0 FAIL
+  FAILING: CASE strict-tree rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED'] FAIL
+  FAILING: CASE f1-count rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=['COUNT_DRIFT'] FAIL
+  FAILING: CASE f2-set-swap rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=['SET_DRIFT'] FAIL
+R95 m05-digest-str-sort rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 e01-rev-token-swap rc=1 covered-by-r95 verdict=[RERUN_CONTROLS=FAIL]
+  FAILING: CASE strict-tree rc=1 expect=1 codes=['TREE_CHANGED'] FAIL
+  FAILING: CASE f1-count rc=1 expect=1 codes=['COUNT_DRIFT'] want=['COUNT_DRIFT'] FAIL
+  FAILING: CASE f2-set-swap rc=1 expect=1 codes=['SET_DRIFT'] want=['SET_DRIFT'] FAIL
+  FAILING: CASE f3-expression rc=1 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=any-rev-code FAIL
+R95 e02-count-lt rc=1 covered-by-r95 verdict=[RERUN_CONTROLS=FAIL]
+  FAILING: CASE f5-zero rc=1 expect=1 codes=['SET_DRIFT'] want=['COUNT_DRIFT', 'SET_DRIFT'] FAIL
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+R95 v01-env-git-prefix rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 u01-verify-return-0 rc=1 covered-by-r95 verdict=[RERUN_CONTROLS=FAIL]
+  FAILING: CASE strict-tree rc=0 expect=1 codes=['TREE_CHANGED'] FAIL
+  FAILING: CASE f1-count rc=0 expect=1 codes=['COUNT_DRIFT'] want=['COUNT_DRIFT'] FAIL
+  FAILING: CASE f2-set-swap rc=0 expect=1 codes=['SET_DRIFT'] want=['SET_DRIFT'] FAIL
+  FAILING: CASE f3-expression rc=0 expect=1 codes=['COUNT_DRIFT', 'SET_DRIFT'] want=any-rev-code FAIL
+R95 u02-run-at-rev-tops-0 rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 u03-blob-silent rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 u04-static-dir-bracket rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 u05-tree-files-jj rc=0 UNCOVERED-by-r95 verdict=[RERUN_CONTROLS=PASS]
+  FAILING: CASE oracle-constant-clean battery=FAIL expect=FAIL failed_groups={'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '0/12', 'CLONE_TREE': '0/2', 'GREP_AGREE': '0/4', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-count-only battery=FAIL expect=FAIL failed_groups={'FORGERY': '5/10'} ok
+  FAILING: CASE oracle-rev-blind battery=FAIL expect=FAIL failed_groups={'POSITIVE': '0/1', 'STRICT_TREE': '0/1', 'FORGERY': '0/10', 'SETUP': '11/12', 'CLONE_TREE': '1/2', 'CONTAINMENT': '1/2'} ok
+  FAILING: CASE oracle-carrier-c-tool battery=FAIL expect=FAIL failed_groups={'GREP_AGREE': '0/4', 'CONTAINMENT': '0/2'} ok
+R95 u06-git-timeout-0 rc=1 covered-by-r95 verdict=[RERUN_CONTROLS=FAIL]
+  FAILING: CASE positive rc=1 expect=0 FAIL
+  FAILING: CASE strict-tree rc=1 expect=1 codes=[] FAIL
+  FAILING: CASE f1-count rc=1 expect=1 codes=[] want=['COUNT_DRIFT'] FAIL
+  FAILING: CASE f2-set-swap rc=1 expect=1 codes=[] want=['SET_DRIFT'] FAIL
+R95 u07-record-exists-refused rc=1 covered-by-r95 verdict=[RERUN_CONTROLS=FAIL]
+  FAILING: CASE positive rc=2 expect=0 FAIL
+  FAILING: CASE strict-tree rc=2 expect=1 codes=[] FAIL
+  FAILING: CASE f1-count rc=2 expect=1 codes=[] want=['COUNT_DRIFT'] FAIL
+  FAILING: CASE f2-set-swap rc=2 expect=1 codes=[] want=['SET_DRIFT'] FAIL

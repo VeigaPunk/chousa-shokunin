@@ -2852,3 +2852,31 @@ F2 amendments: `.ufo/waves/round-96/claims.md`; plan, pre-freeze fixes P0-P3 and
   same tallies); C1's paths are byte-identical at F2 and F3 (`after-f3/c1-f2-equals-f3.txt`). Ledger:
   `.ufo/waves/round-96/claim-falsification.tsv` (16 rows, `falsifies-wording 8`, `neutral 8`). Census end
   `corpus/evidence/round96/census-end.txt` (exit 0, 223 rows). Mistakes mined: 7 (`corpus/lessons/round-96.md`).
+
+## Round 97 — 2026-11-09
+
+Lane `chousa`, round 97 (attempt 1, L1 `ChousaR97`). Base `c8087ac5`; F `9a0ce201`; carrier `4de41332`; F2
+`d84f4e1e`; F3 `1042eb97`. Claims `.ufo/waves/round-97/claims.md` (judged at the F2 sentences, C2 wording B11-B12).
+One v1 wave, 12 seats (executor 2, mutation-tester 2, reviewer 2, critic 1, sentinel 1, scout 1, revenger 1,
+connector 1, scribe 1), 0 dead; ledger `.ufo/waves/round-97/claim-falsification.tsv` (16 rows, 9 falsifies-wording).
+
+- Motivating evidence C1: round-96 seats' mutants survived the round-96 self-test (19 of 29 `R96MutantsC1`, both
+  `R96SentinelC1` git_env mutants). After: self-test 48 cases with per-case and outer guards; F2 battery
+  `EXTERNAL_KILLED=34/34`, base tool `10/34` (`corpus/evidence/round97/after-f2/c1-all.txt`, `before-f2/c1-base.txt`).
+- Motivating evidence C2: the round-96 entry's named limit "the checklist's own element wording ... [is] not held";
+  every primary route 403 from this host. After: `corpus/knowledge/press-checklist-questions-r97.md` on S225 (B)
+  with S226 (C) corroboration, `ENTRY_CONTROLS=PASS`, verbatim 10/26, letters 14/26 (`after-f3/c2-all.txt`).
+- Correction (round-96 spot-check D1, open): `refetch.tsv` still carries the J Clin Epidemiol attempt under `S224`.
+  `plans/round-97.md` first said a correction row was unsafe for the readers; `R97RevenPrior` Q3 showed a 9-field
+  row breaks none of them, but none withdraws the wrong row either (`gate-records.py` accepts any matching row), so
+  D1 needs a reader rule. QUALITY 225 stays violated by that row until then.
+- Correction (C1 battery docstring, `R97SentinelC1` F1-F3): `selftest-controls-r97.py` says "Read-only on the lane"
+  and "Writes only under --work"; its `git status` calls take `.git/index.lock`, mutant runs inherit the battery's
+  cwd (a cwd-writing mutant would litter it and still count killed), and NO_WRITE does not see git-ignored paths.
+  The battery bytes stay as frozen at F2; routed to round 98.
+- Correction (round-96 record, `R97ScribeLesson`): `.ufo/waves/round-96/w1/R96MutantsC1.md:247` says "15 of them also
+  pass the round-95 CLI battery"; its own body names 3 of the 19 survivors failing that battery. The original stays.
+- Routed: `R97MutantsC1` 19 uncovered survivors (guard/summary machinery g01-g05, `u03-blob-silent`, p04-p07,
+  m05) → SCORECARD planned r98; `R97ScoutSources` lead: CADTH report 477 appendices (PRESS checklist).
+- Census: start exit 0 (223 rows), end exit 0 (226 rows; new W01 for S226 tier C mined). QUALITY 227-228 added;
+  mistakes mined: 5 (`corpus/lessons/round-97.md`).

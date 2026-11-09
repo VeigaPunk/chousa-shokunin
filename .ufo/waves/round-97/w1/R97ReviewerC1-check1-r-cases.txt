@@ -1,0 +1,20 @@
+n Cases check + r01-r15 truth
+r01-signed-hits want HITS got HITS MATCH
+r02-bad-date want DATE got DATE MATCH
+r03-upper-rev want REV got REV MATCH
+r04-q0-id want ROW got ROW MATCH
+r05-empty-expression want EXPRESSION got EXPRESSION MATCH
+r06-empty-segment want WHERE got WHERE MATCH
+r07-trailing-comma want HIT_SET got HIT_SET MATCH
+r08 digest in r? False set= ['sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] digest= None
+r09 matches d/f.txt vs d/*/*.txt = False  d vs d/* = False
+r10 True False
+r11 True
+r12 corpus 
+r13 GIT_ keys: ['GIT_NO_LAZY_FETCH', 'GIT_NO_REPLACE_OBJECTS', 'GIT_TERMINAL_PROMPT'] 1 0
+r14 (3, 0, 0, ['COUNT_DRIFT', 'SET_DRIFT', 'TREE_CHANGED']) want (3,0,0,[COUNT_DRIFT,SET_DRIFT,TREE_CHANGED])
+r15 (0, 1, 0, ['TREE_CHANGED']) want (0,1,0,[TREE_CHANGED])
+ST_AC_DIGEST check digest a,c = b5ffc9674501cd88b9070cfa973f489c13bae3e6ace1a78054de8f0789ff64ea True
+DATE_RE [0-9]{4}-[0-9]{2}-[0-9]{2}\Z r02 searched cell: | Q1 | fixed | corpus/*.txt | `PRESS` | aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa | 2026-11-9 | 1 | corpus/a.txt |
+
+HITS_RE -1: False DATE_RE 2026-11-9: False REV_RE A*40: False ID_RE Q0: False

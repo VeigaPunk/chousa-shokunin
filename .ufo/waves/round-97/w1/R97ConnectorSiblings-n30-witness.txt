@@ -1,0 +1,15 @@
+# seat R97ConnectorSiblings — receipt 2: round-96 n30 ('separator-row length check dropped')
+# REV=F 9a0ce2015fa0254848f2f32f612b20caf7dc5478; tool copy $S/tool.py, mutant $S/n30.py
+# mutation (from .ufo/waves/round-96/w1/R96MutantsC1-mutprobe.py.txt:100-102, applied 1x):
+#   -    if sep is None or len(sep) != len(HEADER) or not all(...):
+#   +    if sep is None or not all(...):
+# cmd: python3 -B $S/n30.py --selftest
+EXIT=0
+SEARCH_RERUN_SELFTEST: PASS cases=47/47
+# cmd: python3 -B witness probe (imports both copies, parses one record whose separator row
+#      has 7 cells under an 8-cell header; see n30-witness.txt for the source)
+SEP-BEFORE: '|---|---|---|---|---|---|---|---|'
+ORIGINAL: ('REFUSED', 'TABLE')
+N30-MUTANT: ('OK', 1)
+NON_EQUIVALENT_WITNESS: True
+SEP-CELLS: 7 HEADER-CELLS: 8

@@ -1,0 +1,38 @@
+# git show 9a0ce2015fa0254848f2f32f612b20caf7dc5478:tools/search-rerun.py — self-test guard and fixture lines (read-only extract; numbers are file lines)
+$ awk 'NR>=421 && NR<=438 || NR>=450 && NR<=452 || NR>=506 && NR<=512' sr-F.py
+421:def selftest():
+422:    """In-memory self-test (round 96; round 97 adds cases r01-r15 and the per-case guard): parse refusals,
+423:    matching rules, the digest form, the `git_env` guards and the decision code of `evaluate`, each case against an
+424:    expectation fixed in this file. Every case runs inside a guard, so an exception inside a case (a parse that
+425:    raises, a decode error) is that case's FAIL, never a traceback that ends the run without a summary line
+426:    (round-96 `R96MutantsC1` class B). No file, git or network access; exit 0 PASS, 1 FAIL. It does not exercise
+427:    the git and disk readers (`run_at_rev`, `run_on_tree`, `tree_files`) — the round-95 battery
+428:    `corpus/evidence/round95/rerun-controls-r95.py` does, through the CLI."""
+429:    results = []
+430:
+431:    def case(cid, fn):
+432:        try:
+433:            got = fn()
+434:            ok, detail = got if isinstance(got, tuple) else (got, "")
+435:        except Exception as exc:  # a crash inside a case is that case's failure
+436:            ok, detail = False, f"raised {type(exc).__name__}: {exc}"
+437:        results.append((cid, bool(ok)))
+438:        print(f"SELFTEST {cid} {'ok' if ok else 'FAIL'}" + (f" {detail}" if detail else ""))
+450:    good = ST_HEAD + st_row()
+451:    case("p01-parse-good", lambda: len(parse_text(good)) == 1)
+452:    for cid, text, code in (
+506:    planted = {"GIT_DIR": "/nonexistent", "GIT_OBJECT_DIRECTORY": "/nonexistent/objects",
+507:               "GIT_ALTERNATE_OBJECT_DIRECTORIES": "/nonexistent/alt", "GIT_CONFIG_PARAMETERS": "'core.x=1'",
+508:               "GIT_WORK_TREE": "/nonexistent", "GIT_NO_REPLACE_OBJECTS": "0", "GIT_NO_LAZY_FETCH": "0"}
+509:    saved = {k: os.environ.get(k) for k in planted}
+510:    os.environ.update(planted)
+511:    try:
+512:        env = git_env()
+$ awk 'NR>=416 && NR<=418' sr-F.py
+416:def st_row(qid="Q1", engine="fixed", where="corpus/*.txt", expr="`PRESS`", rev=ST_REV, hits="1",
+417:           hit_set="corpus/a.txt", searched="2026-11-09"):
+418:    return f"| {qid} | {engine} | {where} | {expr} | {rev} | {searched} | {hits} | {hit_set} |\n"
+$ git show 9a0ce2015fa0254848f2f32f612b20caf7dc5478:tools/search-rerun.py | grep -n 'def selftest' ...
+416:def st_row(qid="Q1", engine="fixed", where="corpus/*.txt", expr="`PRESS`", rev=ST_REV, hits="1",
+421:def selftest():
+512:        env = git_env()

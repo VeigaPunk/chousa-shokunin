@@ -1,0 +1,10 @@
+# git show c8087ac529003e667505bcc624f9a7bde0cffbce:corpus/evidence/round96/selftest-controls-r96.py (round-96 battery KILLED rule) and c8087ac529003e667505bcc624f9a7bde0cffbce:tools/search-rerun.py selftest def
+$ git show c8087ac529003e667505bcc624f9a7bde0cffbce:corpus/evidence/round96/selftest-controls-r96.py | awk 'NR>=126 && NR<=131'
+126:            mp = os.path.join(work, name + ".py")
+127:            open(mp, "w", encoding="utf-8").write(src.replace(old, new))
+128:            rc, out, _ = selftest(mp)
+129:            dead = rc == 1 and "SEARCH_RERUN_SELFTEST: FAIL" in out
+130:            failed = next((ln.split("failed=")[1] for ln in out.splitlines() if "failed=" in ln), "-")
+131:            print(f"CASE mutant {name} rc={rc} {'KILLED' if dead else 'SURVIVED'} failed={failed}")
+$ git show c8087ac529003e667505bcc624f9a7bde0cffbce:tools/search-rerun.py | grep -n 'def selftest'
+420:def selftest():
